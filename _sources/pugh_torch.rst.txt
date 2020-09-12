@@ -1,0 +1,29 @@
+pugh\_torch package
+===================
+
+Subpackages
+-----------
+
+.. toctree::
+
+   pugh_torch.bin
+
+Submodules
+----------
+
+pugh\_torch.example module
+--------------------------
+
+.. automodule:: pugh_torch.example
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: pugh_torch
+   :members:
+   :undoc-members:
+   :show-inheritance:
