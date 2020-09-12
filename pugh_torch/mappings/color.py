@@ -3,6 +3,13 @@
 
 import numpy as np
 
+def get_palette(name):
+    palettes = {
+            'ade20k': ade20k,
+    }
+    return palettes[name]
+
+
 # From Gluon
 ade20k = np.array([
     0, 0, 0, 120, 120, 120, 180, 120, 120, 6, 230, 230, 80, 50, 50, 4, 200, 3, 120, 120, 80, 140, 140, 140, 204, 
