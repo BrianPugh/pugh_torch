@@ -40,18 +40,40 @@ class SummaryWriter(tb.SummaryWriter):
         raise NotImplementedError(f"Cannot parse rgb_transform {rgb_transform}")
 
 
-    def add_rgb(self, tag, rgb, global_step=None, walltime=None, dataformats='CHW', *,
+    def add_rgb(self, tag, rgbs, global_step=None, walltime=None, dataformats='CHW', *,
             rgb_transform=None,
+            n_images=1,
             ):
-        """
+        """ Applies a transform and adds image to log
+
+        A common scenario is when you only have a normalized image (say, by
+        ImageNet's mean and stddev) and you want to log it to tensorboard.
+
+        In this case, it may be more convenient to set:
+            rgb_transform="imagenet"
+        in the constructor.
+
         Paramters
         ---------
+        rgbs : torch.Tensor
+            (B, 3, H, W) Image data.  See ``rgb_transform`` argument.
         rgb_transform : str or callable
             Transform to apply to the rgb data. If not provided, defaults to 
             the transform provided in __init__
+        n_images : int
+            Maximum number of images to add.
         """
 
         rgb_transform = self._parse_rgb_transform(rgb_transform)
+
+        rgbs = rgb_transform(rgbs)
+        rgbs = rgbs.cpu().numpy()
+        rgbs = np.clip(rgbs, 0, 1)
+        rgbs = np.transpose(rgbs, (0, 2, 3, 1))  # (B, H, W, 3)
+        rgbs = (rgbs * 255).astype(np.uint8)
+
+        for i, rgb in zip(range(n_images), rgbs):
+            self.add_image(f"{tag}/{i}", rgb, global_step=global_step, walltime=walltime, dataformats="HWC")
 
 
     def add_ss(self, tag, rgbs, preds, targets,
@@ -63,7 +85,9 @@ class SummaryWriter(tb.SummaryWriter):
             palette='ade20k',
             offset=0,
             ):
-        """ Add a semantic segmentation image and it's pairing input montage
+        """ Add a semantic segmentation image and it's pairing input montage.
+
+        ``self.add_rgb``'s documentation applies to the ``rgbs`` input here.
 
         TODO: more control over which image to show
 

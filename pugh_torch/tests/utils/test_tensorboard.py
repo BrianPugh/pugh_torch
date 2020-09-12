@@ -1,4 +1,5 @@
 import pytest
+import numpy as np
 import torch
 from pugh_torch.utils.tensorboard import SummaryWriter
 
@@ -54,6 +55,19 @@ def test_add_ss(mock_add_image):
     # TODO: more strict tests on the produced montage
 
 
-def test_add_rgb(mocker):
-    #TODO
-    pass
+def test_add_rgb(mock_add_image):
+    writer = TestSummaryWriter()
+
+    rgbs = torch.rand(10, 3, 480, 640)
+
+    writer.add_rgb("foo", rgbs)
+
+    mock_add_image.assert_called_once()
+    args, kwargs = mock_add_image.call_args_list[0]
+    actual_tag, actual_rgb = args
+
+    assert actual_tag == "foo/0"
+
+    assert actual_rgb.dtype == np.uint8
+    assert actual_rgb.shape == (480, 640, 3)
+    # TODO: more strict tests on the produced image
