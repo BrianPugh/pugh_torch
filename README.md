@@ -11,6 +11,7 @@ Functions, losses, and module blocks to share between experiments.
 ## Features
 * Store values and retain the prior value in memory
 * ... some other functionality
+* attempts to mirror pytorch's library structure.
 
 ## Quick Start
 ```python

@@ -57,3 +57,6 @@ gen-docs: ## generate Sphinx HTML documentation, including API docs
 docs: ## generate Sphinx HTML documentation, including API docs, and serve to browser
 	make gen-docs
 	$(BROWSER) docs/_build/html/index.html
+
+test:
+	python3 -m pytest pugh_torch/tests
