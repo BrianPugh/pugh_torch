@@ -1,5 +1,5 @@
 import torch
-from torch import transforms
+from torchvision import transforms
 
 
 class Normalize:
