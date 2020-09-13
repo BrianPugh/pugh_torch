@@ -9,17 +9,22 @@ with open("README.md") as readme_file:
     readme = readme_file.read()
 
 setup_requirements = [
+    "cv2>=4.2.0",
+    "numpy>=1.17.1",
     "pytest-runner>=5.2",
+    "torch>=1.4.0",
+    "torchvision>=0.5.0",
 ]
 
 test_requirements = [
     "black>=19.10b0",
     "codecov>=2.1.4",
-    "flake8>=3.8.3",
     "flake8-debugger>=3.2.1",
-    "pytest>=5.4.3",
+    "flake8>=3.8.3",
     "pytest-cov>=2.9.0",
+    "pytest-mock>=3.3.1",
     "pytest-raises>=0.11",
+    "pytest>=5.4.3",
 ]
 
 dev_requirements = [
