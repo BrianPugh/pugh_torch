@@ -4,9 +4,9 @@ from PIL import Image
 import numpy as np
 
 __all__ = [
-        "Normalize",
-        "Unnormalize",
-        ]
+    "Normalize",
+    "Unnormalize",
+]
 
 
 class Normalize:
@@ -16,10 +16,8 @@ class Normalize:
     def __init__(self,):
         self.to_tensor = transforms.ToTensor()
         self.normalize = transforms.Normalize(
-                mean=[.485, .456, .406],
-                std=[.229, .224, .225],
-                )
-
+            mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225],
+        )
 
     def __call__(self, img):
         """
@@ -41,7 +39,9 @@ class Normalize:
             # Need to convert to torch.Tensor first
             if isinstance(img, np.ndarray):
                 if img.max() > 1 or np.issubdtype(img.dtype, np.integer):
-                    raise ValueError("Image must be a float in range [0,1] and in RGB order prior to transform")
+                    raise ValueError(
+                        "Image must be a float in range [0,1] and in RGB order prior to transform"
+                    )
             img = self.to_tensor(img)  # Converts to tensor, and permutes to (C, H, W)
         return self.normalize(img)  # Expects (C, H, W)
 
@@ -52,10 +52,9 @@ class Unnormalize:
 
     def __init__(self,):
         self.unnormalize = transforms.Normalize(
-                        mean=[-0.485/0.229, -0.456/0.224, -0.406/0.225],
-                        std=[1/0.229, 1/0.224, 1/0.225],
-                )
-
+            mean=[-0.485 / 0.229, -0.456 / 0.224, -0.406 / 0.225],
+            std=[1 / 0.229, 1 / 0.224, 1 / 0.225],
+        )
 
     def __call__(self, img):
         """

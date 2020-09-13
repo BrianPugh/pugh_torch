@@ -49,6 +49,9 @@ build: ## run tox / run tests and lint
 	tox
 
 lint:
+	black pugh_torch
+
+check-lint:
 	tox -e lint
 
 gen-docs: ## generate Sphinx HTML documentation, including API docs

@@ -19,14 +19,14 @@ class TestSummaryWriter(SummaryWriter):
 
 def test_parse_rgb_transform(mocker):
     mock_imagenet = mocker.patch("pugh_torch.utils.tensorboard.imagenet")
-    mock_imagenet.Unnormalize.return_value = 'foo'
+    mock_imagenet.Unnormalize.return_value = "foo"
 
     writer = TestSummaryWriter()
 
     assert "bar" == writer._parse_rgb_transform(None)("bar")  # identity
     mock_imagenet.Unnormalize.assert_not_called()
 
-    assert 'foo' == writer._parse_rgb_transform("imagenet")
+    assert "foo" == writer._parse_rgb_transform("imagenet")
     mock_imagenet.Unnormalize.assert_called_once()
 
     with pytest.raises(NotImplementedError):
@@ -51,7 +51,7 @@ def test_add_ss(mock_add_image):
 
     assert actual_tag == "foo/0"
 
-    assert actual_montage.shape == (480, 3*640, 3)
+    assert actual_montage.shape == (480, 3 * 640, 3)
     # TODO: more strict tests on the produced montage
 
 

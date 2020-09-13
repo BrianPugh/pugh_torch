@@ -8,7 +8,10 @@ from distutils import dir_util
 
 def pytest_addoption(parser):
     parser.addoption(
-        "--visual", action="store_true", default=False, help="run interactive visual tests"
+        "--visual",
+        action="store_true",
+        default=False,
+        help="run interactive visual tests",
     )
 
 
@@ -35,6 +38,7 @@ def chelsea():
         (H,W,3) uint8_t RGB test image.
     """
     from skimage import data
+
     return data.chelsea()
 
 

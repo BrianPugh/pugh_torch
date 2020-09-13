@@ -39,11 +39,17 @@ class SummaryWriter(tb.SummaryWriter):
 
         raise NotImplementedError(f"Cannot parse rgb_transform {rgb_transform}")
 
-
-    def add_rgb(self, tag, rgbs, global_step=None, walltime=None, dataformats='CHW', *,
-            rgb_transform=None,
-            n_images=1,
-            ):
+    def add_rgb(
+        self,
+        tag,
+        rgbs,
+        global_step=None,
+        walltime=None,
+        dataformats="CHW",
+        *,
+        rgb_transform=None,
+        n_images=1,
+    ):
         """ Applies a transform and adds image to log
 
         A common scenario is when you only have a normalized image (say, by
@@ -73,18 +79,29 @@ class SummaryWriter(tb.SummaryWriter):
         rgbs = (rgbs * 255).astype(np.uint8)
 
         for i, rgb in zip(range(n_images), rgbs):
-            self.add_image(f"{tag}/{i}", rgb, global_step=global_step, walltime=walltime, dataformats="HWC")
+            self.add_image(
+                f"{tag}/{i}",
+                rgb,
+                global_step=global_step,
+                walltime=walltime,
+                dataformats="HWC",
+            )
 
-
-    def add_ss(self, tag, rgbs, preds, targets,
-            global_step=None,
-            walltime=None,
-            dataformats='CHW', *,
-            rgb_transform=None,
-            n_images=1,
-            palette='ade20k',
-            offset=0,
-            ):
+    def add_ss(
+        self,
+        tag,
+        rgbs,
+        preds,
+        targets,
+        global_step=None,
+        walltime=None,
+        dataformats="CHW",
+        *,
+        rgb_transform=None,
+        n_images=1,
+        palette="ade20k",
+        offset=0,
+    ):
         """ Add a semantic segmentation image and it's pairing input montage.
 
         ``self.add_rgb``'s documentation applies to the ``rgbs`` input here.
@@ -115,7 +132,7 @@ class SummaryWriter(tb.SummaryWriter):
         """
 
         # Input validation
-        if dataformats != 'CHW':
+        if dataformats != "CHW":
             raise NotImplementedError("TODO: allow other dataformats")
         if isinstance(palette, str):
             palette = get_palette(palette)
@@ -123,7 +140,9 @@ class SummaryWriter(tb.SummaryWriter):
             # Do nothing, TODO: maybe add some assertions here
             pass
         else:
-            raise NotImplementedError(f"Don't know how to handle palette type {type(palette)}")
+            raise NotImplementedError(
+                f"Don't know how to handle palette type {type(palette)}"
+            )
         rgb_transform = self._parse_rgb_transform(rgb_transform)
 
         for i, rgb in enumerate(rgbs):
@@ -131,7 +150,7 @@ class SummaryWriter(tb.SummaryWriter):
 
         # Get the most likely class from the network's logits/softmax/whatever.
         preds = torch.argmax(preds, dim=1)  # (B, H, W)
-        
+
         # Move all the data to cpu
         rgbs = rgbs.cpu().numpy()
         preds = preds.cpu().numpy().astype(np.int)
@@ -151,15 +170,23 @@ class SummaryWriter(tb.SummaryWriter):
         # Note: ``zip`` limits iterations to the shortest input iterator.
         for i, rgb, pred, target in zip(range(n_images), rgbs, preds, targets):
             # Resize pred and target
-            pred = cv2.resize(pred, (w,h), interpolation=cv2.INTER_NEAREST)
-            target = cv2.resize(target, (w,h), interpolation=cv2.INTER_NEAREST)
+            pred = cv2.resize(pred, (w, h), interpolation=cv2.INTER_NEAREST)
+            target = cv2.resize(target, (w, h), interpolation=cv2.INTER_NEAREST)
 
             # Apply a color palette
             color_pred = palette[pred]
             color_target = palette[target]
 
             # Horizontally combine all three into a single image
-            montage = np.concatenate((color_target, rgb, color_pred), axis=1).astype(np.uint8)
+            montage = np.concatenate((color_target, rgb, color_pred), axis=1).astype(
+                np.uint8
+            )
 
             # Log the montage to tensorboard
-            self.add_image(f"{tag}/{i}", montage, global_step=global_step, walltime=walltime, dataformats="HWC")
+            self.add_image(
+                f"{tag}/{i}",
+                montage,
+                global_step=global_step,
+                walltime=walltime,
+                dataformats="HWC",
+            )

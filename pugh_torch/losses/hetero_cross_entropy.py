@@ -2,10 +2,9 @@ import torch
 import torch.nn.functional as F
 
 
-def hetero_cross_entropy(preds, targets, availables, *,
-        super_index=0,
-        ignore_index=-100,
-        ):
+def hetero_cross_entropy(
+    preds, targets, availables, *, super_index=0, ignore_index=-100,
+):
     """ Cross Entropy Loss for Heterogenous Datasets.
 
     Basically a cross-entropy-loss for when you are training on multiple
@@ -65,7 +64,9 @@ def hetero_cross_entropy(preds, targets, availables, *,
     # Make sure all the batch sizes are the same
     assert len(preds) == len(targets) == len(availables)
 
-    super_hots = ~availables.bool()  # (B, C) where 1 means that class is a part of the superclass
+    super_hots = (
+        ~availables.bool()
+    )  # (B, C) where 1 means that class is a part of the superclass
 
     # Initialize the two components of our loss on the correct device
     ce_loss = preds.new([0]).float()
@@ -83,14 +84,14 @@ def hetero_cross_entropy(preds, targets, availables, *,
 
         # Apply CE to inbound mask, excluding the super_index
         if torch.any(ce_mask):
-            ce_pred  = pred[:, ce_mask]  # (C, n_valid)
-            ce_target = target[ce_mask]    # (n_valid)
+            ce_pred = pred[:, ce_mask]  # (C, n_valid)
+            ce_target = target[ce_mask]  # (n_valid)
             ce_pred = ce_pred.transpose(0, 1)  # (n_valid, C)
             ce_loss = ce_loss + F.cross_entropy(ce_pred, ce_target)
 
         if torch.any(super_mask):
-            super_pred = pred[:,  super_mask]  # (C, n_pix)
-            
+            super_pred = pred[:, super_mask]  # (C, n_pix)
+
             # Compute the softmax over all classes
             super_pred = F.softmax(super_pred, dim=0)
 
@@ -102,4 +103,3 @@ def hetero_cross_entropy(preds, targets, availables, *,
             super_loss = super_loss - torch.log(super_prob).mean()
 
     return ce_loss + super_loss
-
