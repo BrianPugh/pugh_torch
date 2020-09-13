@@ -61,11 +61,6 @@ setup(
         "Programming Language :: Python :: 3.8",
     ],
     description="Functions, losses, and module blocks to share between experiments.",
-    entry_points={
-        "console_scripts": [
-            "my_example=pugh_torch.bin.my_example:main"
-        ],
-    },
     install_requires=requirements,
     license="MIT license",
     long_description=readme,
@@ -74,7 +69,7 @@ setup(
     keywords="pugh_torch",
     name="pugh_torch",
     packages=find_packages(exclude=["tests", "*.tests", "*.tests.*"]),
-    python_requires=">=3.7",
+    python_requires=">=3.6",
     setup_requires=setup_requirements,
     test_suite="pugh_torch/tests",
     tests_require=test_requirements,
