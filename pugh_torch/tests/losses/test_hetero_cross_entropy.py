@@ -40,7 +40,7 @@ def test_hetero_cross_entropy_ce_only(pred):
     # (1,2,3)
     target = torch.LongTensor([
             [ # Height
-                [-1, 1, -2],
+                [-2, 1, -2],
                 [-2, -2, 1],
             ]
         ])
@@ -48,8 +48,10 @@ def test_hetero_cross_entropy_ce_only(pred):
         [True, True, True, True],
         ])
 
-    actual_loss = hetero_cross_entropy(pred, target, available, ignore_index=-2, super_index=-1)
-    actual_loss = actual_loss.numpy()
+    actual_loss = hetero_cross_entropy(pred, target, available, ignore_index=-2)
+    actual_loss.backward()  # This should always work
+
+    actual_loss = actual_loss.detach().numpy()
 
     # Compute what the expected value should be
     pred_valid = torch.FloatTensor([
@@ -63,4 +65,45 @@ def test_hetero_cross_entropy_ce_only(pred):
             )
     expected = F.cross_entropy(pred_valid, target_valid)  # This should be 3.0005
 
-    assert np.isclose(actual_loss, expected.numpy())
+    assert np.isclose(actual_loss, expected.detach().numpy())
+
+
+def test_hetero_cross_entropy_super_only(pred):
+    target = torch.LongTensor([
+            [ # Height
+                [-1, -1, -1],
+                [-1, -1, -1],
+            ]
+        ])
+    available = torch.BoolTensor([
+        [True, False, False, False],  # Only class 0 is available.
+        ])
+
+    actual_loss = hetero_cross_entropy(pred, target, available, ignore_index=-2, super_index=-1)
+    actual_loss.backward()  # This should always work
+
+    actual_loss = actual_loss.detach().numpy()
+    assert np.isclose(actual_loss, 0.14451282)
+
+
+def test_hetero_cross_entropy_all_invalid(pred):
+    """ This primarily tests that when all invalid data is provided (i.e.
+    the returned loss is 0) that the ``backward()`` method still works.
+    """
+
+    target = torch.LongTensor([
+            [ # Height
+                [-2, -2, -2],
+                [-2, -2, -2],
+            ]
+        ])
+    available = torch.BoolTensor([
+        [True, True, True, True],
+        ])
+
+    actual_loss = hetero_cross_entropy(pred, target, available, ignore_index=-2, super_index=-1)
+    actual_loss.backward()  # This should always work
+
+    actual_loss = actual_loss.detach().numpy()
+    assert actual_loss == 0
+

@@ -69,7 +69,8 @@ def hetero_cross_entropy(preds, targets, availables, *,
 
     # Initialize the two components of our loss on the correct device
     ce_loss = preds.new([0]).float()
-    superclass_loss = preds.new([0]).float()
+    ce_loss.requires_grad_()  # Just in case we don't actually add to this loss, ``backward()`` will still work
+    super_loss = preds.new([0]).float()
 
     # Iterate over the batch dimension because the shapes are going to get jagged.
     for pred, target, super_hot in zip(preds, targets, super_hots):
@@ -77,29 +78,28 @@ def hetero_cross_entropy(preds, targets, availables, *,
         # target - (H, W) long
         # super_hot - (C,) bool
         inbound_mask = target != ignore_index  # (H, W)
-        if not torch.any(inbound_mask):
-            # The entire target is ignored/out-of-bounds.
-            continue
         super_mask = target == super_index
+        ce_mask = inbound_mask * ~super_mask
 
         # Apply CE to inbound mask, excluding the super_index
-        ce_mask = inbound_mask * ~super_mask
-        ce_pred  = pred[:, ce_mask]  # (C, n_valid)
-        ce_target = target[ce_mask]    # (n_valid)
-
-        ce_pred = ce_pred.transpose(0, 1)  # (n_valid, C)
-
-        ce_loss += F.cross_entropy(ce_pred, ce_target)
+        if torch.any(ce_mask):
+            ce_pred  = pred[:, ce_mask]  # (C, n_valid)
+            ce_target = target[ce_mask]    # (n_valid)
+            ce_pred = ce_pred.transpose(0, 1)  # (n_valid, C)
+            ce_loss = ce_loss + F.cross_entropy(ce_pred, ce_target)
 
         if torch.any(super_mask):
-            # TODO: compute the softmax and stuff and stuff
-            #super_pred = valid_pred[]
-            pass
-        # TODO: pickup here
+            super_pred = pred[:,  super_mask]  # (C, n_pix)
+            
+            # Compute the softmax over all classes
+            super_pred = F.softmax(super_pred, dim=0)
 
+            # Select only the probabilities of the classes that are not
+            # available in this dataset.
+            super_pred = super_pred[super_hot]  # (n_super_class, n_pix)
+            super_prob = super_pred.sum(dim=0)  # (n_pix,)
+            # Minus because of negative log
+            super_loss = super_loss - torch.log(super_prob).mean()
 
-    # TODO: I think backward() freaks out if the loss is just a constant 0
-    # in the event of invalid/corrupt/whatever data
-
-    return ce_loss + superclass_loss
+    return ce_loss + super_loss
 
