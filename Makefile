@@ -48,6 +48,9 @@ clean:  ## clean all build, python, and testing files
 build: ## run tox / run tests and lint
 	tox
 
+lint:
+	tox -e lint
+
 gen-docs: ## generate Sphinx HTML documentation, including API docs
 	rm -f docs/pugh_torch*.rst
 	rm -f docs/modules.rst
