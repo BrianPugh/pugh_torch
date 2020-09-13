@@ -107,3 +107,22 @@ def test_hetero_cross_entropy_all_invalid(pred):
     actual_loss = actual_loss.detach().numpy()
     assert actual_loss == 0
 
+
+def test_hetero_cross_entropy_all(pred):
+    target = torch.LongTensor([
+            [ # Height
+                [-1, 1, -2],
+                [-2, -2, 1],
+            ]
+        ])
+    available = torch.BoolTensor([
+        [True, True, False, False],
+        ])
+
+    actual_loss = hetero_cross_entropy(pred, target, available, ignore_index=-2, super_index=-1)
+    actual_loss.backward()  # This should always work
+
+    actual_loss = actual_loss.detach().numpy()
+
+    assert np.isclose(actual_loss, 3.4782796)
+
