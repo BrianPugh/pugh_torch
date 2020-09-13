@@ -9,17 +9,8 @@ Functions, losses, and module blocks to share between experiments.
 ---
 
 ## Features
-* Store values and retain the prior value in memory
-* ... some other functionality
-* attempts to mirror pytorch's library structure.
-
-## Quick Start
-```python
-import pugh_torch as pt
-
-a = Example()
-a.get_value()  # 10
-```
+* Additional methods to TensorBoard summary writer for adding normalized images and semantic segmentation images.
+* hetero_cross_entropy for cross_entropy loss across heterogeneous datasets
 
 ## Installation
 **Stable Release:** `pip install pugh_torch`<br>
