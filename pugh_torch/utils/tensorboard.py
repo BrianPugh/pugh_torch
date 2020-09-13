@@ -125,7 +125,9 @@ class SummaryWriter(tb.SummaryWriter):
         else:
             raise NotImplementedError(f"Don't know how to handle palette type {type(palette)}")
         rgb_transform = self._parse_rgb_transform(rgb_transform)
-        rgbs = rgb_transform(rgbs)
+
+        for i, rgb in enumerate(rgbs):
+            rgbs[i] = rgb_transform(rgb)
 
         # Get the most likely class from the network's logits/softmax/whatever.
         preds = torch.argmax(preds, dim=1)  # (B, H, W)
