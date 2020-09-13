@@ -5,8 +5,11 @@
 
 from setuptools import find_packages, setup
 
-with open("README.md") as readme_file:
-    readme = readme_file.read()
+with open("README.md") as f:
+    readme = f.read()
+
+with open("CHANGELOG.md") as f:
+    changelog = f.read()
 
 setup_requirements = [
     "cv2>=4.2.0",
@@ -68,7 +71,7 @@ setup(
     description="Functions, losses, and module blocks to share between experiments.",
     install_requires=requirements,
     license="MIT license",
-    long_description=readme,
+    long_description=readme + '\n\n' + changelog,
     long_description_content_type="text/markdown",
     include_package_data=True,
     keywords="pugh_torch",
