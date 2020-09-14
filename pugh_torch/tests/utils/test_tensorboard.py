@@ -10,8 +10,7 @@ def mock_add_image(mocker):
 
 
 class TestSummaryWriter(SummaryWriter):
-    """ For testing isolated methods
-    """
+    """For testing isolated methods"""
 
     def __init__(self, *args, **kwargs):
         pass
@@ -34,8 +33,7 @@ def test_parse_rgb_transform(mocker):
 
 
 def test_add_ss(mock_add_image):
-    """ Tests different sizes of inputs and for general common operation.
-    """
+    """Tests different sizes of inputs and for general common operation."""
 
     writer = TestSummaryWriter()
 

@@ -3,9 +3,14 @@ import torch.nn.functional as F
 
 
 def hetero_cross_entropy(
-    preds, targets, availables, *, super_index=0, ignore_index=-100,
+    preds,
+    targets,
+    availables,
+    *,
+    super_index=0,
+    ignore_index=-100,
 ):
-    """ Cross Entropy Loss for Heterogenous Datasets.
+    """Cross Entropy Loss for Heterogenous Datasets.
 
     Basically a cross-entropy-loss for when you are training on multiple
     datasets where some of the datasets may have some of the classes labeled
@@ -16,18 +21,18 @@ def hetero_cross_entropy(
         2. Lets say Dataset B has classes ["cat",              , "other"].
            i.e. Dataset B is missing class "dog" and "bird", and those pixels
            fall into the "other" category.
-        3. For Dataset A, ``hetero_cross_entropy`` is exactly the same as 
+        3. For Dataset A, ``hetero_cross_entropy`` is exactly the same as
            normal cross entropy loss.
         4. For Dataset B, a "dog" will be labeled into the "other" category,
            but we don't want to penalize the network for predicting dog,
-           because it could be correct.  However, we absolutely know that 
+           because it could be correct.  However, we absolutely know that
            the network should not be predicting "cat".
         5. To solve this on dataset B, we apply cross entropy loss over the
            pixels not in the "other" class in the target. In addition to this,
            we want to maximize the probability that the network guessed either
            "dog" or "bird" for the pixels labeled as "other" in the target.
 
-    Described in "Combining Heterogeneously Labeled Datasets For Training 
+    Described in "Combining Heterogeneously Labeled Datasets For Training
     Segmentation Networks"
         https://arxiv.org/pdf/1807.08935.pdf
 

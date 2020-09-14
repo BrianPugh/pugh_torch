@@ -7,15 +7,14 @@ from ..mappings.color import get_palette
 
 
 class SummaryWriter(tb.SummaryWriter):
-    """ Extension of Summary Writer for convenient common uses.
-    """
+    """Extension of Summary Writer for convenient common uses."""
 
     def __init__(self, *args, rgb_transform=None, **kwargs):
         """
         Parameters
         ----------
         rgb_transform : str, torchvision.transforms.*
-            Used when rgb images need to be logged. Transform applied to 
+            Used when rgb images need to be logged. Transform applied to
             rgb images when logged.
         """
         super().__init__(*args, **kwargs)
@@ -50,7 +49,7 @@ class SummaryWriter(tb.SummaryWriter):
         rgb_transform=None,
         n_images=1,
     ):
-        """ Applies a transform and adds image to log
+        """Applies a transform and adds image to log
 
         A common scenario is when you only have a normalized image (say, by
         ImageNet's mean and stddev) and you want to log it to tensorboard.
@@ -64,7 +63,7 @@ class SummaryWriter(tb.SummaryWriter):
         rgbs : torch.Tensor
             (B, 3, H, W) Image data.  See ``rgb_transform`` argument.
         rgb_transform : str or callable
-            Transform to apply to the rgb data. If not provided, defaults to 
+            Transform to apply to the rgb data. If not provided, defaults to
             the transform provided in __init__
         n_images : int
             Maximum number of images to add.
@@ -102,7 +101,7 @@ class SummaryWriter(tb.SummaryWriter):
         palette="ade20k",
         offset=0,
     ):
-        """ Add a semantic segmentation image and it's pairing input montage.
+        """Add a semantic segmentation image and it's pairing input montage.
 
         ``self.add_rgb``'s documentation applies to the ``rgbs`` input here.
 
@@ -120,7 +119,7 @@ class SummaryWriter(tb.SummaryWriter):
         targets : torch.Tensor
             (B, H, W) Indexed ground truth data.
         rgb_transform : str or callable
-            Transform to apply to the rgb data. If not provided, defaults to 
+            Transform to apply to the rgb data. If not provided, defaults to
             the transform provided in __init__. Expects data to be in range
             [0, 1] after transform.
         n_images : int

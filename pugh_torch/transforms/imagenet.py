@@ -10,13 +10,15 @@ __all__ = [
 
 
 class Normalize:
-    """ Applies standard ImageNet normalization to an RGB image
-    """
+    """Applies standard ImageNet normalization to an RGB image"""
 
-    def __init__(self,):
+    def __init__(
+        self,
+    ):
         self.to_tensor = transforms.ToTensor()
         self.normalize = transforms.Normalize(
-            mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225],
+            mean=[0.485, 0.456, 0.406],
+            std=[0.229, 0.224, 0.225],
         )
 
     def __call__(self, img):
@@ -47,10 +49,11 @@ class Normalize:
 
 
 class Unnormalize:
-    """ Reverses standard ImageNet normalization
-    """
+    """Reverses standard ImageNet normalization"""
 
-    def __init__(self,):
+    def __init__(
+        self,
+    ):
         self.unnormalize = transforms.Normalize(
             mean=[-0.485 / 0.229, -0.456 / 0.224, -0.406 / 0.225],
             std=[1 / 0.229, 1 / 0.224, 1 / 0.225],

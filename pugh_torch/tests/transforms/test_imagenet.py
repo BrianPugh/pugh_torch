@@ -5,7 +5,11 @@ import pytest
 
 
 def test_normalize_numpy():
-    img = np.array([[[0.2, 0.5, 0.8]],])  # (1,1,3) image
+    img = np.array(
+        [
+            [[0.2, 0.5, 0.8]],
+        ]
+    )  # (1,1,3) image
     transform = imagenet.Normalize()
     actual = transform(img)
 
@@ -18,7 +22,11 @@ def test_normalize_numpy():
 
 def test_normalize_greater_1_value_error():
 
-    img = np.array([[[50, 127, 250]],])  # (1,1,3) image
+    img = np.array(
+        [
+            [[50, 127, 250]],
+        ]
+    )  # (1,1,3) image
     transform = imagenet.Normalize()
     with pytest.raises(ValueError):
         actual = transform(img)
@@ -26,14 +34,23 @@ def test_normalize_greater_1_value_error():
 
 def test_normalize_uint8_value_error():
 
-    img = np.array([[[0, 0, 0]],], dtype=np.uint8)  # (1,1,3) image
+    img = np.array(
+        [
+            [[0, 0, 0]],
+        ],
+        dtype=np.uint8,
+    )  # (1,1,3) image
     transform = imagenet.Normalize()
     with pytest.raises(ValueError):
         actual = transform(img)
 
 
 def test_normalize_tensor():
-    img = torch.FloatTensor([[[0.2, 0.5, 0.8]],])  # (1, 1, 3) image
+    img = torch.FloatTensor(
+        [
+            [[0.2, 0.5, 0.8]],
+        ]
+    )  # (1, 1, 3) image
     img = img.permute(2, 0, 1)  # (3, H, W)
     transform = imagenet.Normalize()
     actual = transform(img)
@@ -44,7 +61,11 @@ def test_normalize_tensor():
 
 
 def test_auto_normalize_unnormalize():
-    img = np.array([[[0.2, 0.5, 0.8]],])  # (1,1,3) image
+    img = np.array(
+        [
+            [[0.2, 0.5, 0.8]],
+        ]
+    )  # (1,1,3) image
     normalize = imagenet.Normalize()
     unnormalize = imagenet.Unnormalize()
 

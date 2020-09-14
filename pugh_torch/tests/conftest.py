@@ -27,7 +27,7 @@ def pytest_collection_modifyitems(config, items):
 
 @pytest.fixture
 def chelsea():
-    """ What a cute RGB kitty!
+    """What a cute RGB kitty!
 
     Only use for visual confirmation to help debugging. Mark these tests with:
         @pytest.mark.visual
