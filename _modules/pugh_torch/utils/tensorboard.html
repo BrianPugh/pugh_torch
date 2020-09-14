@@ -365,6 +365,7 @@
             <span class="c1"># Apply a color palette</span>
             <span class="n">color_pred</span> <span class="o">=</span> <span class="n">palette</span><span class="p">[</span><span class="n">pred</span><span class="p">]</span>
             <span class="n">color_target</span> <span class="o">=</span> <span class="n">palette</span><span class="p">[</span><span class="n">target</span><span class="p">]</span>
+            <span class="n">color_target</span><span class="p">[</span><span class="n">target</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
 
             <span class="c1"># Horizontally combine all three into a single image</span>
             <span class="n">montage</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">color_target</span><span class="p">,</span> <span class="n">rgb</span><span class="p">,</span> <span class="n">color_pred</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span>
