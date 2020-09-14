@@ -290,9 +290,9 @@
             <span class="c1"># Compute the softmax over all classes</span>
             <span class="n">super_pred_exp</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">super_pred</span><span class="p">)</span>
             <span class="n">super_loss</span> <span class="o">=</span> <span class="n">super_loss</span> <span class="o">-</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span>
-                    <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">super_pred_exp</span><span class="p">[</span><span class="n">super_hot</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
-                    <span class="o">-</span> <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">super_pred_exp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
-                    <span class="p">)</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">super_pred_exp</span><span class="p">[</span><span class="n">super_hot</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+                <span class="o">-</span> <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">super_pred_exp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+            <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">ce_loss</span> <span class="o">+</span> <span class="n">super_loss</span></div>
 </pre></div>
