@@ -18,8 +18,8 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install Dependencies
       run: |
-        python -m pip install --upgrade pip
-        python -m pip install .[test]
+        pip3 install --upgrade pip
+        pip3 install .[test]
     - name: Test with pytest
       run: |
         pytest pugh_torch/tests/
@@ -35,8 +35,8 @@ jobs:
         python-version: 3.8
     - name: Install Dependencies
       run: |
-        python -m pip install --upgrade pip
-        python -m pip install .[test]
+        pip3 install --upgrade pip
+        pip3 install .[test]
     - name: Check with black
       run: |
         black --check pugh_torch
