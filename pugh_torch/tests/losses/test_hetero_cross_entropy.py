@@ -11,7 +11,7 @@ def pred():
     (1, 4, 2, 3) logits
     """
 
-    return torch.FloatTensor(
+    data = torch.FloatTensor(
         [
             [  # Batch 0
                 [
@@ -31,8 +31,10 @@ def pred():
                     [3, 2, 1],
                 ],  # Class 3
             ]
-        ]
+        ],
     )
+    data.requires_grad_()
+    return data
 
 
 def test_hetero_cross_entropy_ce_only(pred):
@@ -121,7 +123,10 @@ def test_hetero_cross_entropy_all_invalid(pred):
     assert actual_loss == 0
 
 
-def test_hetero_cross_entropy_all(pred):
+def test_hetero_cross_entropy_complete(pred):
+    """ Test both parts (ce_loss + super_loss) combined
+    """
+
     target = torch.LongTensor(
         [
             [
@@ -136,11 +141,37 @@ def test_hetero_cross_entropy_all(pred):
         ]
     )
 
+    pred_softmax = F.softmax(pred, dim=1)  # For inspecting/debugging purposes
+    """
+    Predicted classes (where X means doesn't matter AT ALL):
+    tensor([[[2, 3, x],
+             [x, x, 3]]])
+
+    [0,0] -> 2 is the interesting one here.
+        If the loss is working, this prediction should increase 2/3 class prob
+        # pred - learning_rate * grad  should get us closer.
+    """
+
     actual_loss = hetero_cross_entropy(
         pred, target, available, ignore_index=-2, super_index=-1
     )
     actual_loss.backward()  # This should always work
 
-    actual_loss = actual_loss.detach().numpy()
+    pred_grad = pred.grad.detach().numpy()
+    assert not pred_grad[:, :, 0, 2].any()
+    assert not pred_grad[:, :, 1, 0].any()
+    assert not pred_grad[:, :, 1, 1].any()
 
+    actual_loss = actual_loss.detach().numpy()
     assert np.isclose(actual_loss, 3.4782796)
+
+    updated_pred = pred - (0.1 * pred.grad)
+    updated_pred_softmax = F.softmax(updated_pred, dim=1)
+
+    assert updated_pred_softmax[0,1,0,1] > pred_softmax[0,1,0,1]  # prediction should be more sure of 1 target
+    assert updated_pred_softmax[0,1,1,2] > pred_softmax[0,1,1,2]  # prediction should be more sure of 1 target
+
+    # The classes that are in the dataset should now have lower probabilities
+    # for the pixel that's marked as unlabeled.
+    assert updated_pred_softmax[0,0,0,0] < pred_softmax[0,0,0,0]
+    assert updated_pred_softmax[0,1,0,0] < pred_softmax[0,1,0,0]
