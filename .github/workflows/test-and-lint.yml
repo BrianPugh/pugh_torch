@@ -20,6 +20,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install .[test]
+        apt install cmake
     - name: Test with pytest
       run: |
         pytest pugh_torch/tests/
