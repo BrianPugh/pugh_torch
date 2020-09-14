@@ -100,8 +100,8 @@ def hetero_cross_entropy(
             # Compute the softmax over all classes
             super_pred_exp = torch.exp(super_pred)
             super_loss = super_loss - torch.mean(
-                    torch.log(super_pred_exp[super_hot].sum(dim=0))
-                    - torch.log(super_pred_exp.sum(dim=0))
-                    )
+                torch.log(super_pred_exp[super_hot].sum(dim=0))
+                - torch.log(super_pred_exp.sum(dim=0))
+            )
 
     return ce_loss + super_loss

@@ -142,6 +142,7 @@ class SummaryWriter(tb.SummaryWriter):
             raise NotImplementedError(
                 f"Don't know how to handle palette type {type(palette)}"
             )
+        n_colors = len(palette)
         rgb_transform = self._parse_rgb_transform(rgb_transform)
 
         for i, rgb in enumerate(rgbs):
@@ -171,6 +172,12 @@ class SummaryWriter(tb.SummaryWriter):
             # Resize pred and target
             pred = cv2.resize(pred, (w, h), interpolation=cv2.INTER_NEAREST)
             target = cv2.resize(target, (w, h), interpolation=cv2.INTER_NEAREST)
+
+            pred[pred >= n_colors] = 0
+            pred[pred < 0] = 0
+
+            target[target >= n_colors] = 0
+            target[target < 0] = 0
 
             # Apply a color palette
             color_pred = palette[pred]
