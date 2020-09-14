@@ -1,0 +1,22 @@
+pugh\_torch.losses package
+==========================
+
+Submodules
+----------
+
+pugh\_torch.losses.hetero\_cross\_entropy module
+------------------------------------------------
+
+.. automodule:: pugh_torch.losses.hetero_cross_entropy
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: pugh_torch.losses
+   :members:
+   :undoc-members:
+   :show-inheritance:

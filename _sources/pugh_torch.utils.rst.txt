@@ -1,0 +1,22 @@
+pugh\_torch.utils package
+=========================
+
+Submodules
+----------
+
+pugh\_torch.utils.tensorboard module
+------------------------------------
+
+.. automodule:: pugh_torch.utils.tensorboard
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: pugh_torch.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -38,7 +38,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Math notation example" href="math.html" />
-    <link rel="prev" title="pugh_torch.bin package" href="pugh_torch.bin.html" /> 
+    <link rel="prev" title="pugh_torch.utils package" href="pugh_torch.utils.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -98,7 +98,11 @@
 <li class="toctree-l1"><a class="reference internal" href="modules.html">Package modules</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="pugh_torch.html">pugh_torch package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="pugh_torch.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="pugh_torch.bin.html">pugh_torch.bin package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.losses.html">pugh_torch.losses package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.mappings.html">pugh_torch.mappings package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.modules.html">pugh_torch.modules package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.transforms.html">pugh_torch.transforms package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.utils.html">pugh_torch.utils package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="pugh_torch.html#submodules">Submodules</a></li>
@@ -111,6 +115,12 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Contributing</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#get-started">Get Started!</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#deploying">Deploying</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#development">Development</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-four-commands-you-need-to-know">The Four Commands You Need To Know</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#additional-optional-setup-steps">Additional Optional Setup Steps:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#suggested-git-branch-strategy">Suggested Git Branch Strategy</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="math.html">Math notation example</a></li>
@@ -179,7 +189,7 @@
         <a href="math.html" class="btn btn-neutral float-right" title="Math notation example" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="pugh_torch.bin.html" class="btn btn-neutral float-left" title="pugh_torch.bin package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="pugh_torch.utils.html" class="btn btn-neutral float-left" title="pugh_torch.utils package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
   </div>
   
@@ -246,6 +256,145 @@ git push --set-upstream origin stable -f
 </pre></div>
 </div>
 <p>This will release a new package version on Git + GitHub and publish to PyPI.</p>
+</div>
+<div class="section" id="development">
+<h2>Development<a class="headerlink" href="#development" title="Permalink to this headline">¶</a></h2>
+<p>See <a class="reference external" href="CONTRIBUTING.md">CONTRIBUTING.md</a> for information related to developing the code.</p>
+</div>
+<div class="section" id="the-four-commands-you-need-to-know">
+<h2>The Four Commands You Need To Know<a class="headerlink" href="#the-four-commands-you-need-to-know" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">.[dev]</span></code></p>
+<blockquote>
+<div><p>This will install your package in editable mode with all the required development
+dependencies (i.e. <code class="docutils literal notranslate"><span class="pre">tox</span></code>).</p>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">build</span></code></p>
+<blockquote>
+<div><p>This will run <code class="docutils literal notranslate"><span class="pre">tox</span></code> which will run all your tests in both Python 3.7
+and Python 3.8 as well as linting your code.</p>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">clean</span></code></p>
+<blockquote>
+<div><p>This will clean up various Python and build generated files so that you can ensure
+that you are working in a clean environment.</p>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">docs</span></code></p>
+<blockquote>
+<div><p>This will generate and launch a web browser to view the most up-to-date
+documentation for your Python package.</p>
+</div></blockquote>
+</li>
+</ol>
+<div class="section" id="additional-optional-setup-steps">
+<h3>Additional Optional Setup Steps:<a class="headerlink" href="#additional-optional-setup-steps" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Turn your project into a GitHub repository:</p>
+<ul>
+<li><p>Make sure you have <code class="docutils literal notranslate"><span class="pre">git</span></code> installed, if you don’t, <a class="reference external" href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">follow these instructions</a></p></li>
+<li><p>Make an account on <a class="reference external" href="https://github.com">github.com</a></p></li>
+<li><p>Go to <a class="reference external" href="https://github.com/new">make a new repository</a></p></li>
+<li><p><em>Recommendations:</em></p>
+<ul>
+<li><p><em>It is strongly recommended to make the repository name the same as the Python
+package name</em></p></li>
+<li><p><em>A lot of the following optional steps are *free</em> if the repository is Public,
+plus open source is cool*</p></li>
+</ul>
+</li>
+<li><p>After a GitHub repo has been created, run the following commands:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">remote</span> <span class="pre">add</span> <span class="pre">origin</span> <span class="pre">git&#64;github.com:BrianPugh/pugh_torch.git</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">push</span> <span class="pre">-u</span> <span class="pre">origin</span> <span class="pre">master</span></code></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Register pugh_torch with Codecov:</p>
+<ul>
+<li><p>Make an account on <a class="reference external" href="https://codecov.io">codecov.io</a>
+(Recommended to sign in with GitHub)</p></li>
+<li><p>Select <code class="docutils literal notranslate"><span class="pre">BrianPugh</span></code> and click: <code class="docutils literal notranslate"><span class="pre">Add</span> <span class="pre">new</span> <span class="pre">repository</span></code></p></li>
+<li><p>Copy the token provided, go to your <cite>GitHub repository’s settings and under the ``Secrets`</cite> tab &lt;<a class="reference external" href="https://github.com/BrianPugh/pugh_torch/settings/secrets">https://github.com/BrianPugh/pugh_torch/settings/secrets</a>&gt;`_,
+add a secret called <code class="docutils literal notranslate"><span class="pre">CODECOV_TOKEN</span></code> with the token you just copied.
+Don’t worry, no one will see this token because it will be encrypted.</p></li>
+</ul>
+</li>
+<li><p>Generate and add an access token as a secret to the repository for auto documentation
+generation to work</p>
+<ul>
+<li><p>Go to your <a class="reference external" href="https://github.com/settings/tokens">GitHub account’s Personal Access Tokens page</a></p></li>
+<li><p>Click: <code class="docutils literal notranslate"><span class="pre">Generate</span> <span class="pre">new</span> <span class="pre">token</span></code></p></li>
+<li><p><em>Recommendations:</em></p>
+<ul>
+<li><p><em>Name the token: “Auto-Documentation Generation” or similar so you know what it
+is being used for later</em></p></li>
+<li><p>_Select only: <code class="docutils literal notranslate"><span class="pre">repo:status</span></code>, <code class="docutils literal notranslate"><span class="pre">repo_deployment</span></code>, and <code class="docutils literal notranslate"><span class="pre">public_repo</span></code> to limit what
+this token has access <a href="#id1"><span class="problematic" id="id2">to_</span></a></p></li>
+</ul>
+</li>
+<li><p>Copy the newly generated token</p></li>
+<li><p>Go to your <cite>GitHub repository’s settings and under the ``Secrets`</cite> tab &lt;<a class="reference external" href="https://github.com/BrianPugh/pugh_torch/settings/secrets">https://github.com/BrianPugh/pugh_torch/settings/secrets</a>&gt;`_,
+add a secret called <code class="docutils literal notranslate"><span class="pre">ACCESS_TOKEN</span></code> with the personal access token you just created.
+Don’t worry, no one will see this password because it will be encrypted.</p></li>
+</ul>
+</li>
+<li><p>Register your project with PyPI:</p>
+<ul>
+<li><p>Make an account on <a class="reference external" href="https://pypi.org">pypi.org</a></p></li>
+<li><p>Go to your <cite>GitHub repository’s settings and under the ``Secrets`</cite> tab &lt;<a class="reference external" href="https://github.com/BrianPugh/pugh_torch/settings/secrets">https://github.com/BrianPugh/pugh_torch/settings/secrets</a>&gt;`_,
+add a secret called <code class="docutils literal notranslate"><span class="pre">PYPI_TOKEN</span></code> with your password for your PyPI account.
+Don’t worry, no one will see this password because it will be encrypted.</p></li>
+<li><p>Next time you push to the branch: <code class="docutils literal notranslate"><span class="pre">stable</span></code>, GitHub actions will build and deploy
+your Python package to PyPI.</p></li>
+<li><p><em>Recommendation: Prior to pushing to ``stable`` it is recommended to install and run
+``bumpversion`` as this will,
+tag a git commit for release and update the ``setup.py`` version number.</em></p></li>
+</ul>
+</li>
+<li><p>Add branch protections to <code class="docutils literal notranslate"><span class="pre">master</span></code> and <code class="docutils literal notranslate"><span class="pre">stable</span></code></p>
+<ul>
+<li><p>To protect from just anyone pushing to <code class="docutils literal notranslate"><span class="pre">master</span></code> or <code class="docutils literal notranslate"><span class="pre">stable</span></code> (the branches with
+more tests and deploy
+configurations)</p></li>
+<li><p>Go to your <cite>GitHub repository’s settings and under the ``Branches`</cite> tab &lt;<a class="reference external" href="https://github.com/BrianPugh/pugh_torch/settings/branches">https://github.com/BrianPugh/pugh_torch/settings/branches</a>&gt;`_, click <code class="docutils literal notranslate"><span class="pre">Add</span> <span class="pre">rule</span></code> and select the
+settings you believe best.</p></li>
+<li><p><em>Recommendations:</em></p>
+<ul>
+<li><p><em>Require pull request reviews before merging</em></p></li>
+<li><p><em>Require status checks to pass before merging (Recommended: lint and test)</em></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="suggested-git-branch-strategy">
+<h3>Suggested Git Branch Strategy<a class="headerlink" href="#suggested-git-branch-strategy" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">master</span></code> is for the most up-to-date development, very rarely should you directly
+commit to this branch. GitHub Actions will run on every push and on a CRON to this
+branch but still recommended to commit to your development branches and make pull
+requests to master.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stable</span></code> is for releases only. When you want to release your project on PyPI, simply
+make a PR from <code class="docutils literal notranslate"><span class="pre">master</span></code> to <code class="docutils literal notranslate"><span class="pre">stable</span></code>, this template will handle the rest as long as you
+have added your PyPI information described in the above <strong>Optional Steps</strong> section.</p></li>
+<li><p>Your day-to-day work should exist on branches separate from <code class="docutils literal notranslate"><span class="pre">master</span></code>. Even if it is
+just yourself working on the repository, make a PR from your working branch to <code class="docutils literal notranslate"><span class="pre">master</span></code>
+so that you can ensure your commits don’t break the development head. GitHub Actions
+will run on every push to any branch or any pull request from any branch to any other
+branch.</p></li>
+<li><p>It is recommended to use “Squash and Merge” commits when committing PR’s. It makes
+each set of changes to <code class="docutils literal notranslate"><span class="pre">master</span></code> atomic and as a side effect naturally encourages small
+well defined PR’s.</p></li>
+<li><p>GitHub’s UI is bad for rebasing <code class="docutils literal notranslate"><span class="pre">master</span></code> onto <code class="docutils literal notranslate"><span class="pre">stable</span></code>, as it simply adds the
+commits to the other branch instead of properly rebasing from what I can tell. You
+should always rebase locally on the CLI until they fix it.</p></li>
+</ol>
+</div>
 </div>
 </div>
 

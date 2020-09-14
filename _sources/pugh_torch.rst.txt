@@ -6,7 +6,11 @@ Subpackages
 
 .. toctree::
 
-   pugh_torch.bin
+   pugh_torch.losses
+   pugh_torch.mappings
+   pugh_torch.modules
+   pugh_torch.transforms
+   pugh_torch.utils
 
 Submodules
 ----------

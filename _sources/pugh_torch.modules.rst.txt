@@ -1,0 +1,10 @@
+pugh\_torch.modules package
+===========================
+
+Module contents
+---------------
+
+.. automodule:: pugh_torch.modules
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,22 @@
+pugh\_torch.mappings package
+============================
+
+Submodules
+----------
+
+pugh\_torch.mappings.color module
+---------------------------------
+
+.. automodule:: pugh_torch.mappings.color
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: pugh_torch.mappings
+   :members:
+   :undoc-members:
+   :show-inheritance:

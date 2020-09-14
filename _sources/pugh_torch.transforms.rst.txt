@@ -1,0 +1,22 @@
+pugh\_torch.transforms package
+==============================
+
+Submodules
+----------
+
+pugh\_torch.transforms.imagenet module
+--------------------------------------
+
+.. automodule:: pugh_torch.transforms.imagenet
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: pugh_torch.transforms
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pugh_torch &mdash; Pugh Torch 0.0.0 documentation</title>
+  <title>pugh_torch.losses package &mdash; Pugh Torch 0.0.0 documentation</title>
   
 
   
@@ -37,8 +37,8 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="pugh_torch package" href="pugh_torch.html" />
-    <link rel="prev" title="Installation" href="installation.html" /> 
+    <link rel="next" title="pugh_torch.mappings package" href="pugh_torch.mappings.html" />
+    <link rel="prev" title="pugh_torch package" href="pugh_torch.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -95,10 +95,10 @@
 <li class="toctree-l2"><a class="reference internal" href="installation.html#from-sources">From sources</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Package modules</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pugh_torch.html">pugh_torch package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="pugh_torch.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="pugh_torch.losses.html">pugh_torch.losses package</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Package modules</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="pugh_torch.html">pugh_torch package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="pugh_torch.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">pugh_torch.losses package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pugh_torch.mappings.html">pugh_torch.mappings package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pugh_torch.modules.html">pugh_torch.modules package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pugh_torch.transforms.html">pugh_torch.transforms package</a></li>
@@ -170,13 +170,17 @@
     
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>pugh_torch</li>
+          <li><a href="modules.html">pugh_torch</a> &raquo;</li>
+        
+          <li><a href="pugh_torch.html">pugh_torch package</a> &raquo;</li>
+        
+      <li>pugh_torch.losses package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/modules.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/pugh_torch.losses.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -186,10 +190,10 @@
   
   <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
       
-        <a href="pugh_torch.html" class="btn btn-neutral float-right" title="pugh_torch package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="pugh_torch.mappings.html" class="btn btn-neutral float-right" title="pugh_torch.mappings package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="pugh_torch.html" class="btn btn-neutral float-left" title="pugh_torch package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
   </div>
   
@@ -198,48 +202,76 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="pugh-torch">
-<h1>pugh_torch<a class="headerlink" href="#pugh-torch" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="pugh_torch.html">pugh_torch package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pugh_torch.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="pugh_torch.losses.html">pugh_torch.losses package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="pugh_torch.losses.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pugh_torch.losses.html#module-pugh_torch.losses.hetero_cross_entropy">pugh_torch.losses.hetero_cross_entropy module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pugh_torch.losses.html#module-pugh_torch.losses">Module contents</a></li>
+  <div class="section" id="pugh-torch-losses-package">
+<h1>pugh_torch.losses package<a class="headerlink" href="#pugh-torch-losses-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-pugh_torch.losses.hetero_cross_entropy">
+<span id="pugh-torch-losses-hetero-cross-entropy-module"></span><h2>pugh_torch.losses.hetero_cross_entropy module<a class="headerlink" href="#module-pugh_torch.losses.hetero_cross_entropy" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pugh_torch.losses.hetero_cross_entropy.hetero_cross_entropy">
+<code class="sig-prename descclassname">pugh_torch.losses.hetero_cross_entropy.</code><code class="sig-name descname">hetero_cross_entropy</code><span class="sig-paren">(</span><em class="sig-param">preds</em>, <em class="sig-param">targets</em>, <em class="sig-param">availables</em>, <em class="sig-param">*</em>, <em class="sig-param">super_index=0</em>, <em class="sig-param">ignore_index=-100</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/losses/hetero_cross_entropy.html#hetero_cross_entropy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.losses.hetero_cross_entropy.hetero_cross_entropy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cross Entropy Loss for Heterogenous Datasets.</p>
+<p>Basically a cross-entropy-loss for when you are training on multiple
+datasets where some of the datasets may have some of the classes labeled
+as a single superset (for example, background).</p>
+<dl class="simple">
+<dt>Wordy logic:</dt><dd><ol class="arabic simple">
+<li><p>Lets say Dataset A has classes [“cat”, “dog”, “bird”].</p></li>
+<li><p>Lets say Dataset B has classes [“cat”,              , “other”].
+i.e. Dataset B is missing class “dog” and “bird”, and those pixels
+fall into the “other” category.</p></li>
+<li><p>For Dataset A, <code class="docutils literal notranslate"><span class="pre">hetero_cross_entropy</span></code> is exactly the same as
+normal cross entropy loss.</p></li>
+<li><p>For Dataset B, a “dog” will be labeled into the “other” category,
+but we don’t want to penalize the network for predicting dog,
+because it could be correct.  However, we absolutely know that
+the network should not be predicting “cat”.</p></li>
+<li><p>To solve this on dataset B, we apply cross entropy loss over the
+pixels not in the “other” class in the target. In addition to this,
+we want to maximize the probability that the network guessed either
+“dog” or “bird” for the pixels labeled as “other” in the target.</p></li>
+</ol>
+</dd>
+</dl>
+<p>Described in “Combining Heterogeneously Labeled Datasets For Training
+Segmentation Networks”</p>
+<blockquote>
+<div><p><a class="reference external" href="https://arxiv.org/pdf/1807.08935.pdf">https://arxiv.org/pdf/1807.08935.pdf</a></p>
+</div></blockquote>
+<p>TODO: this could be extended to multiple supersets, but the API might
+get complicated, and I personally don’t have a use yet.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>preds</strong> (<em>torch.Tensor</em>) – (N, C, …) where C is the number of classes.
+Typically this is the <strong>logits</strong> coming out of your network.</p></li>
+<li><p><strong>targets</strong> (<em>torch.Tensor</em>) – (N, …) T</p></li>
+<li><p><strong>availables</strong> (<em>torch.Tensor</em>) – (N, C) One-hot vector of which classes are availble from the dataset
+for this exemplar.</p></li>
+<li><p><strong>ignore_index</strong> (<em>int</em>) – Pixels with this target value will be not contribute to the loss what
+so ever. Typically this value might be what you pad the target
+segmentation image with if you are performing random crops.
+May be negative.</p></li>
+<li><p><strong>super_index</strong> (<em>int</em>) – Pixels with this target value will be encouraged to be of classes not
+in the dataset it came from. Typically this is a “background”, “unknown”,
+or “other” class.
+May be negative.</p></li>
 </ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="pugh_torch.mappings.html">pugh_torch.mappings package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="pugh_torch.mappings.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pugh_torch.mappings.html#module-pugh_torch.mappings.color">pugh_torch.mappings.color module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pugh_torch.mappings.html#module-pugh_torch.mappings">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="pugh_torch.modules.html">pugh_torch.modules package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="pugh_torch.modules.html#module-pugh_torch.modules">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="pugh_torch.transforms.html">pugh_torch.transforms package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="pugh_torch.transforms.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pugh_torch.transforms.html#module-pugh_torch.transforms.imagenet">pugh_torch.transforms.imagenet module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pugh_torch.transforms.html#module-pugh_torch.transforms">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="pugh_torch.utils.html">pugh_torch.utils package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="pugh_torch.utils.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pugh_torch.utils.html#module-pugh_torch.utils.tensorboard">pugh_torch.utils.tensorboard module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pugh_torch.utils.html#module-pugh_torch.utils">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="pugh_torch.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pugh_torch.html#module-pugh_torch.example">pugh_torch.example module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pugh_torch.html#module-pugh_torch">Module contents</a></li>
-</ul>
-</li>
-</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Scalar loss value</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pugh_torch.losses">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pugh_torch.losses" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 

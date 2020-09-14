@@ -97,7 +97,11 @@
 <li class="toctree-l1"><a class="reference internal" href="modules.html">Package modules</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="pugh_torch.html">pugh_torch package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="pugh_torch.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="pugh_torch.bin.html">pugh_torch.bin package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.losses.html">pugh_torch.losses package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.mappings.html">pugh_torch.mappings package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.modules.html">pugh_torch.modules package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.transforms.html">pugh_torch.transforms package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.utils.html">pugh_torch.utils package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="pugh_torch.html#submodules">Submodules</a></li>
@@ -110,6 +114,12 @@
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#get-started">Get Started!</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#deploying">Deploying</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#development">Development</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#the-four-commands-you-need-to-know">The Four Commands You Need To Know</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#additional-optional-setup-steps">Additional Optional Setup Steps:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#suggested-git-branch-strategy">Suggested Git Branch Strategy</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="math.html">Math notation example</a></li>
@@ -181,11 +191,12 @@
 
 <div class="genindex-jumpbox">
  <a href="#A"><strong>A</strong></a>
- | <a href="#D"><strong>D</strong></a>
  | <a href="#E"><strong>E</strong></a>
  | <a href="#G"><strong>G</strong></a>
- | <a href="#M"><strong>M</strong></a>
+ | <a href="#H"><strong>H</strong></a>
+ | <a href="#N"><strong>N</strong></a>
  | <a href="#P"><strong>P</strong></a>
+ | <a href="#S"><strong>S</strong></a>
  | <a href="#U"><strong>U</strong></a>
  | <a href="#V"><strong>V</strong></a>
  
@@ -193,19 +204,11 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pugh_torch.bin.html#pugh_torch.bin.my_example.Args">Args (class in pugh_torch.bin.my_example)</a>
-</li>
-  </ul></td>
-</tr></table>
-
-<h2 id="D">D</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pugh_torch.bin.html#pugh_torch.bin.my_example.Args.DEFAULT_FIRST">DEFAULT_FIRST (pugh_torch.bin.my_example.Args attribute)</a>
+      <li><a href="pugh_torch.utils.html#pugh_torch.utils.tensorboard.SummaryWriter.add_rgb">add_rgb() (pugh_torch.utils.tensorboard.SummaryWriter method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pugh_torch.bin.html#pugh_torch.bin.my_example.Args.DEFAULT_SECOND">DEFAULT_SECOND (pugh_torch.bin.my_example.Args attribute)</a>
+      <li><a href="pugh_torch.utils.html#pugh_torch.utils.tensorboard.SummaryWriter.add_ss">add_ss() (pugh_torch.utils.tensorboard.SummaryWriter method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -223,6 +226,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pugh_torch.html#pugh_torch.get_module_version">get_module_version() (in module pugh_torch)</a>
 </li>
+      <li><a href="pugh_torch.mappings.html#pugh_torch.mappings.color.get_palette">get_palette() (in module pugh_torch.mappings.color)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pugh_torch.html#pugh_torch.example.Example.get_previous_value">get_previous_value() (pugh_torch.example.Example method)</a>
@@ -232,10 +237,18 @@
   </ul></td>
 </tr></table>
 
-<h2 id="M">M</h2>
+<h2 id="H">H</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pugh_torch.bin.html#pugh_torch.bin.my_example.main">main() (in module pugh_torch.bin.my_example)</a>
+      <li><a href="pugh_torch.losses.html#pugh_torch.losses.hetero_cross_entropy.hetero_cross_entropy">hetero_cross_entropy() (in module pugh_torch.losses.hetero_cross_entropy)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="pugh_torch.transforms.html#pugh_torch.transforms.imagenet.Normalize">Normalize (class in pugh_torch.transforms.imagenet)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -245,19 +258,45 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pugh_torch.html#module-pugh_torch">pugh_torch (module)</a>
 </li>
-      <li><a href="pugh_torch.bin.html#module-pugh_torch.bin">pugh_torch.bin (module)</a>
+      <li><a href="pugh_torch.html#module-pugh_torch.example">pugh_torch.example (module)</a>
+</li>
+      <li><a href="pugh_torch.losses.html#module-pugh_torch.losses">pugh_torch.losses (module)</a>
+</li>
+      <li><a href="pugh_torch.losses.html#module-pugh_torch.losses.hetero_cross_entropy">pugh_torch.losses.hetero_cross_entropy (module)</a>
+</li>
+      <li><a href="pugh_torch.mappings.html#module-pugh_torch.mappings">pugh_torch.mappings (module)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pugh_torch.bin.html#module-pugh_torch.bin.my_example">pugh_torch.bin.my_example (module)</a>
+      <li><a href="pugh_torch.mappings.html#module-pugh_torch.mappings.color">pugh_torch.mappings.color (module)</a>
 </li>
-      <li><a href="pugh_torch.html#module-pugh_torch.example">pugh_torch.example (module)</a>
+      <li><a href="pugh_torch.modules.html#module-pugh_torch.modules">pugh_torch.modules (module)</a>
+</li>
+      <li><a href="pugh_torch.transforms.html#module-pugh_torch.transforms">pugh_torch.transforms (module)</a>
+</li>
+      <li><a href="pugh_torch.transforms.html#module-pugh_torch.transforms.imagenet">pugh_torch.transforms.imagenet (module)</a>
+</li>
+      <li><a href="pugh_torch.utils.html#module-pugh_torch.utils">pugh_torch.utils (module)</a>
+</li>
+      <li><a href="pugh_torch.utils.html#module-pugh_torch.utils.tensorboard">pugh_torch.utils.tensorboard (module)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="pugh_torch.utils.html#pugh_torch.utils.tensorboard.SummaryWriter">SummaryWriter (class in pugh_torch.utils.tensorboard)</a>
 </li>
   </ul></td>
 </tr></table>
 
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="pugh_torch.transforms.html#pugh_torch.transforms.imagenet.Unnormalize">Unnormalize (class in pugh_torch.transforms.imagenet)</a>
+</li>
+  </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pugh_torch.html#pugh_torch.example.Example.update_value">update_value() (pugh_torch.example.Example method)</a>
 </li>

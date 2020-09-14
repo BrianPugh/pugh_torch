@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pugh_torch.bin package &mdash; Pugh Torch 0.0.0 documentation</title>
+  <title>pugh_torch.modules package &mdash; Pugh Torch 0.0.0 documentation</title>
   
 
   
@@ -37,8 +37,8 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Contributing" href="contributing.html" />
-    <link rel="prev" title="pugh_torch package" href="pugh_torch.html" /> 
+    <link rel="next" title="pugh_torch.transforms package" href="pugh_torch.transforms.html" />
+    <link rel="prev" title="pugh_torch.mappings package" href="pugh_torch.mappings.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -98,7 +98,11 @@
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">Package modules</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="pugh_torch.html">pugh_torch package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="pugh_torch.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l4 current"><a class="current reference internal" href="#">pugh_torch.bin package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.losses.html">pugh_torch.losses package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.mappings.html">pugh_torch.mappings package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">pugh_torch.modules package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.transforms.html">pugh_torch.transforms package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.utils.html">pugh_torch.utils package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="pugh_torch.html#submodules">Submodules</a></li>
@@ -111,6 +115,12 @@
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#get-started">Get Started!</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#deploying">Deploying</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#development">Development</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#the-four-commands-you-need-to-know">The Four Commands You Need To Know</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#additional-optional-setup-steps">Additional Optional Setup Steps:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#suggested-git-branch-strategy">Suggested Git Branch Strategy</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="math.html">Math notation example</a></li>
@@ -164,13 +174,13 @@
         
           <li><a href="pugh_torch.html">pugh_torch package</a> &raquo;</li>
         
-      <li>pugh_torch.bin package</li>
+      <li>pugh_torch.modules package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/pugh_torch.bin.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/pugh_torch.modules.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -180,10 +190,10 @@
   
   <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
       
-        <a href="contributing.html" class="btn btn-neutral float-right" title="Contributing" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="pugh_torch.transforms.html" class="btn btn-neutral float-right" title="pugh_torch.transforms package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="pugh_torch.html" class="btn btn-neutral float-left" title="pugh_torch package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="pugh_torch.mappings.html" class="btn btn-neutral float-left" title="pugh_torch.mappings package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
   </div>
   
@@ -192,40 +202,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="pugh-torch-bin-package">
-<h1>pugh_torch.bin package<a class="headerlink" href="#pugh-torch-bin-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="module-pugh_torch.bin.my_example">
-<span id="pugh-torch-bin-my-example-module"></span><h2>pugh_torch.bin.my_example module<a class="headerlink" href="#module-pugh_torch.bin.my_example" title="Permalink to this headline">¶</a></h2>
-<p>This sample script will get deployed in the bin directory of the
-users’ virtualenv when the parent module is installed using pip.</p>
-<dl class="class">
-<dt id="pugh_torch.bin.my_example.Args">
-<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.bin.my_example.</code><code class="sig-name descname">Args</code><a class="reference internal" href="_modules/pugh_torch/bin/my_example.html#Args"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.bin.my_example.Args" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">argparse.Namespace</span></code></p>
-<dl class="attribute">
-<dt id="pugh_torch.bin.my_example.Args.DEFAULT_FIRST">
-<code class="sig-name descname">DEFAULT_FIRST</code><em class="property"> = 10</em><a class="headerlink" href="#pugh_torch.bin.my_example.Args.DEFAULT_FIRST" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="pugh_torch.bin.my_example.Args.DEFAULT_SECOND">
-<code class="sig-name descname">DEFAULT_SECOND</code><em class="property"> = 20</em><a class="headerlink" href="#pugh_torch.bin.my_example.Args.DEFAULT_SECOND" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="function">
-<dt id="pugh_torch.bin.my_example.main">
-<code class="sig-prename descclassname">pugh_torch.bin.my_example.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/bin/my_example.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.bin.my_example.main" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</div>
-<div class="section" id="module-pugh_torch.bin">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pugh_torch.bin" title="Permalink to this headline">¶</a></h2>
-<p>Bin scripts package for pugh_torch.</p>
+  <div class="section" id="pugh-torch-modules-package">
+<h1>pugh_torch.modules package<a class="headerlink" href="#pugh-torch-modules-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-pugh_torch.modules">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pugh_torch.modules" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
