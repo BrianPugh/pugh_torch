@@ -98,13 +98,10 @@ def hetero_cross_entropy(
             super_pred = pred[:, super_mask]  # (C, n_pix)
 
             # Compute the softmax over all classes
-            super_pred = F.softmax(super_pred, dim=0)
-
-            # Select only the probabilities of the classes that are not
-            # available in this dataset.
-            super_pred = super_pred[super_hot]  # (n_super_class, n_pix)
-            super_prob = super_pred.sum(dim=0)  # (n_pix,)
-            # Minus because of negative log
-            super_loss = super_loss - torch.log(super_prob).mean()
+            super_pred_exp = torch.exp(super_pred)
+            super_loss = super_loss - torch.mean(
+                    torch.log(super_pred_exp[super_hot].sum(dim=0))
+                    - torch.log(super_pred_exp.sum(dim=0))
+                    )
 
     return ce_loss + super_loss

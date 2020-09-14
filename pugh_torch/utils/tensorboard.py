@@ -175,6 +175,7 @@ class SummaryWriter(tb.SummaryWriter):
             # Apply a color palette
             color_pred = palette[pred]
             color_target = palette[target]
+            color_target[target < 0] = 0
 
             # Horizontally combine all three into a single image
             montage = np.concatenate((color_target, rgb, color_pred), axis=1).astype(
