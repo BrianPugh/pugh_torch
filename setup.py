@@ -5,26 +5,37 @@
 
 from setuptools import find_packages, setup
 
-with open("README.md") as readme_file:
-    readme = readme_file.read()
+with open("README.md") as f:
+    readme = f.read()
+
+with open("CHANGELOG.md") as f:
+    changelog = f.read()
+
 
 setup_requirements = [
     "pytest-runner>=5.2",
 ]
 
+requirements = [
+    "numpy>=1.17.1",
+    "opencv-python>=4.2.0",
+    "tensorboard>=2.2.1",
+    "torch>=1.4.0",
+    "torchvision>=0.5.0",
+]
+
 test_requirements = [
     "black>=19.10b0",
     "codecov>=2.1.4",
-    "flake8>=3.8.3",
     "flake8-debugger>=3.2.1",
-    "pytest>=5.4.3",
+    "flake8>=3.8.3",
     "pytest-cov>=2.9.0",
+    "pytest-mock>=3.3.1",
     "pytest-raises>=0.11",
+    "pytest>=5.4.3",
 ]
 
 dev_requirements = [
-    *setup_requirements,
-    *test_requirements,
     "bumpversion>=0.6.0",
     "coverage>=5.1",
     "ipython>=7.15.0",
@@ -37,16 +48,26 @@ dev_requirements = [
     "wheel>=0.34.2",
 ]
 
-requirements = []
 
 extra_requirements = {
     "setup": setup_requirements,
-    "test": test_requirements,
-    "dev": dev_requirements,
+    "test": [
+        *setup_requirements,
+        *requirements,
+        *test_requirements,
+    ],
+    "dev": [
+        *setup_requirements,
+        *requirements,
+        *test_requirements,
+        *dev_requirements,
+    ],
     "all": [
         *requirements,
+        *setup_requirements,
+        *test_requirements,
         *dev_requirements,
-    ]
+    ],
 }
 
 setup(
@@ -61,20 +82,15 @@ setup(
         "Programming Language :: Python :: 3.8",
     ],
     description="Functions, losses, and module blocks to share between experiments.",
-    entry_points={
-        "console_scripts": [
-            "my_example=pugh_torch.bin.my_example:main"
-        ],
-    },
     install_requires=requirements,
     license="MIT license",
-    long_description=readme,
+    long_description=readme + '\n\n' + changelog,
     long_description_content_type="text/markdown",
     include_package_data=True,
     keywords="pugh_torch",
     name="pugh_torch",
     packages=find_packages(exclude=["tests", "*.tests", "*.tests.*"]),
-    python_requires=">=3.7",
+    python_requires=">=3.6",
     setup_requires=setup_requirements,
     test_suite="pugh_torch/tests",
     tests_require=test_requirements,

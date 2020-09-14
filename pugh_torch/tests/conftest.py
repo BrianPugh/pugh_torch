@@ -1,37 +1,58 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-"""
-Configuration for tests! There are a whole list of hooks you can define in this file to
-run before, after, or to mutate how tests run. Commonly for most of our work, we use
-this file to define top level fixtures that may be needed for tests throughout multiple
-test files.
-
-In this case, while we aren't using this fixture in our tests, the prime use case for
-something like this would be when we want to preload a file to be used in multiple
-tests. File reading can take time, so instead of re-reading the file for each test,
-read the file once then use the loaded content.
-
-Docs: https://docs.pytest.org/en/latest/example/simple.html
-      https://docs.pytest.org/en/latest/plugins.html#requiring-loading-plugins-in-a-test-module-or-conftest-file
-"""
-
-import json
-from pathlib import Path
-from typing import Dict
+# content of conftest.py
 
 import pytest
+from pathlib import Path
+from distutils import dir_util
+
+
+def pytest_addoption(parser):
+    parser.addoption(
+        "--visual",
+        action="store_true",
+        default=False,
+        help="run interactive visual tests",
+    )
+
+
+def pytest_collection_modifyitems(config, items):
+    if config.getoption("--visual"):
+        # --visual given in cli: do not skip visual tests
+        return
+    skip_visual = pytest.mark.skip(reason="need --visual option to run")
+    for item in items:
+        if "visual" in item.keywords:
+            item.add_marker(skip_visual)
 
 
 @pytest.fixture
-def data_dir() -> Path:
-    return Path(__file__).parent / "data"
+def chelsea():
+    """What a cute RGB kitty!
+
+    Only use for visual confirmation to help debugging. Mark these tests with:
+        @pytest.mark.visual
+
+    Returns
+    -------
+    numpy.ndarray
+        (H,W,3) uint8_t RGB test image.
+    """
+    from skimage import data
+
+    return data.chelsea()
 
 
-# Fixtures can simply be added as a parameter to the other test or fixture functions to
-# expose them. If we had multiple tests that wanted to use the contents of this file,
-# we could simply add "loaded_example_values" as a parameter for each test.
 @pytest.fixture
-def loaded_example_values(data_dir) -> Dict[str, int]:
-    with open(data_dir / "example_values.json", "r") as read_in:
-        return json.load(read_in)
+def data_path(tmp_path, request):
+    """
+    Fixture responsible for searching a folder with the same name of test
+    module and, if available, copying all contents to a temporary directory so
+    tests can use them freely.
+    """
+
+    filename = Path(request.module.__file__)
+    test_dir = filename.parent / filename.stem
+    if test_dir.is_dir():
+        dir_util.copy_tree(test_dir, str(tmp_path))
+
+    return tmp_path
