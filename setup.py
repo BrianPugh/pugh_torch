@@ -11,10 +11,14 @@ with open("README.md") as f:
 with open("CHANGELOG.md") as f:
     changelog = f.read()
 
+
 setup_requirements = [
+    "pytest-runner>=5.2",
+]
+
+requirements = [
     "numpy>=1.17.1",
     "opencv-python>=4.2.0",
-    "pytest-runner>=5.2",
     "tensorboard>=2.2.1",
     "torch>=1.4.0",
     "torchvision>=0.5.0",
@@ -32,8 +36,6 @@ test_requirements = [
 ]
 
 dev_requirements = [
-    *setup_requirements,
-    *test_requirements,
     "bumpversion>=0.6.0",
     "coverage>=5.1",
     "ipython>=7.15.0",
@@ -46,16 +48,26 @@ dev_requirements = [
     "wheel>=0.34.2",
 ]
 
-requirements = []
 
 extra_requirements = {
     "setup": setup_requirements,
-    "test": test_requirements,
-    "dev": dev_requirements,
+    "test": [
+        *setup_requirements,
+        *requirements,
+        *test_requirements,
+    ],
+    "dev": [
+        *setup_requirements,
+        *requirements,
+        *test_requirements,
+        *dev_requirements,
+    ],
     "all": [
         *requirements,
+        *setup_requirements,
+        *test_requirements,
         *dev_requirements,
-    ]
+    ],
 }
 
 setup(
