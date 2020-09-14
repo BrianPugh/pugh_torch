@@ -124,8 +124,7 @@ def test_hetero_cross_entropy_all_invalid(pred):
 
 
 def test_hetero_cross_entropy_complete(pred):
-    """ Test both parts (ce_loss + super_loss) combined
-    """
+    """Test both parts (ce_loss + super_loss) combined"""
 
     target = torch.LongTensor(
         [
@@ -168,10 +167,14 @@ def test_hetero_cross_entropy_complete(pred):
     updated_pred = pred - (0.1 * pred.grad)
     updated_pred_softmax = F.softmax(updated_pred, dim=1)
 
-    assert updated_pred_softmax[0,1,0,1] > pred_softmax[0,1,0,1]  # prediction should be more sure of 1 target
-    assert updated_pred_softmax[0,1,1,2] > pred_softmax[0,1,1,2]  # prediction should be more sure of 1 target
+    assert (
+        updated_pred_softmax[0, 1, 0, 1] > pred_softmax[0, 1, 0, 1]
+    )  # prediction should be more sure of 1 target
+    assert (
+        updated_pred_softmax[0, 1, 1, 2] > pred_softmax[0, 1, 1, 2]
+    )  # prediction should be more sure of 1 target
 
     # The classes that are in the dataset should now have lower probabilities
     # for the pixel that's marked as unlabeled.
-    assert updated_pred_softmax[0,0,0,0] < pred_softmax[0,0,0,0]
-    assert updated_pred_softmax[0,1,0,0] < pred_softmax[0,1,0,0]
+    assert updated_pred_softmax[0, 0, 0, 0] < pred_softmax[0, 0, 0, 0]
+    assert updated_pred_softmax[0, 1, 0, 0] < pred_softmax[0, 1, 0, 0]
