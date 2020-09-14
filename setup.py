@@ -12,9 +12,10 @@ with open("CHANGELOG.md") as f:
     changelog = f.read()
 
 setup_requirements = [
-    "cv2>=4.2.0",
     "numpy>=1.17.1",
+    "opencv-python>=4.2.0",
     "pytest-runner>=5.2",
+    "tensorboard>=2.2.1",
     "torch>=1.4.0",
     "torchvision>=0.5.0",
 ]
