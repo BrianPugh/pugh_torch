@@ -18,9 +18,9 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install Dependencies
       run: |
+        apt install cmake
         python -m pip install --upgrade pip
         pip install .[test]
-        apt install cmake
     - name: Test with pytest
       run: |
         pytest pugh_torch/tests/
