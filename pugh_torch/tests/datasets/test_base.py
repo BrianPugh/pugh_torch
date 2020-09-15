@@ -14,11 +14,13 @@ def dummy(mocker, tmp_path):
 
 
 def test_path(dummy, tmp_path):
-    assert dummy.path == (tmp_path / "unknown" / "DummyDataset")
+    assert dummy.path == (tmp_path / "datasets" / "DummyDataset")
 
 
 def test_downloaded_file(dummy, tmp_path):
-    assert dummy.downloaded_file == (tmp_path / "unknown" / "DummyDataset" / "downloaded")
+    assert dummy.downloaded_file == (
+        tmp_path / "datasets" / "DummyDataset" / "downloaded"
+    )
 
 
 def test_download_dataset_if_not_downloaded(mocker, dummy, tmp_path):

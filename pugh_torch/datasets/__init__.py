@@ -10,13 +10,15 @@ I don't expose this in code because I think it just clutters the code.
 import os
 from pathlib import Path
 
-ROOT_DATASET_PATH = Path(os.environ.get("PUGH_TORCH_DATASET_PATH", "~/.pugh_torch/data"))
+ROOT_DATASET_PATH = Path(
+    os.environ.get("PUGH_TORCH_DATASET_PATH", "~/.pugh_torch/data")
+)
 
 from .base import Dataset
 
 
-#def get_dataset(name):
-#    """ 
+# def get_dataset(name):
+#    """
 #    Parameters
 #    ----------
 #    name : str

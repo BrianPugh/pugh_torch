@@ -17,6 +17,7 @@ setup_requirements = [
 ]
 
 requirements = [
+    "gdown>=3.10.1",
     "numpy>=1.17.1",
     "opencv-python>=4.2.0",
     "tensorboard>=2.2.1",
