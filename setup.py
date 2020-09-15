@@ -17,6 +17,7 @@ setup_requirements = [
 ]
 
 requirements = [
+    "gdown>=3.10.1",
     "numpy>=1.17.1",
     "opencv-python>=4.2.0",
     "tensorboard>=2.2.1",
@@ -48,6 +49,14 @@ dev_requirements = [
     "wheel>=0.34.2",
 ]
 
+experiment_requirements = [
+    "ipdb",
+    "matplotlib>=3.0.3",
+    "pytorch-lightning>=0.9.0",
+    "scipy>=1.5.1",
+    "tqdm>=4.45.0",
+]
+
 
 extra_requirements = {
     "setup": setup_requirements,
@@ -67,6 +76,7 @@ extra_requirements = {
         *setup_requirements,
         *test_requirements,
         *dev_requirements,
+        *experiment_requirements,
     ],
 }
 
