@@ -20,6 +20,10 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - 
+        name: See current directory
+        run: |
+          pwd; ls; ls ..
       -
         name: Build and push
         id: docker_build
