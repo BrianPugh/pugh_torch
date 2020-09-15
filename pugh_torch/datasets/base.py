@@ -28,13 +28,11 @@ class Dataset(torch.utils.data.Dataset):
             self.download()
             self.downloaded = True
 
-
     def _unpack_dataset_if_not_unpacked(self):
         if not self.unpacked:
             self.path.mkdir(parents=True, exist_ok=True)
             self.unpack()
             self.unpacked = True
-
 
     @property
     def path(self):
@@ -87,7 +85,6 @@ class Dataset(torch.utils.data.Dataset):
         """
 
         raise NotImplementedError
-
 
     @property
     def unpacked_file(self):
