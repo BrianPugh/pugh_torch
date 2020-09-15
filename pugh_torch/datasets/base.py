@@ -1,4 +1,17 @@
 """
+To implement your own dataset:
+    1. Subclass the ``pugh_torch.datasets.Dataset`` class.
+       This class itself is a subclass of ``torch.utils.data.Dataset``.
+    2. Implement the download method:
+            def download(self):
+                # the local folder (guarenteed to exist) is ``self.path``
+       This will only be called if the downloaded data isn't available.
+    3. Implement the unpack method:
+            def unpack(self):
+                # the local folder (guarenteed to exist) is ``self.path``
+       This will only be called if the data hasn't been unpacked yet.
+    4. Follow the other remaining instructions at:
+        https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset
 """
 
 import torch
