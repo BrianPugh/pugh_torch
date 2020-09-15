@@ -1,15 +1,31 @@
 import pytest
-from pugh_torch.datasets import Dataset, ROOT_DATASET_PATH
+from pugh_torch.datasets import Dataset
 
 
 class DummyDataset(Dataset):
-    pass
+    def __init__(self, *args, **kwargs):
+        pass
 
 
 @pytest.fixture
-def dummy():
+def dummy(mocker, tmp_path):
+    mocker.patch("pugh_torch.datasets.base.ROOT_DATASET_PATH", tmp_path)
     return DummyDataset()
 
 
-def test_path(dummy):
-    assert dummy.path == (ROOT_DATASET_PATH / "unknown" / "DummyDataset")
+def test_path(dummy, tmp_path):
+    assert dummy.path == (tmp_path / "unknown" / "DummyDataset")
+
+
+def test_downloaded_file(dummy, tmp_path):
+    assert dummy.downloaded_file == (tmp_path / "unknown" / "DummyDataset" / "downloaded")
+
+
+def test_download_dataset_if_not_downloaded(mocker, dummy, tmp_path):
+    mock_download = mocker.patch.object(dummy, "download")
+
+    assert not dummy.downloaded
+    dummy._download_dataset_if_not_downloaded()
+
+    mock_download.assert_called_once()
+    assert dummy.downloaded
