@@ -42,13 +42,12 @@ class Dataset(torch.utils.data.Dataset):
     """"""
 
     def __init_subclass__(cls, **kwargs):
-        """ Automatic registration stuff
-        """
+        """Automatic registration stuff"""
         super().__init_subclass__(**kwargs)
 
         # Register in DATASETS
         modules = cls.__module__.split(".")
-        if len(modules) > 3 and modules[0] == 'pugh_torch' and modules[1] == 'datasets':
+        if len(modules) > 3 and modules[0] == "pugh_torch" and modules[1] == "datasets":
             d = DATASETS
             for module in modules[2:-1]:
                 if module not in d:

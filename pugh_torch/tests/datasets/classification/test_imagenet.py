@@ -11,19 +11,23 @@ from tqdm import tqdm
 
 @pytest.fixture
 def imagenet_train(tmp_path):
-    transform = transforms.Compose([
-        transforms.Resize((224,224)),  # So that exemplars can be collated.
-        transforms.ToTensor(),
-        ]) 
+    transform = transforms.Compose(
+        [
+            transforms.Resize((224, 224)),  # So that exemplars can be collated.
+            transforms.ToTensor(),
+        ]
+    )
     return ImageNet(split="train", transform=transform)
 
 
 @pytest.fixture
 def imagenet_val(tmp_path):
-    transform = transforms.Compose([
-        transforms.Resize((224,224)),  # So that exemplars can be collated.
-        transforms.ToTensor(),
-        ]) 
+    transform = transforms.Compose(
+        [
+            transforms.Resize((224, 224)),  # So that exemplars can be collated.
+            transforms.ToTensor(),
+        ]
+    )
     return ImageNet(split="val", transform=transform)
 
 
@@ -31,9 +35,11 @@ def assert_imagenet(loader):
     """"""
     bar = tqdm(loader)
     for i, (image, label) in enumerate(bar):
-        import ipdb as pdb
-
-        pdb.set_trace()
+        assert image.max() <= 1
+        assert image.min() >= 0
+        assert image.shape == (16, 3, 224, 224)
+        assert label.shape == (16,)
+        # TODO: We could/should make more assertions like label range and stuff.
 
 
 @pytest.mark.dataset

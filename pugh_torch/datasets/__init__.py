@@ -23,8 +23,9 @@ from .torchvision import TorchVisionDataset
 import pugh_torch.datasets.classification
 import pugh_torch.datasets.segmentation
 
+
 def get(genre, name):
-    """ Gets dataset constructor from string identifiers
+    """Gets dataset constructor from string identifiers
 
     Parameters
     ----------
@@ -40,6 +41,7 @@ def get(genre, name):
     name = name.lower()
 
     return DATASETS[genre][name]
+
 
 # Alias for ``get`` function
 get_dataset = get
