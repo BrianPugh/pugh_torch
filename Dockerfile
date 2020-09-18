@@ -5,6 +5,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Just life imporvement cli utilities
 RUN apt update && apt -y install \
     autoconf \
+	git \
     autotools-dev \
     cmake \
     feh \
@@ -27,7 +28,7 @@ ENV PYTHONPATH=/root/pugh_torch/$PYTHONPATH
 WORKDIR /root/pugh_torch
 
 # Install from master to always get the latest.
-RUN pip install "pugh-torch[all] @ git+ssh://git@github.com/brianpugh/pugh_torch.git"
+RUN pip install "pugh-torch[all] @ git+https://github.com/BrianPugh/pugh_torch.git"
 
 ENV DISPLAY=:20
 ENV DISPLAY_RESOLUTION=1280x1440
