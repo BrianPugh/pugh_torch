@@ -1,0 +1,22 @@
+pugh\_torch.datasets.segmentation package
+=========================================
+
+Submodules
+----------
+
+pugh\_torch.datasets.segmentation.ade20k module
+-----------------------------------------------
+
+.. automodule:: pugh_torch.datasets.segmentation.ade20k
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: pugh_torch.datasets.segmentation
+   :members:
+   :undoc-members:
+   :show-inheritance:

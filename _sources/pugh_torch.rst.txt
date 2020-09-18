@@ -6,6 +6,7 @@ Subpackages
 
 .. toctree::
 
+   pugh_torch.datasets
    pugh_torch.losses
    pugh_torch.mappings
    pugh_torch.modules
@@ -15,10 +16,18 @@ Subpackages
 Submodules
 ----------
 
-pugh\_torch.example module
+pugh\_torch.exceptions module
+-----------------------------
+
+.. automodule:: pugh_torch.exceptions
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pugh\_torch.helpers module
 --------------------------
 
-.. automodule:: pugh_torch.example
+.. automodule:: pugh_torch.helpers
    :members:
    :undoc-members:
    :show-inheritance:

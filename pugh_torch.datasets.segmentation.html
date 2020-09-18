@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pugh_torch.transforms package &mdash; Pugh Torch 0.2.0 documentation</title>
+  <title>pugh_torch.datasets.segmentation package &mdash; Pugh Torch 0.2.0 documentation</title>
   
 
   
@@ -37,8 +37,8 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="pugh_torch.utils package" href="pugh_torch.utils.html" />
-    <link rel="prev" title="pugh_torch.modules package" href="pugh_torch.modules.html" /> 
+    <link rel="next" title="pugh_torch.losses package" href="pugh_torch.losses.html" />
+    <link rel="prev" title="pugh_torch.datasets.classification package" href="pugh_torch.datasets.classification.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -98,11 +98,11 @@
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">Package modules</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="pugh_torch.html">pugh_torch package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="pugh_torch.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="pugh_torch.datasets.html">pugh_torch.datasets package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="pugh_torch.datasets.html">pugh_torch.datasets package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pugh_torch.losses.html">pugh_torch.losses package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pugh_torch.mappings.html">pugh_torch.mappings package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pugh_torch.modules.html">pugh_torch.modules package</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">pugh_torch.transforms package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.transforms.html">pugh_torch.transforms package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pugh_torch.utils.html">pugh_torch.utils package</a></li>
 </ul>
 </li>
@@ -176,13 +176,15 @@
         
           <li><a href="pugh_torch.html">pugh_torch package</a> &raquo;</li>
         
-      <li>pugh_torch.transforms package</li>
+          <li><a href="pugh_torch.datasets.html">pugh_torch.datasets package</a> &raquo;</li>
+        
+      <li>pugh_torch.datasets.segmentation package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/pugh_torch.transforms.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/pugh_torch.datasets.segmentation.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -192,10 +194,10 @@
   
   <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
       
-        <a href="pugh_torch.utils.html" class="btn btn-neutral float-right" title="pugh_torch.utils package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="pugh_torch.losses.html" class="btn btn-neutral float-right" title="pugh_torch.losses package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="pugh_torch.modules.html" class="btn btn-neutral float-left" title="pugh_torch.modules package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="pugh_torch.datasets.classification.html" class="btn btn-neutral float-left" title="pugh_torch.datasets.classification package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
   </div>
   
@@ -204,30 +206,36 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="pugh-torch-transforms-package">
-<h1>pugh_torch.transforms package<a class="headerlink" href="#pugh-torch-transforms-package" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="pugh-torch-datasets-segmentation-package">
+<h1>pugh_torch.datasets.segmentation package<a class="headerlink" href="#pugh-torch-datasets-segmentation-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-pugh_torch.transforms.imagenet">
-<span id="pugh-torch-transforms-imagenet-module"></span><h2>pugh_torch.transforms.imagenet module<a class="headerlink" href="#module-pugh_torch.transforms.imagenet" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-pugh_torch.datasets.segmentation.ade20k">
+<span id="pugh-torch-datasets-segmentation-ade20k-module"></span><h2>pugh_torch.datasets.segmentation.ade20k module<a class="headerlink" href="#module-pugh_torch.datasets.segmentation.ade20k" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="pugh_torch.transforms.imagenet.Normalize">
-<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.transforms.imagenet.</code><code class="sig-name descname">Normalize</code><a class="reference internal" href="_modules/pugh_torch/transforms/imagenet.html#Normalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.transforms.imagenet.Normalize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Applies standard ImageNet normalization to an RGB image</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="pugh_torch.transforms.imagenet.Unnormalize">
-<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.transforms.imagenet.</code><code class="sig-name descname">Unnormalize</code><a class="reference internal" href="_modules/pugh_torch/transforms/imagenet.html#Unnormalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.transforms.imagenet.Unnormalize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Reverses standard ImageNet normalization</p>
+<dt id="pugh_torch.datasets.segmentation.ade20k.ADE20k">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.datasets.segmentation.ade20k.</code><code class="sig-name descname">ADE20k</code><span class="sig-paren">(</span><em class="sig-param">split='train'</em>, <em class="sig-param">*</em>, <em class="sig-param">transform=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/datasets/segmentation/ade20k.html#ADE20k"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.datasets.segmentation.ade20k.ADE20k" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pugh_torch.datasets.html#pugh_torch.datasets.base.Dataset" title="pugh_torch.datasets.base.Dataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.datasets.base.Dataset</span></code></a></p>
+<p>Attempts to download data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>split</strong> (<em>str</em>) – One of {“train”, “val”, “test”}.
+Which data partition to use. Case insensitive.</p></li>
+<li><p><strong>transform</strong> (<em>obj</em>) – Whatever format you want. Depends on dataset __getitem__ implementation.
+Defaults to just a <code class="docutils literal notranslate"><span class="pre">ToTensor</span></code> transform.
+This attribute is NOT used anywhere except in the dataset-specific
+__get__ implementation, or other parent classes of the dataset..</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
-<div class="section" id="module-pugh_torch.transforms">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pugh_torch.transforms" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-pugh_torch.datasets.segmentation">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pugh_torch.datasets.segmentation" title="Permalink to this headline">¶</a></h2>
+<p>pugh_torch.datasets.segmentation.__init__</p>
 </div>
 </div>
 

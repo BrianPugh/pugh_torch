@@ -37,7 +37,7 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="pugh_torch.losses package" href="pugh_torch.losses.html" />
+    <link rel="next" title="pugh_torch.datasets package" href="pugh_torch.datasets.html" />
     <link rel="prev" title="pugh_torch" href="modules.html" /> 
 </head>
 
@@ -98,6 +98,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">Package modules</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">pugh_torch package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.datasets.html">pugh_torch.datasets package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pugh_torch.losses.html">pugh_torch.losses package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pugh_torch.mappings.html">pugh_torch.mappings package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pugh_torch.modules.html">pugh_torch.modules package</a></li>
@@ -106,7 +107,8 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-pugh_torch.example">pugh_torch.example module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pugh_torch.exceptions">pugh_torch.exceptions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pugh_torch.helpers">pugh_torch.helpers module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-pugh_torch">Module contents</a></li>
 </ul>
 </li>
@@ -188,7 +190,7 @@
   
   <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
       
-        <a href="pugh_torch.losses.html" class="btn btn-neutral float-right" title="pugh_torch.losses package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="pugh_torch.datasets.html" class="btn btn-neutral float-right" title="pugh_torch.datasets package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="modules.html" class="btn btn-neutral float-left" title="pugh_torch" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -206,6 +208,30 @@
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="pugh_torch.datasets.html">pugh_torch.datasets package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pugh_torch.datasets.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pugh_torch.datasets.classification.html">pugh_torch.datasets.classification package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.datasets.classification.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.datasets.classification.html#module-pugh_torch.datasets.classification.cifar">pugh_torch.datasets.classification.cifar module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.datasets.classification.html#module-pugh_torch.datasets.classification.imagenet">pugh_torch.datasets.classification.imagenet module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.datasets.classification.html#module-pugh_torch.datasets.classification.mnist">pugh_torch.datasets.classification.mnist module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.datasets.classification.html#module-pugh_torch.datasets.classification">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pugh_torch.datasets.segmentation.html">pugh_torch.datasets.segmentation package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.datasets.segmentation.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.datasets.segmentation.html#module-pugh_torch.datasets.segmentation.ade20k">pugh_torch.datasets.segmentation.ade20k module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.datasets.segmentation.html#module-pugh_torch.datasets.segmentation">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pugh_torch.datasets.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pugh_torch.datasets.html#module-pugh_torch.datasets.base">pugh_torch.datasets.base module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pugh_torch.datasets.html#module-pugh_torch.datasets.torchvision">pugh_torch.datasets.torchvision module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pugh_torch.datasets.html#module-pugh_torch.datasets">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="pugh_torch.losses.html">pugh_torch.losses package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="pugh_torch.losses.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pugh_torch.losses.html#module-pugh_torch.losses.hetero_cross_entropy">pugh_torch.losses.hetero_cross_entropy module</a></li>
@@ -240,80 +266,61 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-pugh_torch.example">
-<span id="pugh-torch-example-module"></span><h2>pugh_torch.example module<a class="headerlink" href="#module-pugh_torch.example" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="pugh_torch.example.Example">
-<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.example.</code><code class="sig-name descname">Example</code><span class="sig-paren">(</span><em class="sig-param">init_value: int = 10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/example.html#Example"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.example.Example" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>This is an example object. Use this example for ideas on how to write doc strings,
-use logging, construct objects. This is not an exhaustive example but a decent
-start.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>init_value</strong> (<em>int</em>) – An integer value to initialize the object with.</p>
-</dd>
-</dl>
-<dl class="method">
-<dt id="pugh_torch.example.Example.get_previous_value">
-<code class="sig-name descname">get_previous_value</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/pugh_torch/example.html#Example.get_previous_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.example.Example.get_previous_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the previous value.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><strong>previous_value</strong> – The previous value stored in the object.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>int</p>
-</dd>
-</dl>
+<div class="section" id="module-pugh_torch.exceptions">
+<span id="pugh-torch-exceptions-module"></span><h2>pugh_torch.exceptions module<a class="headerlink" href="#module-pugh_torch.exceptions" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="pugh_torch.exceptions.DataUnavailableError">
+<em class="property">exception </em><code class="sig-prename descclassname">pugh_torch.exceptions.</code><code class="sig-name descname">DataUnavailableError</code><a class="reference internal" href="_modules/pugh_torch/exceptions.html#DataUnavailableError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.exceptions.DataUnavailableError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Data is missing from disk and isn’t readily available to easily download.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="pugh_torch.example.Example.get_value">
-<code class="sig-name descname">get_value</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/pugh_torch/example.html#Example.get_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.example.Example.get_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the current value.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><strong>current_value</strong> – The current value stored in the object.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>int</p>
-</dd>
-</dl>
+<dl class="exception">
+<dt id="pugh_torch.exceptions.HashMismatchError">
+<em class="property">exception </em><code class="sig-prename descclassname">pugh_torch.exceptions.</code><code class="sig-name descname">HashMismatchError</code><a class="reference internal" href="_modules/pugh_torch/exceptions.html#HashMismatchError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.exceptions.HashMismatchError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Occurs when a file does not have the expected hash.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="pugh_torch.example.Example.update_value">
-<code class="sig-name descname">update_value</code><span class="sig-paren">(</span><em class="sig-param">new_value: int</em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/pugh_torch/example.html#Example.update_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.example.Example.update_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save old value and set new value.</p>
+</div>
+<div class="section" id="module-pugh_torch.helpers">
+<span id="pugh-torch-helpers-module"></span><h2>pugh_torch.helpers module<a class="headerlink" href="#module-pugh_torch.helpers" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pugh_torch.helpers.camel_to_snake">
+<code class="sig-prename descclassname">pugh_torch.helpers.</code><code class="sig-name descname">camel_to_snake</code><span class="sig-paren">(</span><em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/helpers.html#camel_to_snake"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.helpers.camel_to_snake" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a camelCase or pascalCase string to snake_case</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>new_value</strong> (<em>int</em>) – The new value to assign to the object.</p>
+<dd class="field-odd"><p><strong>s</strong> (<em>str</em>) – Some camel/pascal case string to convert to snake case</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>old_value</strong> – The previous value stored in the object.</p>
+<dd class="field-even"><p>camel_case equivalent of the provided string.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>int</p>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="pugh_torch.example.Example.values">
-<em class="property">property </em><code class="sig-name descname">values</code><a class="headerlink" href="#pugh_torch.example.Example.values" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get both values stored in the object as a tuple of integers.</p>
+<dl class="function">
+<dt id="pugh_torch.helpers.compare_hash">
+<code class="sig-prename descclassname">pugh_torch.helpers.</code><code class="sig-name descname">compare_hash</code><span class="sig-paren">(</span><em class="sig-param">expected</em>, <em class="sig-param">actual</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/helpers.html#compare_hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.helpers.compare_hash" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>pugh_torch.HashMismatchError</strong> – If the hashes do not match.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pugh_torch.helpers.compute_sha1">
+<code class="sig-prename descclassname">pugh_torch.helpers.</code><code class="sig-name descname">compute_sha1</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">chunk_size=1048576</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/helpers.html#compute_sha1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.helpers.compute_sha1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the SHA1 hash of a file</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><strong>values</strong> – The current and old values stored in a tuple in (current_value, old_value)
-order.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>Tuple[int]</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str-like</em>) – Path to file to compute the hash of.</p>
 </dd>
 </dl>
-</dd></dl>
-
 </dd></dl>
 
 </div>

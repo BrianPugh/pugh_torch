@@ -1,0 +1,38 @@
+pugh\_torch.datasets package
+============================
+
+Subpackages
+-----------
+
+.. toctree::
+
+   pugh_torch.datasets.classification
+   pugh_torch.datasets.segmentation
+
+Submodules
+----------
+
+pugh\_torch.datasets.base module
+--------------------------------
+
+.. automodule:: pugh_torch.datasets.base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pugh\_torch.datasets.torchvision module
+---------------------------------------
+
+.. automodule:: pugh_torch.datasets.torchvision
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: pugh_torch.datasets
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,38 @@
+pugh\_torch.datasets.classification package
+===========================================
+
+Submodules
+----------
+
+pugh\_torch.datasets.classification.cifar module
+------------------------------------------------
+
+.. automodule:: pugh_torch.datasets.classification.cifar
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pugh\_torch.datasets.classification.imagenet module
+---------------------------------------------------
+
+.. automodule:: pugh_torch.datasets.classification.imagenet
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pugh\_torch.datasets.classification.mnist module
+------------------------------------------------
+
+.. automodule:: pugh_torch.datasets.classification.mnist
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: pugh_torch.datasets.classification
+   :members:
+   :undoc-members:
+   :show-inheritance:
