@@ -11,7 +11,7 @@ import os
 from pathlib import Path
 
 ROOT_DATASET_PATH = Path(
-    os.environ.get("PUGH_TORCH_DATASET_PATH", "~/.pugh_torch/data")
+    os.environ.get("PUGH_TORCH_DATASET_PATH", "~/.pugh_torch/datasets")
 ).expanduser()
 
 from .base import Dataset

@@ -49,10 +49,5 @@ class TorchVisionDataset(Dataset):
         """
 
         img, label = self.dataset[index]
-
-        import ipdb as pdb
-
-        pdb.set_trace()
         img = self.transform(img)
-
         return img, label
