@@ -55,7 +55,7 @@ class Dataset(torch.utils.data.Dataset):
                 d = d[module]
             d[cls.__name__.lower()] = cls
 
-    def __init__(self, *, split="train", transform=None, **kwargs):
+    def __init__(self, split="train", *, transform=None, **kwargs):
         """
         Attempts to download data.
 
@@ -63,7 +63,7 @@ class Dataset(torch.utils.data.Dataset):
         ----------
         split : str
             One of {"train", "val", "test"}.
-            Which data partition to use.
+            Which data partition to use. Case insensitive.
         transform : obj
             Whatever format you want. Depends on dataset __getitem__ implementation.
             Defaults to just a ``ToTensor`` transform.
@@ -71,6 +71,7 @@ class Dataset(torch.utils.data.Dataset):
             __get__ implementation, or other parent classes of the dataset..
         """
 
+        split = split.lower()
         assert split in ("train", "val", "test")
         self.split = split
 

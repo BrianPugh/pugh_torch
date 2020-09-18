@@ -1,5 +1,5 @@
 import pytest
-from pugh_torch.datasets.classification import ImageNet
+from pugh_torch.datasets.classification import MNIST
 from torchvision import transforms
 from torch.utils.data import DataLoader
 from tqdm import tqdm
@@ -11,24 +11,12 @@ from tqdm import tqdm
 
 @pytest.fixture
 def train(tmp_path):
-    transform = transforms.Compose(
-        [
-            transforms.Resize((224, 224)),  # So that exemplars can be collated.
-            transforms.ToTensor(),
-        ]
-    )
-    return ImageNet("train", transform=transform)
+    return MNIST(split="train")
 
 
 @pytest.fixture
 def val(tmp_path):
-    transform = transforms.Compose(
-        [
-            transforms.Resize((224, 224)),  # So that exemplars can be collated.
-            transforms.ToTensor(),
-        ]
-    )
-    return ImageNet("val", transform=transform)
+    return MNIST(split="val")
 
 
 def assert_imagenet(loader):
@@ -37,9 +25,10 @@ def assert_imagenet(loader):
     for i, (image, label) in enumerate(bar):
         assert image.max() <= 1
         assert image.min() >= 0
-        assert image.shape == (16, 3, 224, 224)
+        assert image.shape == (16, 1, 28, 28)
         assert label.shape == (16,)
-        # TODO: We could/should make more assertions like label range and stuff.
+        assert label.max() <= 9
+        assert label.min() >= 0
 
 
 @pytest.mark.dataset
