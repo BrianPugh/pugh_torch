@@ -4,8 +4,15 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Just life imporvement cli utilities
 RUN apt update && apt -y install \
+    autoconf \
+    autotools-dev \
+    cmake \
     feh \
+    ffmpeg \
     fluxbox \
+    libglib2.0-0 \
+    libjpeg8-dev \
+    python3-tk \
     vim \
     wget \
     x11vnc \
@@ -19,7 +26,8 @@ ENV PYTHONPATH=/root/pugh_torch/$PYTHONPATH
 
 WORKDIR /root/pugh_torch
 
-RUN pip install pugh-torch[all]
+# Install from master to always get the latest.
+RUN pip install "pugh-torch[all] @ git+ssh://git@github.com/brianpugh/pugh_torch.git"
 
 ENV DISPLAY=:20
 ENV DISPLAY_RESOLUTION=1280x1440
