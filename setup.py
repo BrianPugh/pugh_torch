@@ -50,11 +50,12 @@ dev_requirements = [
 ]
 
 experiment_requirements = [
+    "hydra==2.5",
     "ipdb",
     "matplotlib>=3.0.3",
+    "open3d>=0.10.0.0",
     "pytorch-lightning>=0.9.0",
     "scipy>=1.5.1",
-    "open3d>=0.10.0.0",
     "tqdm>=4.45.0",
 ]
 
