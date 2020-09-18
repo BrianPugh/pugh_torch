@@ -6,10 +6,15 @@ To implement your own dataset:
             def download(self):
                 # the local folder (guarenteed to exist) is ``self.path``
        This will only be called if the downloaded data isn't available.
+       The download being available is determined by a sentinel "downloaded"
+       file.
     3. Implement the unpack method:
             def unpack(self):
                 # the local folder (guarenteed to exist) is ``self.path``
        This will only be called if the data hasn't been unpacked yet.
+       The unpacked being available is determined by a sentinel "unpacked"
+       file.
+
     4. Follow the other remaining instructions at:
         https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset
 """
@@ -33,20 +38,27 @@ class Dataset(torch.utils.data.Dataset):
         assert split in ("train", "val", "test")
         self.split = split
 
+        self.path.mkdir(parents=True, exist_ok=True)
         self._download_dataset_if_not_downloaded()
         self._unpack_dataset_if_not_unpacked()
 
     def _download_dataset_if_not_downloaded(self):
-        if not self.downloaded:
-            self.path.mkdir(parents=True, exist_ok=True)
-            self.download()
-            self.downloaded = True
+        self.path.mkdir(parents=True, exist_ok=True)
+
+        if self.unpacked or self.downloaded:
+            return
+
+        self.download()
+        self.downloaded = True
 
     def _unpack_dataset_if_not_unpacked(self):
-        if not self.unpacked:
-            self.path.mkdir(parents=True, exist_ok=True)
-            self.unpack()
-            self.unpacked = True
+        if self.unpacked:
+            return
+
+        self.path.mkdir(parents=True, exist_ok=True)
+
+        self.unpack()
+        self.unpacked = True
 
     @property
     def path(self):

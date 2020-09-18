@@ -16,6 +16,9 @@ ROOT_DATASET_PATH = Path(
 
 from .base import Dataset
 
+import pugh_torch.datasets.classification
+import pugh_torch.datasets.segmentation
+
 
 # def get_dataset(name):
 #    """
