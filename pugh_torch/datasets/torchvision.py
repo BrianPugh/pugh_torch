@@ -17,7 +17,7 @@ class TorchVisionDataset(Dataset):
         """Automatically gets the constructor of the torchvision dataset
         of the same name
         """
-
+        super().__init_subclass__(**kwargs)
         cls.__torchvision_constructor = getattr(torchvision.datasets, cls.__name__)
 
     def __init__(self, **kwargs):

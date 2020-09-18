@@ -35,15 +35,26 @@ To implement your own dataset:
 
 import torch
 from torchvision import transforms
-from . import ROOT_DATASET_PATH
+from . import ROOT_DATASET_PATH, DATASETS
 
 
 class Dataset(torch.utils.data.Dataset):
     """"""
 
     def __init_subclass__(cls, **kwargs):
-        """"""
-        pass
+        """ Automatic registration stuff
+        """
+        super().__init_subclass__(**kwargs)
+
+        # Register in DATASETS
+        modules = cls.__module__.split(".")
+        if len(modules) > 3 and modules[0] == 'pugh_torch' and modules[1] == 'datasets':
+            d = DATASETS
+            for module in modules[2:-1]:
+                if module not in d:
+                    d[module] = {}
+                d = d[module]
+            d[cls.__name__.lower()] = cls
 
     def __init__(self, *, split="train", transform=None, **kwargs):
         """
