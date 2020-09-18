@@ -1,4 +1,17 @@
 """
+Design philosophies/rules:
+    * All datasets in this repo are a child of ``Dataset``.
+    * All paths are pathlib.Path objects.
+        * If something cannot handle it as a Path object, cast it to a string
+          as late as possible.
+    * Whenever possible, require the least amount of effort on the dev's part
+      to get a dataset downloaded and properly formatted.
+    * Dataset directories are automatically parsed/derived, so no need to
+      prompt the developer on where they want their dataset files.
+    * ``self.transform`` is ONLY ever used in the dev's implementation of
+      ``self.__getitem__``
+
+
 To implement your own dataset:
     1. Subclass the ``pugh_torch.datasets.Dataset`` class.
        This class itself is a subclass of ``torch.utils.data.Dataset``.
@@ -19,7 +32,9 @@ To implement your own dataset:
         https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset
 """
 
+
 import torch
+from torchvision import transforms
 from . import ROOT_DATASET_PATH
 
 
@@ -30,13 +45,33 @@ class Dataset(torch.utils.data.Dataset):
         """"""
         pass
 
-    def __init__(self, *args, split="train", **kwargs):
+    def __init__(self, *, split="train", transform=None, **kwargs):
         """
         Attempts to download data.
+
+        Parameters
+        ----------
+        split : str
+            One of {"train", "val", "test"}.
+            Which data partition to use.
+        transform : obj
+            Whatever format you want. Depends on dataset __getitem__ implementation.
+            Defaults to just a ``ToTensor`` transform.
+            This attribute is NOT used anywhere except in the dataset-specific
+            __get__ implementation, or other parent classes of the dataset..
         """
 
         assert split in ("train", "val", "test")
         self.split = split
+
+        if transform is None:
+            self.transform = transforms.Compose(
+                [
+                    transforms.ToTensor(),
+                ]
+            )
+        else:
+            self.transform = transform
 
         self.path.mkdir(parents=True, exist_ok=True)
         self._download_dataset_if_not_downloaded()

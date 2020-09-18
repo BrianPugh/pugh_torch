@@ -15,6 +15,7 @@ ROOT_DATASET_PATH = Path(
 ).expanduser()
 
 from .base import Dataset
+from .torchvision import TorchVisionDataset
 
 import pugh_torch.datasets.classification
 import pugh_torch.datasets.segmentation
