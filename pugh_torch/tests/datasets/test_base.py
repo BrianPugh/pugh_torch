@@ -31,3 +31,13 @@ def test_download_dataset_if_not_downloaded(mocker, dummy, tmp_path):
 
     mock_download.assert_called_once()
     assert dummy.downloaded
+
+
+def test_unpack_dataset_if_not_unpacked(mocker, dummy, tmp_path):
+    mock_unpack = mocker.patch.object(dummy, "unpack")
+
+    assert not dummy.unpacked
+    dummy._unpack_dataset_if_not_unpacked()
+
+    mock_unpack.assert_called_once()
+    assert dummy.unpacked

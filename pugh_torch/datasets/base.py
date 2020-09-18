@@ -34,6 +34,7 @@ class Dataset(torch.utils.data.Dataset):
         self.split = split
 
         self._download_dataset_if_not_downloaded()
+        self._unpack_dataset_if_not_unpacked()
 
     def _download_dataset_if_not_downloaded(self):
         if not self.downloaded:
