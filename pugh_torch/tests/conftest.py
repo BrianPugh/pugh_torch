@@ -13,6 +13,12 @@ def pytest_addoption(parser):
         default=False,
         help="run interactive visual tests",
     )
+    parser.addoption(
+        "--dataset",
+        action="store_true",
+        default=False,
+        help="run dataset downloading tests. WARNING may use considerable bandwith and take a long time. DOES NOT SAVE DATA.",
+    )
 
 
 def pytest_collection_modifyitems(config, items):
@@ -23,6 +29,14 @@ def pytest_collection_modifyitems(config, items):
     for item in items:
         if "visual" in item.keywords:
             item.add_marker(skip_visual)
+
+    if config.getoption("--dataset"):
+        # --dataset given in cli: do not skip dataset tests
+        return
+    skip_dataset = pytest.mark.skip(reason="need --dataset option to run")
+    for item in items:
+        if "dataset" in item.keywords:
+            item.add_marker(skip_dataset)
 
 
 @pytest.fixture

@@ -66,3 +66,6 @@ docs: gen-docs  ## generate Sphinx HTML documentation, including API docs, and s
 
 test:
 	$(PYTHON) -m pytest pugh_torch/tests
+
+test-pdb:
+	$(PYTHON) -m pytest pugh_torch/tests -s --pdb

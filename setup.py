@@ -50,6 +50,7 @@ dev_requirements = [
 ]
 
 experiment_requirements = [
+    "albumentations>=0.4.6",
     "hydra==2.5",
     "ipdb",
     "matplotlib>=3.0.3",
