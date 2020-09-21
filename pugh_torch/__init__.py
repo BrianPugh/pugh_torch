@@ -21,4 +21,5 @@ import pugh_torch.losses
 import pugh_torch.mappings
 import pugh_torch.modules
 import pugh_torch.transforms
-import pugh_torch.transforms
+import pugh_torch.augmentations
+import pugh_torch.augmentations as A
