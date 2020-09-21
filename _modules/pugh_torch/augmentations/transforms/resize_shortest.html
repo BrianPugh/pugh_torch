@@ -227,8 +227,8 @@
         <span class="n">new_width</span> <span class="o">=</span> <span class="n">length</span>
         <span class="n">new_height</span> <span class="o">=</span> <span class="n">height</span> <span class="o">*</span> <span class="n">length</span> <span class="o">/</span> <span class="n">width</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">new_width</span> <span class="o">=</span> <span class="n">width</span>
-        <span class="n">new_height</span> <span class="o">=</span> <span class="n">height</span>
+        <span class="n">new_width</span> <span class="o">=</span> <span class="n">length</span>
+        <span class="n">new_height</span> <span class="o">=</span> <span class="n">length</span>
 
     <span class="k">if</span> <span class="n">trunc</span><span class="p">:</span>
         <span class="n">new_height</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">new_height</span><span class="p">)</span>
@@ -279,6 +279,10 @@
 <div class="viewcode-block" id="ResizeShortest.get_transform_init_args_names"><a class="viewcode-back" href="../../../../pugh_torch.augmentations.transforms.html#pugh_torch.augmentations.transforms.resize_shortest.ResizeShortest.get_transform_init_args_names">[docs]</a>    <span class="k">def</span> <span class="nf">get_transform_init_args_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># TODO</span>
         <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;length&quot;</span><span class="p">,</span> <span class="s2">&quot;interpolation&quot;</span><span class="p">)</span></div></div>
+
+
+<span class="c1"># Alias with similar naming to albumentations.augmentations.transforms.LongestMaxSize</span>
+<span class="n">ShortestMaxSize</span> <span class="o">=</span> <span class="n">ResizeShortest</span>
 </pre></div>
 
            </div>
