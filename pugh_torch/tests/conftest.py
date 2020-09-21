@@ -118,3 +118,41 @@ def assert_img_equal(img1, img2, thresh=0.001, resize=True):
     avg_diff = np.linalg.norm(img1 - img2, axis=-1).mean()
 
     assert avg_diff < thresh 
+
+@pytest.fixture
+def assert_img_equal(request, tmpdir):
+    """ Compares the provided file to the one recorded in the tests's data_path.
+
+    The input image has the same constraints/requirements as described in
+    the helper function ``assert_img_equal``
+
+    Usage:
+            # from pugh_torch/tests/foo/bar.py
+            def test_mytest(assert_img_equal):
+                some_created_img = some_function()
+                # Check if this img is very close to the stored one:
+                assert_img_equal(some_created_img)
+                # This ALWAYS saves to "pugh_torch/tests/foo/bar/mytest_0_actual.png"
+                # This compares to "pugh_torch/tests/foo/bar/mytest_0.png", if available.
+                # This is so you can easily rename the "actual" image after human-verification
+    """
+
+    testname = request.node.name
+    filename = Path(request.module.__file__)
+    test_dir = filename.parent / filename.stem
+    test_dir.mkdir(exist_ok=True)
+
+    def _img_equal(img, index=0):
+        expected_file = test_dir / f"{testname}_{index}.png"
+        actual_file = test_dir / f"{testname}_{index}_actual.png"
+        if img.ndim == 2:
+            cv2.imwrite(str(actual_file), img)
+        else:
+            cv2.imwrite(str(actual_file), img[..., ::-1])  # img is RGB, imwrite expects BGR
+
+        if not expected_file.exists():
+            raise AssertionError(f"{expected_file} does not exist!")
+
+        pytest.helpers.assert_img_equal(expected_file, img)
+
+    return _img_equal

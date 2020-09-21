@@ -107,3 +107,5 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+pugh_torch/tests/**/*_actual.png
