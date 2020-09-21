@@ -98,6 +98,8 @@ def add_text_under_img(img, text, font_size=None, min_font_size=10, font="DejaVu
                 font_size += jump_size
             else:
                 jump_size = int(jump_size / 2)
+                if jump_size == 0 or font_size == min_font_size:
+                    break
                 font_size -= jump_size
             font_obj = ImageFont.truetype(font, font_size)
             if jump_size <= 1:

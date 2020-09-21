@@ -1,5 +1,5 @@
 import pytest
-
+import cv2
 from pugh_torch import helpers
 
 
@@ -14,4 +14,10 @@ def test_add_text_under_img(chelsea, assert_img_equal):
 def test_add_text_under_img_multiline(chelsea, assert_img_equal):
     annotated = helpers.add_text_under_img(chelsea, "hello world\nmultiline test\nabc123")
     assert_img_equal(annotated)
+
+def test_add_text_under_img_tiny(chelsea, assert_img_equal):
+    chelsea = cv2.resize(chelsea, (48, 48))
+    annotated = helpers.add_text_under_img(chelsea, "this string is much longer than the image is wide.")
+    assert_img_equal(annotated)
+
 
