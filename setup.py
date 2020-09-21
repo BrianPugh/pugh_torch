@@ -31,6 +31,7 @@ test_requirements = [
     "flake8-debugger>=3.2.1",
     "flake8>=3.8.3",
     "pytest-cov>=2.9.0",
+    "pytest-helpers-namespace==2019.1.8",
     "pytest-mock>=3.3.1",
     "pytest-raises>=0.11",
     "pytest>=5.4.3",

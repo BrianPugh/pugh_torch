@@ -1,9 +1,14 @@
 #!/usr/bin/env python
 # content of conftest.py
 
+pytest_plugins = ['helpers_namespace']
+
 import pytest
 from pathlib import Path
+import numpy as np
 from distutils import dir_util
+import cv2
+from PIL import Image
 
 
 def pytest_addoption(parser):
@@ -70,3 +75,46 @@ def data_path(tmp_path, request):
         dir_util.copy_tree(test_dir, str(tmp_path))
 
     return tmp_path
+
+
+@pytest.helpers.register
+def assert_img_equal(img1, img2, thresh=0.001, resize=True):
+    """ Assert two images are similar.
+
+    Parameters
+    ----------
+    img1 : numpy.ndarray or PIL.Image.Image or str-like
+        First image to compare. If a numpy array, assumes RGB order.
+    img2 : numpy.ndarray or PIL.Image.Image or str-like
+        Second image to compare. If a numpy array, assumes RGB order.
+    thresh : float
+        Maximum average per-pixel L2 distance.
+        Defaults to 0.001.
+    resize : bool
+        Bilinearly resize img2 to match the dimensions of img1.
+        Defaults to True.
+    """
+
+    def standardize_args(img):
+        """ Transform some img representation into a numpy array """
+        if isinstance(img, np.ndarray):
+            pass
+        elif isinstance(img, Image.Image):
+            img = np.array(img)
+        else:
+            # Assume its something path/str-like
+            img = cv2.imread(str(img))[..., ::-1]
+        img = img.astype(np.float32)
+        if img.ndim == 2:
+            img = img[..., None]
+        return img
+
+    img1 = standardize_args(img1)
+    img2 = standardize_args(img2)
+
+    if resize and img1.shape != img2.shape:
+        img2 = cv2.resize(im2, (img1.shape[1], img1.shape[0]))
+
+    avg_diff = np.linalg.norm(img1 - img2, axis=-1).mean()
+
+    assert avg_diff < thresh 
