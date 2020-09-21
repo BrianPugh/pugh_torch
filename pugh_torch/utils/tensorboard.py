@@ -9,6 +9,7 @@ from ..helpers import add_text_under_img
 
 import pytorch_lightning as pl
 
+
 class SummaryWriter(tb.SummaryWriter):
     """Extension of Summary Writer for convenient common uses."""
 
@@ -42,16 +43,16 @@ class SummaryWriter(tb.SummaryWriter):
         raise NotImplementedError(f"Cannot parse rgb_transform {rgb_transform}")
 
     def _parse_labels(self, labels, n):
-        """ Converts labels into a standardized list of strings.
-        """
+        """Converts labels into a standardized list of strings."""
 
         if isinstance(labels, str) or labels is None:
-            labels = [labels,] * n
+            labels = [
+                labels,
+            ] * n
 
         assert isinstance(labels, list)
 
         return labels
-
 
     def add_rgb(
         self,
@@ -101,7 +102,7 @@ class SummaryWriter(tb.SummaryWriter):
 
         for i, rgb, label in zip(range(n_images), rgbs, labels):
             if label is not None:
-                rgb = add_text_under_img(rgb, label) 
+                rgb = add_text_under_img(rgb, label)
 
             self.add_image(
                 f"{tag}/{i}",
@@ -198,7 +199,9 @@ class SummaryWriter(tb.SummaryWriter):
 
         # Iterate over exemplars and log
         # Note: ``zip`` limits iterations to the shortest input iterator.
-        for i, rgb, pred, target, label in zip(range(n_images), rgbs, preds, targets, labels):
+        for i, rgb, pred, target, label in zip(
+            range(n_images), rgbs, preds, targets, labels
+        ):
             # Resize pred and target
             pred = cv2.resize(pred, (w, h), interpolation=cv2.INTER_NEAREST)
             target = cv2.resize(target, (w, h), interpolation=cv2.INTER_NEAREST)
@@ -220,7 +223,7 @@ class SummaryWriter(tb.SummaryWriter):
             )
 
             if label is not None:
-                montage = add_text_under_img(montage, label) 
+                montage = add_text_under_img(montage, label)
 
             # Log the montage to tensorboard
             self.add_image(
@@ -233,7 +236,7 @@ class SummaryWriter(tb.SummaryWriter):
 
 
 class TensorBoardLogger(pl.loggers.TensorBoardLogger):
-    """ Same as default PyTorch Lightning TensorBoard Logger, but uses
+    """Same as default PyTorch Lightning TensorBoard Logger, but uses
     the extended SummaryWriter defined in this file.
     """
 
@@ -249,7 +252,7 @@ class TensorBoardLogger(pl.loggers.TensorBoardLogger):
         if self._experiment is not None:
             return self._experiment
 
-        assert rank_zero_only.rank == 0, 'tried to init log dirs in non global_rank=0'
+        assert rank_zero_only.rank == 0, "tried to init log dirs in non global_rank=0"
         if self.root_dir:
             self._fs.makedirs(self.root_dir, exist_ok=True)
         self._experiment = SummaryWriter(log_dir=self.log_dir, **self._kwargs)

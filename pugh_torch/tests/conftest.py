@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # content of conftest.py
 
-pytest_plugins = ['helpers_namespace']
+pytest_plugins = ["helpers_namespace"]
 
 import pytest
 from pathlib import Path
@@ -79,7 +79,7 @@ def data_path(tmp_path, request):
 
 @pytest.helpers.register
 def assert_img_equal(img1, img2, thresh=0.001, resize=True):
-    """ Assert two images are similar.
+    """Assert two images are similar.
 
     Parameters
     ----------
@@ -117,11 +117,12 @@ def assert_img_equal(img1, img2, thresh=0.001, resize=True):
 
     avg_diff = np.linalg.norm(img1 - img2, axis=-1).mean()
 
-    assert avg_diff < thresh 
+    assert avg_diff < thresh
+
 
 @pytest.fixture
 def assert_img_equal(request, tmpdir):
-    """ Compares the provided file to the one recorded in the tests's data_path.
+    """Compares the provided file to the one recorded in the tests's data_path.
 
     The input image has the same constraints/requirements as described in
     the helper function ``assert_img_equal``
@@ -148,10 +149,14 @@ def assert_img_equal(request, tmpdir):
         if img.ndim == 2:
             cv2.imwrite(str(actual_file), img)
         else:
-            cv2.imwrite(str(actual_file), img[..., ::-1])  # img is RGB, imwrite expects BGR
+            cv2.imwrite(
+                str(actual_file), img[..., ::-1]
+            )  # img is RGB, imwrite expects BGR
 
         if not expected_file.exists():
-            raise AssertionError(f"{expected_file} does not exist! Check newly produced img with a command like:\n\n    feh {actual_file}\n\n")
+            raise AssertionError(
+                f"{expected_file} does not exist! Check newly produced img with a command like:\n\n    feh {actual_file}\n\n"
+            )
 
         pytest.helpers.assert_img_equal(expected_file, img)
 

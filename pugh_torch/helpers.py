@@ -55,8 +55,16 @@ def compare_hash(expected, actual):
     raise HashMismatchError(f"{actual} doesn't match expected hash {expected}")
 
 
-def add_text_under_img(img, text, font_size=None, min_font_size=10, font="DejaVuSansMono.ttf", bg="white", fg="black"):
-    """ Rasterize and add text under an image.
+def add_text_under_img(
+    img,
+    text,
+    font_size=None,
+    min_font_size=10,
+    font="DejaVuSansMono.ttf",
+    bg="white",
+    fg="black",
+):
+    """Rasterize and add text under an image.
 
     Based on:
         https://stackoverflow.com/a/4902713/13376237
@@ -115,10 +123,10 @@ def add_text_under_img(img, text, font_size=None, min_font_size=10, font="DejaVu
     font_dim = font_obj.getsize_multiline(text)
     if font_dim[0] > img.size[0]:
         new_w = font_dim[0]
-        new_h = int(new_w / img.size[0] * img.size[1]) 
+        new_h = int(new_w / img.size[0] * img.size[1])
         img = img.resize((new_w, new_h))
 
-    output = Image.new('RGB', (img.size[0], img.size[1] + font_dim[1]), color=bg)
+    output = Image.new("RGB", (img.size[0], img.size[1] + font_dim[1]), color=bg)
     output.paste(img)
 
     draw = ImageDraw.Draw(output)
@@ -126,4 +134,3 @@ def add_text_under_img(img, text, font_size=None, min_font_size=10, font="DejaVu
 
     # Convert to a numpy object
     return np.array(output)
-
