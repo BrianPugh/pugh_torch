@@ -2,6 +2,7 @@ import pytest
 import numpy as np
 import pugh_torch as pt
 import albumentations as A
+import cv2
 
 
 def test_compute_new_shape():
@@ -22,6 +23,14 @@ def test_resize_shortest_image(chelsea):
     result = transform(image=chelsea)
 
     assert result["image"].shape == (100, 150, 3)
+
+
+def test_resize_shortest_image_equal(chelsea):
+    chelsea = cv2.resize(chelsea, (200, 200))
+    transform = pt.A.ResizeShortest(100)
+    result = transform(image=chelsea)
+
+    assert result["image"].shape == (100, 100, 3)
 
 
 def test_resize_shortest_image_keypoint(chelsea):

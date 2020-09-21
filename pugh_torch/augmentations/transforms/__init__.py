@@ -1,1 +1,1 @@
-from .resize_shortest import ResizeShortest
+from .resize_shortest import ResizeShortest, ShortestMaxSize

@@ -33,8 +33,8 @@ def _compute_new_shape(length, height, width, trunc=True):
         new_width = length
         new_height = height * length / width
     else:
-        new_width = width
-        new_height = height
+        new_width = length
+        new_height = length
 
     if trunc:
         new_height = int(new_height)
@@ -85,3 +85,7 @@ class ResizeShortest(DualTransform):
     def get_transform_init_args_names(self):
         # TODO
         return ("length", "interpolation")
+
+
+# Alias with similar naming to albumentations.augmentations.transforms.LongestMaxSize
+ShortestMaxSize = ResizeShortest

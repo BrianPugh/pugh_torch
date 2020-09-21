@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2020-09-21
+### Added
+* Aliased `ResizeShortest` to `ShortestMaxSize` to be consistent with `albumentations.augmentations.transforms.LongestMaxSize`
+
+### Fixed
+* Add missing interpolation attribute in ResizeShortest transform.
+* Fixed `ResizeShortest` producing erroenous results when both sides are the same length.
+
 ## [0.3.0] - 2020-09-21
 ### Added
 + Text label adding to TensorBoard Images
