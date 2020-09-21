@@ -7,7 +7,10 @@ from ..transforms import imagenet
 from ..mappings.color import get_palette
 from ..helpers import add_text_under_img
 
-import pytorch_lightning as pl
+try:
+    import pytorch_lightning as pl
+except ModuleNotFoundError:
+    pl = None
 
 
 class SummaryWriter(tb.SummaryWriter):
@@ -235,25 +238,29 @@ class SummaryWriter(tb.SummaryWriter):
             )
 
 
-class TensorBoardLogger(pl.loggers.TensorBoardLogger):
-    """Same as default PyTorch Lightning TensorBoard Logger, but uses
-    the extended SummaryWriter defined in this file.
-    """
+if pl is not None:
 
-    @property
-    @pl.loggers.base.rank_zero_experiment
-    def experiment(self) -> SummaryWriter:
-        r"""
-        Actual tensorboard object. To use TensorBoard features in your
-        :class:`~pytorch_lightning.core.lightning.LightningModule` do the following.
-        Example::
-            self.logger.experiment.some_tensorboard_function()
+    class TensorBoardLogger(pl.loggers.TensorBoardLogger):
+        """Same as default PyTorch Lightning TensorBoard Logger, but uses
+        the extended SummaryWriter defined in this file.
         """
-        if self._experiment is not None:
-            return self._experiment
 
-        assert rank_zero_only.rank == 0, "tried to init log dirs in non global_rank=0"
-        if self.root_dir:
-            self._fs.makedirs(self.root_dir, exist_ok=True)
-        self._experiment = SummaryWriter(log_dir=self.log_dir, **self._kwargs)
-        return self._experiment
+        @property
+        @pl.loggers.base.rank_zero_experiment
+        def experiment(self) -> SummaryWriter:
+            r"""
+            Actual tensorboard object. To use TensorBoard features in your
+            :class:`~pytorch_lightning.core.lightning.LightningModule` do the following.
+            Example::
+                self.logger.experiment.some_tensorboard_function()
+            """
+            if self._experiment is not None:
+                return self._experiment
+
+            assert (
+                rank_zero_only.rank == 0
+            ), "tried to init log dirs in non global_rank=0"
+            if self.root_dir:
+                self._fs.makedirs(self.root_dir, exist_ok=True)
+            self._experiment = SummaryWriter(log_dir=self.log_dir, **self._kwargs)
+            return self._experiment
