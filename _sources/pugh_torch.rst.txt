@@ -6,6 +6,7 @@ Subpackages
 
 .. toctree::
 
+   pugh_torch.augmentations
    pugh_torch.datasets
    pugh_torch.losses
    pugh_torch.mappings

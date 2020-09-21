@@ -1,0 +1,17 @@
+pugh\_torch.augmentations package
+=================================
+
+Subpackages
+-----------
+
+.. toctree::
+
+   pugh_torch.augmentations.transforms
+
+Module contents
+---------------
+
+.. automodule:: pugh_torch.augmentations
+   :members:
+   :undoc-members:
+   :show-inheritance:

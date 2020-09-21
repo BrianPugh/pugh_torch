@@ -1,0 +1,22 @@
+pugh\_torch.augmentations.transforms package
+============================================
+
+Submodules
+----------
+
+pugh\_torch.augmentations.transforms.resize\_shortest module
+------------------------------------------------------------
+
+.. automodule:: pugh_torch.augmentations.transforms.resize_shortest
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: pugh_torch.augmentations.transforms
+   :members:
+   :undoc-members:
+   :show-inheritance:
