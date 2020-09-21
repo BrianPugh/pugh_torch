@@ -113,7 +113,7 @@ def assert_img_equal(img1, img2, thresh=0.001, resize=True):
     img2 = standardize_args(img2)
 
     if resize and img1.shape != img2.shape:
-        img2 = cv2.resize(im2, (img1.shape[1], img1.shape[0]))
+        img2 = cv2.resize(img2, (img1.shape[1], img1.shape[0]))
 
     avg_diff = np.linalg.norm(img1 - img2, axis=-1).mean()
 
@@ -158,6 +158,9 @@ def assert_img_equal(request, tmpdir):
                 f"{expected_file} does not exist! Check newly produced img with a command like:\n\n    feh {actual_file}\n\n"
             )
 
-        pytest.helpers.assert_img_equal(expected_file, img)
+        try:
+            pytest.helpers.assert_img_equal(expected_file, img)
+        except Exception as e:
+            raise AssertionError(f"{expected_file} differs from {actual_file}") from e
 
     return _img_equal
