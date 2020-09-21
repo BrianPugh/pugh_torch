@@ -17,6 +17,7 @@ setup_requirements = [
 ]
 
 requirements = [
+    "albumentations>=0.4.6",
     "gdown>=3.10.1",
     "numpy>=1.17.1",
     "opencv-python>=4.2.0",
@@ -52,7 +53,6 @@ dev_requirements = [
 ]
 
 experiment_requirements = [
-    "albumentations>=0.4.6",
     "hydra==2.5",
     "ipdb",
     "matplotlib>=3.0.3",
