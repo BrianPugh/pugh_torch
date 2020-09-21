@@ -192,6 +192,8 @@
   <h1>Source code for pugh_torch.helpers</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageDraw</span><span class="p">,</span> <span class="n">ImageFont</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 
 <div class="viewcode-block" id="camel_to_snake"><a class="viewcode-back" href="../../pugh_torch.html#pugh_torch.helpers.camel_to_snake">[docs]</a><span class="k">def</span> <span class="nf">camel_to_snake</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
@@ -243,6 +245,87 @@
         <span class="k">return</span>
 
     <span class="k">raise</span> <span class="n">HashMismatchError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">actual</span><span class="si">}</span><span class="s2"> doesn&#39;t match expected hash </span><span class="si">{</span><span class="n">expected</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="add_text_under_img"><a class="viewcode-back" href="../../pugh_torch.html#pugh_torch.helpers.add_text_under_img">[docs]</a><span class="k">def</span> <span class="nf">add_text_under_img</span><span class="p">(</span>
+    <span class="n">img</span><span class="p">,</span>
+    <span class="n">text</span><span class="p">,</span>
+    <span class="n">font_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">min_font_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">font</span><span class="o">=</span><span class="s2">&quot;DejaVuSansMono.ttf&quot;</span><span class="p">,</span>
+    <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+    <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Rasterize and add text under an image.</span>
+
+<span class="sd">    Based on:</span>
+<span class="sd">        https://stackoverflow.com/a/4902713/13376237</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    img : numpy.ndarray or PIL.Image.Image</span>
+<span class="sd">        (H,W,3) Image</span>
+<span class="sd">    text : str</span>
+<span class="sd">        Text to display under the image</span>
+<span class="sd">    min_font_size : int</span>
+<span class="sd">        Minimum font size to render. If the resulting text is wider than the</span>
+<span class="sd">        passed in img, then the img will be resized.</span>
+<span class="sd">        Ignored if ``font_size`` is provided.</span>
+<span class="sd">    font_size : int</span>
+<span class="sd">        If provided, uses this font size and doesn&#39;t auto-search for a font size.</span>
+<span class="sd">    bg: str or tuple</span>
+<span class="sd">        Background color of annotation. Defaults to white.</span>
+<span class="sd">    fg: str or tuple</span>
+<span class="sd">        Text color. Defaults to black.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy.ndarray</span>
+<span class="sd">        Resulting annotated image. The image may be rescaled depending on</span>
+<span class="sd">        ``min_font_size``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">fromarray</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">font_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Figure out biggest font that will fit.</span>
+        <span class="n">font_size</span> <span class="o">=</span> <span class="n">min_font_size</span>
+        <span class="n">font_obj</span> <span class="o">=</span> <span class="n">ImageFont</span><span class="o">.</span><span class="n">truetype</span><span class="p">(</span><span class="n">font</span><span class="p">,</span> <span class="n">font_size</span><span class="p">)</span>
+        <span class="n">jump_size</span> <span class="o">=</span> <span class="mi">75</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">font_obj</span><span class="o">.</span><span class="n">getsize_multiline</span><span class="p">(</span><span class="n">text</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">img</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">font_size</span> <span class="o">+=</span> <span class="n">jump_size</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">jump_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">jump_size</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">jump_size</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">font_size</span> <span class="o">==</span> <span class="n">min_font_size</span><span class="p">:</span>
+                    <span class="k">break</span>
+                <span class="n">font_size</span> <span class="o">-=</span> <span class="n">jump_size</span>
+            <span class="n">font_obj</span> <span class="o">=</span> <span class="n">ImageFont</span><span class="o">.</span><span class="n">truetype</span><span class="p">(</span><span class="n">font</span><span class="p">,</span> <span class="n">font_size</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">jump_size</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="k">if</span> <span class="n">font_size</span> <span class="o">&lt;</span> <span class="n">min_font_size</span><span class="p">:</span>
+            <span class="n">font_size</span> <span class="o">=</span> <span class="n">min_font_size</span>
+            <span class="n">font_obj</span> <span class="o">=</span> <span class="n">ImageFont</span><span class="o">.</span><span class="n">truetype</span><span class="p">(</span><span class="n">font</span><span class="p">,</span> <span class="n">font_size</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">font_obj</span> <span class="o">=</span> <span class="n">ImageFont</span><span class="o">.</span><span class="n">truetype</span><span class="p">(</span><span class="n">font</span><span class="p">,</span> <span class="n">font_size</span><span class="p">)</span>
+
+    <span class="c1"># Check and resize img if the font doesn&#39;t fit</span>
+    <span class="n">font_dim</span> <span class="o">=</span> <span class="n">font_obj</span><span class="o">.</span><span class="n">getsize_multiline</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">font_dim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">img</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="n">new_w</span> <span class="o">=</span> <span class="n">font_dim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">new_h</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">new_w</span> <span class="o">/</span> <span class="n">img</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">img</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="n">new_w</span><span class="p">,</span> <span class="n">new_h</span><span class="p">))</span>
+
+    <span class="n">output</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;RGB&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">img</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">font_dim</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">color</span><span class="o">=</span><span class="n">bg</span><span class="p">)</span>
+    <span class="n">output</span><span class="o">.</span><span class="n">paste</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+
+    <span class="n">draw</span> <span class="o">=</span> <span class="n">ImageDraw</span><span class="o">.</span><span class="n">Draw</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+    <span class="n">draw</span><span class="o">.</span><span class="n">text</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">img</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">text</span><span class="p">,</span> <span class="n">font</span><span class="o">=</span><span class="n">font_obj</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="n">fg</span><span class="p">)</span>
+
+    <span class="c1"># Convert to a numpy object</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">output</span><span class="p">)</span></div>
 </pre></div>
 
            </div>
