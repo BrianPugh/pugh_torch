@@ -151,7 +151,7 @@ def assert_img_equal(request, tmpdir):
             cv2.imwrite(str(actual_file), img[..., ::-1])  # img is RGB, imwrite expects BGR
 
         if not expected_file.exists():
-            raise AssertionError(f"{expected_file} does not exist!")
+            raise AssertionError(f"{expected_file} does not exist! Check newly produced img with a command like:\n\n    feh {actual_file}\n\n")
 
         pytest.helpers.assert_img_equal(expected_file, img)
 

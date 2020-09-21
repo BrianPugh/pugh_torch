@@ -94,7 +94,7 @@ def add_text_under_img(img, text, font_size=None, min_font_size=10, font="DejaVu
         font_obj = ImageFont.truetype(font, font_size)
         jump_size = 75
         while True:
-            if font_obj.getsize(text)[0] < img.size[0]:
+            if font_obj.getsize_multiline(text)[0] < img.size[0]:
                 font_size += jump_size
             else:
                 jump_size = int(jump_size / 2)
@@ -110,7 +110,7 @@ def add_text_under_img(img, text, font_size=None, min_font_size=10, font="DejaVu
         font_obj = ImageFont.truetype(font, font_size)
 
     # Check and resize img if the font doesn't fit
-    font_dim = font_obj.getsize(text)
+    font_dim = font_obj.getsize_multiline(text)
     if font_dim[0] > img.size[0]:
         new_w = font_dim[0]
         new_h = int(new_w / img.size[0] * img.size[1]) 
