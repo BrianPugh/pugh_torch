@@ -17,7 +17,7 @@ def mock_add_text_under_img(mocker):
     )
 
 
-class TestSummaryWriter(SummaryWriter):
+class NoInitSummaryWriter(SummaryWriter):
     """For testing isolated methods"""
 
     def __init__(self, *args, **kwargs):
@@ -28,7 +28,7 @@ def test_parse_rgb_transform(mocker):
     mock_imagenet = mocker.patch("pugh_torch.utils.tensorboard.imagenet")
     mock_imagenet.Unnormalize.return_value = "foo"
 
-    writer = TestSummaryWriter()
+    writer = NoInitSummaryWriter()
 
     assert "bar" == writer._parse_rgb_transform(None)("bar")  # identity
     mock_imagenet.Unnormalize.assert_not_called()
@@ -43,7 +43,7 @@ def test_parse_rgb_transform(mocker):
 def test_add_ss(mock_add_image):
     """Tests different sizes of inputs and for general common operation."""
 
-    writer = TestSummaryWriter()
+    writer = NoInitSummaryWriter()
 
     rgbs = torch.rand(10, 3, 480, 640)
     preds = torch.rand(10, 13, 120, 160)
@@ -62,7 +62,7 @@ def test_add_ss(mock_add_image):
 
 
 def test_add_ss_single_label(mock_add_text_under_img, mock_add_image):
-    writer = TestSummaryWriter()
+    writer = NoInitSummaryWriter()
 
     rgbs = torch.rand(10, 3, 480, 640)
     preds = torch.rand(10, 13, 120, 160)
@@ -77,7 +77,7 @@ def test_add_ss_single_label(mock_add_text_under_img, mock_add_image):
 
 
 def test_add_ss_multi_label(mock_add_text_under_img, mock_add_image):
-    writer = TestSummaryWriter()
+    writer = NoInitSummaryWriter()
 
     rgbs = torch.rand(10, 3, 480, 640)
     preds = torch.rand(10, 13, 120, 160)
@@ -101,7 +101,7 @@ def test_add_ss_multi_label(mock_add_text_under_img, mock_add_image):
 
 
 def test_add_rgb(mock_add_image):
-    writer = TestSummaryWriter()
+    writer = NoInitSummaryWriter()
 
     rgbs = torch.rand(10, 3, 480, 640)
 
@@ -119,7 +119,7 @@ def test_add_rgb(mock_add_image):
 
 
 def test_add_rgb_single_label(mock_add_text_under_img, mock_add_image):
-    writer = TestSummaryWriter()
+    writer = NoInitSummaryWriter()
 
     rgbs = torch.rand(10, 3, 480, 640)
 
@@ -132,7 +132,7 @@ def test_add_rgb_single_label(mock_add_text_under_img, mock_add_image):
 
 
 def test_add_rgb_multi_label(mock_add_text_under_img, mock_add_image):
-    writer = TestSummaryWriter()
+    writer = NoInitSummaryWriter()
 
     rgbs = torch.rand(10, 3, 480, 640)
 
