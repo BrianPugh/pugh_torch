@@ -56,6 +56,7 @@ class ResizeShortest(DualTransform):
 
         super().__init__(always_apply, p)
         self.length = length
+        self.interpolation = interpolation
 
     def apply(self, img, interpolation=cv2.INTER_LINEAR, **params):
         new_height, new_width = _compute_new_shape(
