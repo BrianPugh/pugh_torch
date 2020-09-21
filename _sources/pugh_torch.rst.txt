@@ -9,6 +9,7 @@ Subpackages
    pugh_torch.datasets
    pugh_torch.losses
    pugh_torch.mappings
+   pugh_torch.metrics
    pugh_torch.modules
    pugh_torch.transforms
    pugh_torch.utils
