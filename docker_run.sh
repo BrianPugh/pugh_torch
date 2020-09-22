@@ -17,9 +17,8 @@ docker \
     --gpus all \
     -v $HOME/.pugh_torch:/root/.pugh_torch \
     -v $DIRECTORY:/root/pugh_torch \
-    -e DISPLAY \
+    --ipc=host \
     --net=host \
-    -v $HOME/.Xauthority:/root/.Xauthority \
     brianpugh/pugh-torch:${1:-latest}
 
 xhost -local:root

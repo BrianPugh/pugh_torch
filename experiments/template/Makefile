@@ -1,4 +1,4 @@
-.PHONY: train test test-pdb
+.PHONY: train test test-pdb lint clean
 
 PYTHON := python3
 
@@ -13,3 +13,7 @@ test-pdb:
 
 lint:
 	black .
+
+clean:
+	# WARNING: DELETES THE OUTPUTS/ FOLDER
+	rm -rf outputs

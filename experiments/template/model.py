@@ -7,6 +7,7 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 import pytorch_lightning as pl
+from pytorch_lightning.metrics.functional import accuracy
 
 
 def conv3x3(in_planes, out_planes, stride=1, groups=1, dilation=1):
@@ -114,11 +115,13 @@ class MyModel(pl.LightningModule):
         width_per_group=64,
         replace_stride_with_dilation=None,
         norm_layer=None,
+        learning_rate=0.002,
         **kwargs
     ):
         """Defaults are ResNet50"""
 
         super().__init__()
+        self.learning_rate = learning_rate  # This will be overwritten by learning rate finder.
 
         if norm_layer is None:
             norm_layer = nn.BatchNorm2d
@@ -243,23 +246,30 @@ class MyModel(pl.LightningModule):
 
         return x
 
+    ###########################
+    # PyTorch Lightning Stuff #
+    ###########################
+
+    def _log_common(self, result, split, logits, target, loss):
+        pred = torch.argmax(logits, dim=-1)
+        result.log(f"{split}/loss", loss, prog_bar=True)
+        result.log(f"{split}/acc", accuracy(pred, target), prog_bar=True)
+
+    def _compute_loss(self, pred, target):
+        return F.cross_entropy(pred, target)
+
     def training_step(self, batch, batch_nb):
         """"""
 
         x, y = batch
         logits = self(x)
-        loss = F.cross_entropy(logits, y)
+        loss = self._compute_loss(logits, y)
+
+        #self.logger.experiment.add_image  # TODO: probably in a hook
 
         result = pl.TrainResult(minimize=loss)
+        self._log_common(result, "train", logits, y, loss)
 
-        result.log("train_loss", loss, prog_bar=True)
-        result.log_dict(
-            {
-                "train_mse_loss": mse_loss,
-                "train_ce_loss": cross_entropy_loss,
-                "train_acc": accuracy(pred_move, target_move),
-            }
-        )
         return result
 
     def validation_step(self, batch, batch_nb):
@@ -267,19 +277,13 @@ class MyModel(pl.LightningModule):
 
         # OPTIONAL
         x, y = batch
-        y_hat = self(x)
-        return {"val_loss": F.cross_entropy(y_hat, y)}
+        logits = self(x)
+        loss = self._compute_loss(logits, y)
 
         result = pl.EvalResult(checkpoint_on=loss)
-        result.log_dict(
-            {
-                "val_loss": loss,
-                "val_mse_loss": mse_loss,
-                "val_ce_loss": cross_entropy_loss,
-                "val_acc": accuracy(pred_move, target_move),
-            }
-        )
+        self._log_common(result, "val", logits, y, loss)
+
         return result
 
     def configure_optimizers(self):
-        return torch.optim.Adam(self.parameters(), lr=0.02)
+        return torch.optim.Adam(self.parameters(), lr=self.learning_rate)
