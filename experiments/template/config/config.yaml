@@ -1,0 +1,3 @@
+defaults:
+    - trainer: default
+    - dataset: default

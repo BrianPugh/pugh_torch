@@ -47,13 +47,14 @@ dev_requirements = [
     "pytest-runner>=5.2",
     "Sphinx>=2.0.0b1,<3",
     "sphinx_rtd_theme>=0.4.3",
+    "torchtest==0.5",
     "tox>=3.15.2",
     "twine>=3.1.1",
     "wheel>=0.34.2",
 ]
 
 experiment_requirements = [
-    "hydra==2.5",
+    "hydra-core==1.0.2",
     "ipdb",
     "matplotlib>=3.0.3",
     "open3d>=0.10.0.0",
