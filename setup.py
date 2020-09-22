@@ -54,7 +54,7 @@ dev_requirements = [
 ]
 
 experiment_requirements = [
-    "hydra==2.5",
+    "hydra-core==1.0.2",
     "ipdb",
     "matplotlib>=3.0.3",
     "open3d>=0.10.0.0",
