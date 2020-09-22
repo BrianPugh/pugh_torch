@@ -17,3 +17,6 @@ lint:
 clean:
 	# WARNING: DELETES THE OUTPUTS/ FOLDER
 	rm -rf outputs
+
+tensorboard:
+	tensorboard --logdir outputs --port 6006 --host 0.0.0.0
