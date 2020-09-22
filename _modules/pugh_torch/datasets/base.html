@@ -205,7 +205,8 @@
 <span class="sd">    * Dataset directories are automatically parsed/derived, so no need to</span>
 <span class="sd">      prompt the developer on where they want their dataset files.</span>
 <span class="sd">    * ``self.transform`` is ONLY ever used in the dev&#39;s implementation of</span>
-<span class="sd">      ``self.__getitem__``</span>
+<span class="sd">      ``self.__getitem__``. However, the package ``albumentations`` does</span>
+<span class="sd">      a great job, so when in doubt, assume this is a ``albumentations.Compose``.</span>
 
 
 <span class="sd">To implement your own dataset:</span>
@@ -223,14 +224,17 @@
 <span class="sd">       This will only be called if the data hasn&#39;t been unpacked yet.</span>
 <span class="sd">       The unpacked being available is determined by a sentinel &quot;unpacked&quot;</span>
 <span class="sd">       file.</span>
-
 <span class="sd">    4. Follow the other remaining instructions at:</span>
 <span class="sd">        https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset</span>
+<span class="sd">    5. Registration, path-handling, and all of that other stuff is automatically</span>
+<span class="sd">       handled.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 
 <span class="kn">import</span> <span class="nn">torch</span>
-<span class="kn">from</span> <span class="nn">torchvision</span> <span class="kn">import</span> <span class="n">transforms</span>
+<span class="kn">import</span> <span class="nn">albumentations</span> <span class="k">as</span> <span class="nn">A</span>
+<span class="kn">from</span> <span class="nn">albumentations.pytorch</span> <span class="kn">import</span> <span class="n">ToTensorV2</span>
+
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">ROOT_DATASET_PATH</span><span class="p">,</span> <span class="n">DATASETS</span>
 
 
@@ -272,9 +276,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">split</span> <span class="o">=</span> <span class="n">split</span>
 
         <span class="k">if</span> <span class="n">transform</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="n">transforms</span><span class="o">.</span><span class="n">Compose</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">Compose</span><span class="p">(</span>
                 <span class="p">[</span>
-                    <span class="n">transforms</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">(),</span>
+                    <span class="n">ToTensorV2</span><span class="p">(),</span>
                 <span class="p">]</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>

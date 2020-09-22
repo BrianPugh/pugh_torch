@@ -201,8 +201,18 @@
 <span class="kn">from</span> <span class="nn">..mappings.color</span> <span class="kn">import</span> <span class="n">get_palette</span>
 <span class="kn">from</span> <span class="nn">..helpers</span> <span class="kn">import</span> <span class="n">add_text_under_img</span>
 
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;SummaryWriter&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">pytorch_lightning</span> <span class="k">as</span> <span class="nn">pl</span>
+
+    <span class="n">__all__</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="s2">&quot;TensorBoardLogger&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
 <span class="k">except</span> <span class="ne">ModuleNotFoundError</span><span class="p">:</span>
     <span class="n">pl</span> <span class="o">=</span> <span class="kc">None</span>
 

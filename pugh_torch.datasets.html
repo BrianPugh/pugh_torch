@@ -250,7 +250,8 @@ to get a dataset downloaded and properly formatted.</p></li>
 <li><p>Dataset directories are automatically parsed/derived, so no need to
 prompt the developer on where they want their dataset files.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">self.transform</span></code> is ONLY ever used in the dev’s implementation of
-<code class="docutils literal notranslate"><span class="pre">self.__getitem__</span></code></p></li>
+<code class="docutils literal notranslate"><span class="pre">self.__getitem__</span></code>. However, the package <code class="docutils literal notranslate"><span class="pre">albumentations</span></code> does
+a great job, so when in doubt, assume this is a <code class="docutils literal notranslate"><span class="pre">albumentations.Compose</span></code>.</p></li>
 </ul>
 </dd>
 <dt>To implement your own dataset:</dt><dd><ol class="arabic">
@@ -283,6 +284,8 @@ file.</p>
 </dd>
 </dl>
 </li>
+<li><p>Registration, path-handling, and all of that other stuff is automatically
+handled.</p></li>
 </ol>
 </dd>
 </dl>
@@ -366,7 +369,7 @@ file in the root of the data directory.</p>
 </dl>
 <dl class="class">
 <dt id="pugh_torch.datasets.torchvision.TorchVisionDataset">
-<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.datasets.torchvision.</code><code class="sig-name descname">TorchVisionDataset</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/datasets/torchvision.html#TorchVisionDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.datasets.torchvision.TorchVisionDataset" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.datasets.torchvision.</code><code class="sig-name descname">TorchVisionDataset</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/datasets/torchvision.html#TorchVisionDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.datasets.torchvision.TorchVisionDataset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pugh_torch.datasets.base.Dataset" title="pugh_torch.datasets.base.Dataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.datasets.base.Dataset</span></code></a></p>
 <p>Attempts to download data.</p>
 <dl class="field-list simple">
