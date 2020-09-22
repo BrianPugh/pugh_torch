@@ -60,5 +60,5 @@ class TorchVisionDataset(Dataset):
         """
 
         img, label = self.dataset[index]
-        img = self.transform(img)
+        img = self.transform(image=img)
         return img, label

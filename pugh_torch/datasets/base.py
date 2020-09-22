@@ -9,7 +9,8 @@ Design philosophies/rules:
     * Dataset directories are automatically parsed/derived, so no need to
       prompt the developer on where they want their dataset files.
     * ``self.transform`` is ONLY ever used in the dev's implementation of
-      ``self.__getitem__``
+      ``self.__getitem__``. However, the package ``albumentations`` does
+      a great job, so when in doubt, assume this is a ``albumentations.Compose``.
 
 
 To implement your own dataset:
@@ -34,7 +35,9 @@ To implement your own dataset:
 
 
 import torch
-from torchvision import transforms
+import albumentations as A
+from albumentations.pytorch import ToTensorV2
+
 from . import ROOT_DATASET_PATH, DATASETS
 
 
@@ -76,9 +79,9 @@ class Dataset(torch.utils.data.Dataset):
         self.split = split
 
         if transform is None:
-            self.transform = transforms.Compose(
+            self.transform = A.Compose(
                 [
-                    transforms.ToTensor(),
+                    ToTensorV2(),
                 ]
             )
         else:
