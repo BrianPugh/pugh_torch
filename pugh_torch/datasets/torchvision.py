@@ -22,8 +22,8 @@ class TorchVisionDataset(Dataset):
         super().__init_subclass__(**kwargs)
         cls.torchvision_constructor = getattr(torchvision.datasets, cls.__name__)
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
         if self.auto_construct:
             kwargs["root"] = self.path

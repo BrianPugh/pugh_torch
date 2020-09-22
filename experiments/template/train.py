@@ -22,9 +22,6 @@ logger = logging.getLogger(__name__)
 
 @hydra.main(config_path="config", config_name="config")
 def train(cfg):
-    import ipdb as pdb
-
-    pdb.set_trace()
     logger.info(f"Training with the following config:\n{OmegaConf.to_yaml(cfg)}")
 
     pl.seed_everything(1234)
@@ -51,6 +48,7 @@ def train(cfg):
     loader_kwargs = {
         "pin_memory": True,
         "num_workers": 4,
+        "batch_size": cfg.dataset.batch_size,
     }
     train_loader = DataLoader(
         train_dataset, shuffle=True, drop_last=True, **loader_kwargs
@@ -60,6 +58,7 @@ def train(cfg):
     # Instantiate Model to Train
     model = Model(num_classes=len(train_dataset.classes))
 
+    # TODO add more callbacks
     trainer = Trainer(logger=pt.utils.TensorBoardLogger, **cfg.trainer)
     trainer.fit(model, train_loader, train_loader)
 

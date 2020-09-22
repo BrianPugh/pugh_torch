@@ -23,13 +23,14 @@ RUN apt update && apt -y install \
 RUN mkdir /root/pugh_torch
 
 # This is so the git repo doesn't have to be explicitly installed.
-ENV PYTHONPATH=/root/pugh_torch/$PYTHONPATH
+ENV PYTHONPATH=/root/pugh_torch/:$PYTHONPATH
 
 WORKDIR /root/pugh_torch
 
 # Install from master to always get the latest.
 RUN pip install "pugh-torch[all] @ git+https://github.com/BrianPugh/pugh_torch.git"
 
+ENV HYDRA_FULL_ERROR=1
 ENV DISPLAY=:20
 ENV DISPLAY_RESOLUTION=1280x1440
 

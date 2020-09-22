@@ -28,9 +28,10 @@ To implement your own dataset:
        This will only be called if the data hasn't been unpacked yet.
        The unpacked being available is determined by a sentinel "unpacked"
        file.
-
     4. Follow the other remaining instructions at:
         https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset
+    5. Registration, path-handling, and all of that other stuff is automatically
+       handled.
 """
 
 

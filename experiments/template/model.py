@@ -120,13 +120,6 @@ class MyModel(pl.LightningModule):
 
         super().__init__()
 
-        # TODO: set self.hparams here with locals() or somethign
-        #self.hparams = {
-        #    "block": str(block),
-        #    "layers": layers,
-        #    "zero_init_residual": zero_init_residual,
-        #}
-
         if norm_layer is None:
             norm_layer = nn.BatchNorm2d
         self._norm_layer = norm_layer
