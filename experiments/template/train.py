@@ -47,13 +47,13 @@ def train(cfg):
     # Create loaders to get data from dataset(s)
     loader_kwargs = {
         "pin_memory": True,
-        "num_workers": 4,
+        "num_workers": 4,  # Set this to 0 if you are debugging your dataset.
         "batch_size": cfg.dataset.batch_size,
     }
     train_loader = DataLoader(
         train_dataset, shuffle=True, drop_last=True, **loader_kwargs
     )
-    val_loader = DataLoader(val_dataset, **loader_kwargs)
+    val_loader = DataLoader(val_dataset, shuffle=False, **loader_kwargs)
 
     # Instantiate Model to Train
     model = Model(num_classes=len(train_dataset.classes))

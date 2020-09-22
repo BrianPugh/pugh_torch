@@ -8,14 +8,17 @@ from ..mappings.color import get_palette
 from ..helpers import add_text_under_img
 
 __all__ = [
-        "SummaryWriter",
-        ]
+    "SummaryWriter",
+]
 
 try:
     import pytorch_lightning as pl
-    __all__.extend([
-        "TensorBoardLogger",
-        ])
+
+    __all__.extend(
+        [
+            "TensorBoardLogger",
+        ]
+    )
 except ModuleNotFoundError:
     pl = None
 

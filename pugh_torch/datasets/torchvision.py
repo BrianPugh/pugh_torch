@@ -8,6 +8,8 @@ Most notably, this:
     * Applies our automatic opinionated pathing rules.
 """
 
+from PIL import Image
+import numpy as np
 import torchvision
 from .base import Dataset
 
@@ -60,5 +62,7 @@ class TorchVisionDataset(Dataset):
         """
 
         img, label = self.dataset[index]
-        img = self.transform(image=img)
-        return img, label
+        if isinstance(img, Image.Image):
+            img = np.array(img)
+        transformed = self.transform(image=img)
+        return transformed["image"], label
