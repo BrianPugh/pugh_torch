@@ -59,8 +59,8 @@ def train(cfg):
     model = Model(num_classes=len(train_dataset.classes))
 
     # TODO add more callbacks
-    trainer = Trainer(logger=pt.utils.TensorBoardLogger, **cfg.trainer)
-    trainer.fit(model, train_loader, train_loader)
+    trainer = Trainer(logger=pt.utils.TensorBoardLogger("."), **cfg.trainer)
+    trainer.fit(model, train_loader, val_loader)
 
     # TODO: you can run the test set here, if appropriate.
 
