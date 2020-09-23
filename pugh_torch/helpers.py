@@ -1,7 +1,10 @@
-import re
-import hashlib
 from PIL import Image, ImageDraw, ImageFont
+from pathlib import Path
+from tqdm import tqdm
+import hashlib
 import numpy as np
+import re
+import requests
 
 
 def camel_to_snake(s):
@@ -134,3 +137,73 @@ def add_text_under_img(
 
     # Convert to a numpy object
     return np.array(output)
+
+
+def download(url, path=None, overwrite=False, sha1_hash=None):
+    """Download an given URL
+
+    Parameters
+    ----------
+    url : str
+        URL to download
+    path : str or Path-like, optional
+        Destination path to store downloaded file. By default stores to the
+        current directory with same name as in url.
+    overwrite : bool, optional
+        Whether to overwrite destination file if already exists.
+    sha1_hash : str, optional
+        Expected sha1 hash in hexadecimal digits. Will delete and re-download
+        existing file when hash is specified but doesn't match.
+
+    Returns
+    -------
+    pathlib.Path
+        The file path of the downloaded file.
+    """
+
+    if path is None:
+        path = Path.cwd()
+    else:
+        path = Path(path).expanduser()
+
+    if path.is_dir():
+        file_path = path / url.split('/')[-1]
+    else:
+        file_path = path
+        path = path.parent
+        path.mkdir(parents=True, exist_ok=True)
+
+    if sha1_hash and file_path.exists():
+        # Compute and compare the existing file to the hash
+        actual_hash = compute_sha1(file_path)
+        try:
+            compare_hash(sha1_hash, actual_hash)
+            return
+        except HashMismatchError:
+            print(f"Local file {file_path} hash mismatch. Re-downloading...")
+            file_path.unlink()
+
+    if overwrite or not file_path.exists():
+        print(f"Downloading {file_path} from {url}...")
+        r = requests.get(url, stream=True)
+        if r.status_code != 200:
+            raise RuntimeError("Failed downloading url %s"%url)
+        total_length = r.headers.get('content-length')
+        with open(file_path, 'wb') as f:
+            if total_length is None: # no content length header
+                for chunk in r.iter_content(chunk_size=1024):
+                    if chunk: # filter out keep-alive new chunks
+                        f.write(chunk)
+            else:
+                total_length = int(total_length)
+                for chunk in tqdm(r.iter_content(chunk_size=1024),
+                                  total=int(total_length / 1024. + 0.5),
+                                  unit='KB', unit_scale=False, dynamic_ncols=True):
+                    f.write(chunk)
+
+        # Verify newly downloaded file's hash
+        if sha1_hash:
+            actual_hash = compute_sha1(file_path)
+            compare_hash(sha1_hash, actual_hash)
+
+    return file_path
