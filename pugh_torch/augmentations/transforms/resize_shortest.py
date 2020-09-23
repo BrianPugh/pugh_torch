@@ -8,6 +8,7 @@ __all__ = ["ResizeShortest"]
 
 logger = logging.getLogger(__name__)
 
+
 def _compute_new_shape(length, height, width, trunc=True):
     """Computes the new target shape that results in the shortest side length.
 

@@ -116,12 +116,14 @@ class MyModel(pl.LightningModule):
         replace_stride_with_dilation=None,
         norm_layer=None,
         learning_rate=0.002,
-        **kwargs
+        **kwargs,
     ):
         """Defaults are ResNet50"""
 
         super().__init__()
-        self.learning_rate = learning_rate  # This will be overwritten by learning rate finder.
+        self.learning_rate = (
+            learning_rate  # This will be overwritten by learning rate finder.
+        )
 
         if norm_layer is None:
             norm_layer = nn.BatchNorm2d
@@ -265,7 +267,7 @@ class MyModel(pl.LightningModule):
         logits = self(x)
         loss = self._compute_loss(logits, y)
 
-        #self.logger.experiment.add_image  # TODO: probably in a hook
+        # self.logger.experiment.add_image  # TODO: probably in a hook
 
         result = pl.TrainResult(minimize=loss)
         self._log_common(result, "train", logits, y, loss)
