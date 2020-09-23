@@ -194,10 +194,13 @@
   <h1>Source code for pugh_torch.augmentations.transforms.resize_shortest</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">albumentations.core.transforms_interface</span> <span class="kn">import</span> <span class="n">DualTransform</span>
 <span class="kn">import</span> <span class="nn">albumentations.augmentations.functional</span> <span class="k">as</span> <span class="nn">F</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="kn">import</span> <span class="nn">cv2</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ResizeShortest&quot;</span><span class="p">]</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_compute_new_shape</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">trunc</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -247,6 +250,7 @@
 <span class="sd">        length : int</span>
 <span class="sd">            Length in pixels of the resulting shortest side of the image.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Use A.SmallestMaxSize instead. This is deprecated.&quot;</span><span class="p">)</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">always_apply</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">length</span>
