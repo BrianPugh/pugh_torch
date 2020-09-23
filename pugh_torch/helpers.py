@@ -167,7 +167,7 @@ def download(url, path=None, overwrite=False, sha1_hash=None):
         path = Path(path).expanduser()
 
     if path.is_dir():
-        file_path = path / url.split('/')[-1]
+        file_path = path / url.split("/")[-1]
     else:
         file_path = path
         path = path.parent
@@ -187,18 +187,22 @@ def download(url, path=None, overwrite=False, sha1_hash=None):
         print(f"Downloading {file_path} from {url}...")
         r = requests.get(url, stream=True)
         if r.status_code != 200:
-            raise RuntimeError("Failed downloading url %s"%url)
-        total_length = r.headers.get('content-length')
-        with open(file_path, 'wb') as f:
-            if total_length is None: # no content length header
+            raise RuntimeError("Failed downloading url %s" % url)
+        total_length = r.headers.get("content-length")
+        with open(file_path, "wb") as f:
+            if total_length is None:  # no content length header
                 for chunk in r.iter_content(chunk_size=1024):
-                    if chunk: # filter out keep-alive new chunks
+                    if chunk:  # filter out keep-alive new chunks
                         f.write(chunk)
             else:
                 total_length = int(total_length)
-                for chunk in tqdm(r.iter_content(chunk_size=1024),
-                                  total=int(total_length / 1024. + 0.5),
-                                  unit='KB', unit_scale=False, dynamic_ncols=True):
+                for chunk in tqdm(
+                    r.iter_content(chunk_size=1024),
+                    total=int(total_length / 1024.0 + 0.5),
+                    unit="KB",
+                    unit_scale=False,
+                    dynamic_ncols=True,
+                ):
                     f.write(chunk)
 
         # Verify newly downloaded file's hash

@@ -59,10 +59,7 @@ def train(cfg):
     model = Model(num_classes=len(train_dataset.classes))
 
     # TODO add more callbacks
-    # TODO uncomment this one an upstream pytorch-lightning bug has been fixed
-    # 
-    #trainer = Trainer(logger=pt.utils.TensorBoardLogger, **cfg.trainer)
-    trainer = Trainer(**cfg.trainer)
+    trainer = Trainer(logger=pt.utils.TensorBoardLogger("."), **cfg.trainer)
     trainer.fit(model, train_loader, val_loader)
 
     # TODO: you can run the test set here, if appropriate.

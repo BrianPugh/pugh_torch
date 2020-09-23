@@ -1,9 +1,12 @@
 from albumentations.core.transforms_interface import DualTransform
 import albumentations.augmentations.functional as F
+import logging
 
 import cv2
 
 __all__ = ["ResizeShortest"]
+
+logger = logging.getLogger(__name__)
 
 
 def _compute_new_shape(length, height, width, trunc=True):
@@ -53,6 +56,7 @@ class ResizeShortest(DualTransform):
         length : int
             Length in pixels of the resulting shortest side of the image.
         """
+        logger.warn(f"Use A.SmallestMaxSize instead. This is deprecated.")
 
         super().__init__(always_apply, p)
         self.length = length

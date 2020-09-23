@@ -13,6 +13,7 @@ __all__ = [
 
 try:
     import pytorch_lightning as pl
+    from pytorch_lightning.utilities import rank_zero_only
 
     __all__.extend(
         [
