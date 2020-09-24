@@ -11,6 +11,8 @@ Most notably, this:
 from PIL import Image
 import numpy as np
 import torchvision
+import albumentations as A
+from torchvision import transforms
 from .base import Dataset
 
 
@@ -62,7 +64,20 @@ class TorchVisionDataset(Dataset):
         """
 
         img, label = self.dataset[index]
-        if isinstance(img, Image.Image):
-            img = np.array(img)
-        transformed = self.transform(image=img)
-        return transformed["image"], label
+
+
+        if isinstance(self.transform, A.Compose):
+            # albumentations
+            if isinstance(img, Image.Image):
+                img = np.array(img)
+
+            img = self.transform(image=img)["image"]
+        elif isinstance(self.transform, transforms.Compose):
+            # torchvision
+            if isinstance(img, np.ndarray):
+                img = Image.fromarray(img)
+            img = self.transform(img)
+        else:
+            raise NotImplementedError(f"Don't know how to handle transform type {type(self.transform)}. Implement your own __getitem__.")
+
+        return img, label
