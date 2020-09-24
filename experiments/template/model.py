@@ -265,6 +265,7 @@ class MyModel(pl.LightningModule):
 
         x, y = batch
         logits = self(x)
+        self.last_logits = logits
         loss = self._compute_loss(logits, y)
 
         # self.logger.experiment.add_image  # TODO: probably in a hook
