@@ -16,7 +16,11 @@ def train():
         [
             A.SmallestMaxSize(520),
             A.CropNonEmptyMaskIfExists(
-                360, 360, ignore_values=[0,],
+                360,
+                360,
+                ignore_values=[
+                    0,
+                ],
             ),
             A.HorizontalFlip(),
             ToTensorV2(),
@@ -32,7 +36,11 @@ def val():
         [
             A.SmallestMaxSize(520),
             A.CropNonEmptyMaskIfExists(
-                360, 360, ignore_values=[0,],
+                360,
+                360,
+                ignore_values=[
+                    0,
+                ],
             ),
             A.HorizontalFlip(),
             ToTensorV2(),

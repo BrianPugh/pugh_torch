@@ -46,13 +46,17 @@ class ADE20K(Dataset):
         self,
         index,
     ):
-        img = cv2.imread(str(self.images[index]), cv2.IMREAD_COLOR)[..., ::-1]  # Result should be RGB
-        img = img.astype(np.float32) / 255  # Images are supposed to be float in range [0, 1]
+        img = cv2.imread(str(self.images[index]), cv2.IMREAD_COLOR)[
+            ..., ::-1
+        ]  # Result should be RGB
+        img = (
+            img.astype(np.float32) / 255
+        )  # Images are supposed to be float in range [0, 1]
         mask = cv2.imread(str(self.masks[index]), cv2.IMREAD_GRAYSCALE)
 
         transformed = self.transform(image=img, mask=mask)
 
-        return transformed['image'], transformed['mask']
+        return transformed["image"], transformed["mask"]
 
     def __len__(self):
         return len(self.images)
@@ -76,7 +80,7 @@ class ADE20K(Dataset):
             mask_folder = path / "annotations/validation"
             expected_len = 2000
         else:
-            raise ValueError(f"split must be train or val; got \"{self.split}\"")
+            raise ValueError(f'split must be train or val; got "{self.split}"')
 
         potential_images = img_folder.glob("*.jpg")
         for potential_image in potential_images:
