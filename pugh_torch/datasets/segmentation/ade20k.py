@@ -1,9 +1,8 @@
-import os
-import shutil
-import argparse
+import cv2
+import numpy as np
 import zipfile
-from ...helpers import download
 
+from ...helpers import download
 from .. import Dataset
 
 
@@ -40,15 +39,25 @@ class ADE20K(Dataset):
 
         for payload in self.PAYLOAD_NAMES:
             filename = self.path / payload
-            with zipfile.ZipFile(filename, "r") as zip_ref:
-                zip_ref.extractall(path=self.path)
+            with zipfile.ZipFile(filename, "r") as f:
+                f.extractall(path=self.path)
 
     def __getitem__(
         self,
+        index,
     ):
-        raise NotImplementedError
+        img = cv2.imread(str(self.images[index]), cv2.IMREAD_COLOR)[..., ::-1]  # Result should be RGB
+        img = img.astype(np.float32) / 255  # Images are supposed to be float in range [0, 1]
+        mask = cv2.imread(str(self.masks[index]), cv2.IMREAD_GRAYSCALE)
 
-    def _populate_ade20k_pairs():
+        transformed = self.transform(image=img, mask=mask)
+
+        return transformed['image'], transformed['mask']
+
+    def __len__(self):
+        return len(self.images)
+
+    def _populate_ade20k_pairs(self):
         """Populates the attributes:
         * images - list of Paths to images
         * masks - list of Paths to semantic segmentation masks
@@ -58,21 +67,21 @@ class ADE20K(Dataset):
 
         path = self.path / "ADEChallengeData2016"
 
-        if split == "train":
+        if self.split == "train":
             img_folder = path / "images/training"
             mask_folder = path / "annotations/training"
             expected_len = 20210
-        elif split == "val":
+        elif self.split == "val":
             img_folder = path / "images/validation"
             mask_folder = path / "annotations/validation"
             expected_len = 2000
         else:
-            raise ValueError("split must be train or val")
+            raise ValueError(f"split must be train or val; got \"{self.split}\"")
 
         potential_images = img_folder.glob("*.jpg")
         for potential_image in potential_images:
             mask_path = mask_folder / (potential_image.stem + ".png")
-            if mask_path.isfile():
+            if mask_path.is_file():
                 self.images.append(potential_image)
                 self.masks.append(mask_path)
             else:
