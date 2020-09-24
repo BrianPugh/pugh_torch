@@ -373,6 +373,30 @@ Ignored if <code class="docutils literal notranslate"><span class="pre">font_siz
 </dl>
 </dd></dl>
 
+<dl class="function">
+<dt id="pugh_torch.helpers.download">
+<code class="sig-prename descclassname">pugh_torch.helpers.</code><code class="sig-name descname">download</code><span class="sig-paren">(</span><em class="sig-param">url</em>, <em class="sig-param">path=None</em>, <em class="sig-param">overwrite=False</em>, <em class="sig-param">sha1_hash=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/helpers.html#download"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.helpers.download" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download an given URL</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> (<em>str</em>) – URL to download</p></li>
+<li><p><strong>path</strong> (<em>str or Path-like, optional</em>) – Destination path to store downloaded file. By default stores to the
+current directory with same name as in url.</p></li>
+<li><p><strong>overwrite</strong> (<em>bool, optional</em>) – Whether to overwrite destination file if already exists.</p></li>
+<li><p><strong>sha1_hash</strong> (<em>str, optional</em>) – Expected sha1 hash in hexadecimal digits. Will delete and re-download
+existing file when hash is specified but doesn’t match.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The file path of the downloaded file.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pathlib.Path</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 <div class="section" id="module-pugh_torch">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pugh_torch" title="Permalink to this headline">¶</a></h2>

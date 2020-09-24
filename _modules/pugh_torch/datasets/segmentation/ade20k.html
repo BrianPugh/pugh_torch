@@ -194,12 +194,102 @@
            <div itemprop="articleBody">
             
   <h1>Source code for pugh_torch.datasets.segmentation.ade20k</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">Dataset</span>
+<span></span><span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">zipfile</span>
+
+<span class="kn">from</span> <span class="nn">...helpers</span> <span class="kn">import</span> <span class="n">download</span>
+<span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">Dataset</span>
 
 
-<div class="viewcode-block" id="ADE20k"><a class="viewcode-back" href="../../../../pugh_torch.datasets.segmentation.html#pugh_torch.datasets.segmentation.ade20k.ADE20k">[docs]</a><span class="k">class</span> <span class="nc">ADE20k</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
-    <span class="c1"># TODO</span>
-    <span class="k">pass</span></div>
+<div class="viewcode-block" id="ADE20K"><a class="viewcode-back" href="../../../../pugh_torch.datasets.segmentation.html#pugh_torch.datasets.segmentation.ade20k.ADE20K">[docs]</a><span class="k">class</span> <span class="nc">ADE20K</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
+    <span class="n">DOWNLOAD_URLS</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span>
+            <span class="s2">&quot;http://data.csail.mit.edu/places/ADEchallenge/ADEChallengeData2016.zip&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;219e1696abb36c8ba3a3afe7fb2f4b4606a897c7&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="p">(</span>
+            <span class="s2">&quot;http://data.csail.mit.edu/places/ADEchallenge/release_test.zip&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;e05747892219d10e9243933371a497e905a4860c&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">]</span>
+
+    <span class="n">PAYLOAD_NAMES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ADEChallengeData2016.zip&quot;</span><span class="p">,</span> <span class="s2">&quot;release_test.zip&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">split</span><span class="o">=</span><span class="s2">&quot;train&quot;</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">split</span><span class="o">=</span><span class="n">split</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_populate_ade20k_pairs</span><span class="p">()</span>
+
+<div class="viewcode-block" id="ADE20K.download"><a class="viewcode-back" href="../../../../pugh_torch.datasets.segmentation.html#pugh_torch.datasets.segmentation.ade20k.ADE20K.download">[docs]</a>    <span class="k">def</span> <span class="nf">download</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="k">for</span> <span class="n">url</span><span class="p">,</span> <span class="n">checksum</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">DOWNLOAD_URLS</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">download</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sha1_hash</span><span class="o">=</span><span class="n">checksum</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ADE20K.unpack"><a class="viewcode-back" href="../../../../pugh_torch.datasets.segmentation.html#pugh_torch.datasets.segmentation.ade20k.ADE20K.unpack">[docs]</a>    <span class="k">def</span> <span class="nf">unpack</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Extract the downloaded zip files.</span>
+<span class="sd">        No furth processing required.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">payload</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">PAYLOAD_NAMES</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="n">payload</span>
+            <span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">index</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="n">index</span><span class="p">]),</span> <span class="n">cv2</span><span class="o">.</span><span class="n">IMREAD_COLOR</span><span class="p">)[</span>
+            <span class="o">...</span><span class="p">,</span> <span class="p">::</span><span class="o">-</span><span class="mi">1</span>
+        <span class="p">]</span>  <span class="c1"># Result should be RGB</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">img</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">/</span> <span class="mi">255</span>
+        <span class="p">)</span>  <span class="c1"># Images are supposed to be float in range [0, 1]</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">masks</span><span class="p">[</span><span class="n">index</span><span class="p">]),</span> <span class="n">cv2</span><span class="o">.</span><span class="n">IMREAD_GRAYSCALE</span><span class="p">)</span>
+
+        <span class="n">transformed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="n">img</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transformed</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">],</span> <span class="n">transformed</span><span class="p">[</span><span class="s2">&quot;mask&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_populate_ade20k_pairs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Populates the attributes:</span>
+<span class="sd">        * images - list of Paths to images</span>
+<span class="sd">        * masks - list of Paths to semantic segmentation masks</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">masks</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+
+        <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="s2">&quot;ADEChallengeData2016&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">split</span> <span class="o">==</span> <span class="s2">&quot;train&quot;</span><span class="p">:</span>
+            <span class="n">img_folder</span> <span class="o">=</span> <span class="n">path</span> <span class="o">/</span> <span class="s2">&quot;images/training&quot;</span>
+            <span class="n">mask_folder</span> <span class="o">=</span> <span class="n">path</span> <span class="o">/</span> <span class="s2">&quot;annotations/training&quot;</span>
+            <span class="n">expected_len</span> <span class="o">=</span> <span class="mi">20210</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">split</span> <span class="o">==</span> <span class="s2">&quot;val&quot;</span><span class="p">:</span>
+            <span class="n">img_folder</span> <span class="o">=</span> <span class="n">path</span> <span class="o">/</span> <span class="s2">&quot;images/validation&quot;</span>
+            <span class="n">mask_folder</span> <span class="o">=</span> <span class="n">path</span> <span class="o">/</span> <span class="s2">&quot;annotations/validation&quot;</span>
+            <span class="n">expected_len</span> <span class="o">=</span> <span class="mi">2000</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;split must be train or val; got &quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">split</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="p">)</span>
+
+        <span class="n">potential_images</span> <span class="o">=</span> <span class="n">img_folder</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.jpg&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">potential_image</span> <span class="ow">in</span> <span class="n">potential_images</span><span class="p">:</span>
+            <span class="n">mask_path</span> <span class="o">=</span> <span class="n">mask_folder</span> <span class="o">/</span> <span class="p">(</span><span class="n">potential_image</span><span class="o">.</span><span class="n">stem</span> <span class="o">+</span> <span class="s2">&quot;.png&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">mask_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">potential_image</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">masks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mask_path</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cannot find mask for </span><span class="si">{</span><span class="n">potential_image</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="p">)</span> <span class="o">==</span> <span class="n">expected_len</span>
+        <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Expected </span><span class="si">{</span><span class="n">expected_len</span><span class="si">}</span><span class="s2"> exemplars, only found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span></div>
 </pre></div>
 
            </div>

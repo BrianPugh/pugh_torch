@@ -203,6 +203,8 @@
 
 <span class="kn">import</span> <span class="nn">torchvision</span>
 <span class="kn">from</span> <span class="nn">torchvision</span> <span class="kn">import</span> <span class="n">transforms</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
 
 <span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">TorchVisionDataset</span>
@@ -211,6 +213,8 @@
 
 
 <div class="viewcode-block" id="ImageNet"><a class="viewcode-back" href="../../../../pugh_torch.datasets.classification.html#pugh_torch.datasets.classification.imagenet.ImageNet">[docs]</a><span class="k">class</span> <span class="nc">ImageNet</span><span class="p">(</span><span class="n">TorchVisionDataset</span><span class="p">):</span>
+    <span class="n">auto_construct</span> <span class="o">=</span> <span class="kc">False</span>
+
     <span class="n">__download_train_payload</span> <span class="o">=</span> <span class="s2">&quot;ILSVRC2012_img_train.tar&quot;</span>
     <span class="n">__download_val_payload</span> <span class="o">=</span> <span class="s2">&quot;ILSVRC2012_img_val.tar&quot;</span>
     <span class="n">__download_devkit_payload</span> <span class="o">=</span> <span class="s2">&quot;ILSVRC2012_devkit_t12.tar.gz&quot;</span>
@@ -224,6 +228,25 @@
     <span class="n">__download_devkit_link</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;https://drive.google.com/file/d/1ina38-4xDAlWVcPcuMZMIx4filKtFqBL&quot;</span>
     <span class="p">)</span>
+
+    <span class="n">__cache_file</span> <span class="o">=</span> <span class="s2">&quot;dataset.pkl&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">cache_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">__cache_file</span>
+        <span class="c1"># We cache the complete dataset object since it can take forever</span>
+        <span class="c1"># to construct depending on disk performance.</span>
+
+        <span class="k">if</span> <span class="n">cache_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cache_file</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;root&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;transform&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># We handle our own transforms.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">torchvision_constructor</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cache_file</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ImageNet.download"><a class="viewcode-back" href="../../../../pugh_torch.datasets.classification.html#pugh_torch.datasets.classification.imagenet.ImageNet.download">[docs]</a>    <span class="k">def</span> <span class="nf">download</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">__download_train_payload</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">and</span> <span class="p">(</span>

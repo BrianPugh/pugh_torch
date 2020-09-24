@@ -216,8 +216,8 @@
 <div class="section" id="module-pugh_torch.datasets.segmentation.ade20k">
 <span id="pugh-torch-datasets-segmentation-ade20k-module"></span><h2>pugh_torch.datasets.segmentation.ade20k module<a class="headerlink" href="#module-pugh_torch.datasets.segmentation.ade20k" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="pugh_torch.datasets.segmentation.ade20k.ADE20k">
-<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.datasets.segmentation.ade20k.</code><code class="sig-name descname">ADE20k</code><span class="sig-paren">(</span><em class="sig-param">split='train'</em>, <em class="sig-param">*</em>, <em class="sig-param">transform=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/datasets/segmentation/ade20k.html#ADE20k"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.datasets.segmentation.ade20k.ADE20k" title="Permalink to this definition">¶</a></dt>
+<dt id="pugh_torch.datasets.segmentation.ade20k.ADE20K">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.datasets.segmentation.ade20k.</code><code class="sig-name descname">ADE20K</code><span class="sig-paren">(</span><em class="sig-param">split='train'</em>, <em class="sig-param">*</em>, <em class="sig-param">transform=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/datasets/segmentation/ade20k.html#ADE20K"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.datasets.segmentation.ade20k.ADE20K" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="pugh_torch.datasets.html#pugh_torch.datasets.base.Dataset" title="pugh_torch.datasets.base.Dataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.datasets.base.Dataset</span></code></a></p>
 <p>Attempts to download data.</p>
 <dl class="field-list simple">
@@ -232,6 +232,31 @@ __get__ implementation, or other parent classes of the dataset..</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="attribute">
+<dt id="pugh_torch.datasets.segmentation.ade20k.ADE20K.DOWNLOAD_URLS">
+<code class="sig-name descname">DOWNLOAD_URLS</code><em class="property"> = [('http://data.csail.mit.edu/places/ADEchallenge/ADEChallengeData2016.zip', '219e1696abb36c8ba3a3afe7fb2f4b4606a897c7'), ('http://data.csail.mit.edu/places/ADEchallenge/release_test.zip', 'e05747892219d10e9243933371a497e905a4860c')]</em><a class="headerlink" href="#pugh_torch.datasets.segmentation.ade20k.ADE20K.DOWNLOAD_URLS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.datasets.segmentation.ade20k.ADE20K.PAYLOAD_NAMES">
+<code class="sig-name descname">PAYLOAD_NAMES</code><em class="property"> = ['ADEChallengeData2016.zip', 'release_test.zip']</em><a class="headerlink" href="#pugh_torch.datasets.segmentation.ade20k.ADE20K.PAYLOAD_NAMES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pugh_torch.datasets.segmentation.ade20k.ADE20K.download">
+<code class="sig-name descname">download</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/datasets/segmentation/ade20k.html#ADE20K.download"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.datasets.segmentation.ade20k.ADE20K.download" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to download data to <code class="docutils literal notranslate"><span class="pre">self.path</span></code>.</p>
+<p>The directories up to <code class="docutils literal notranslate"><span class="pre">self.path</span></code> have already been created.</p>
+<p>Will only be called if data has not been downloaded.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pugh_torch.datasets.segmentation.ade20k.ADE20K.unpack">
+<code class="sig-name descname">unpack</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/datasets/segmentation/ade20k.html#ADE20K.unpack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.datasets.segmentation.ade20k.ADE20K.unpack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the downloaded zip files.
+No furth processing required.</p>
+</dd></dl>
+
 </dd></dl>
 
 </div>
