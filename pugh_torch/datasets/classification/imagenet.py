@@ -43,13 +43,13 @@ class ImageNet(TorchVisionDataset):
         # to construct depending on disk performance.
 
         if cache_file.exists():
-            with open(cache_file, 'rb') as f:
+            with open(cache_file, "rb") as f:
                 self.dataset = pickle.load(f)
         else:
             kwargs["root"] = self.path
             kwargs["transform"] = None  # We handle our own transforms.
             self.dataset = self.torchvision_constructor(**kwargs)
-            with open(cache_file, 'wb') as f:
+            with open(cache_file, "wb") as f:
                 pickle.dump(self.dataset, f)
 
     def download(self):

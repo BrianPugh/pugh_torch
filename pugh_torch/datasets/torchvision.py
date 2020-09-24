@@ -65,7 +65,6 @@ class TorchVisionDataset(Dataset):
 
         img, label = self.dataset[index]
 
-
         if isinstance(self.transform, A.Compose):
             # albumentations
             if isinstance(img, Image.Image):
@@ -78,6 +77,8 @@ class TorchVisionDataset(Dataset):
                 img = Image.fromarray(img)
             img = self.transform(img)
         else:
-            raise NotImplementedError(f"Don't know how to handle transform type {type(self.transform)}. Implement your own __getitem__.")
+            raise NotImplementedError(
+                f"Don't know how to handle transform type {type(self.transform)}. Implement your own __getitem__."
+            )
 
         return img, label
