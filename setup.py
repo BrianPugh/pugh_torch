@@ -25,7 +25,7 @@ requirements = [
     "tensorboard>=2.2.1",
     "torch>=1.4.0",
     "torchvision>=0.5.0",
-etup
+]
 
 test_requirements = [
     "black>=19.10b0",
