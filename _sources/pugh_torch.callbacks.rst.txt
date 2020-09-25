@@ -1,0 +1,38 @@
+pugh\_torch.callbacks package
+=============================
+
+Submodules
+----------
+
+pugh\_torch.callbacks.tensorboard\_add\_classification module
+-------------------------------------------------------------
+
+.. automodule:: pugh_torch.callbacks.tensorboard_add_classification
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pugh\_torch.callbacks.tensorboard\_add\_ss module
+-------------------------------------------------
+
+.. automodule:: pugh_torch.callbacks.tensorboard_add_ss
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pugh\_torch.callbacks.tensorboard\_base module
+----------------------------------------------
+
+.. automodule:: pugh_torch.callbacks.tensorboard_base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: pugh_torch.callbacks
+   :members:
+   :undoc-members:
+   :show-inheritance:
