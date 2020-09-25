@@ -1,4 +1,7 @@
 import pytest
+
+pytest.importorskip("pytorch_lightning")
+
 from pugh_torch.callbacks import TensorBoardAddClassification
 from pugh_torch.utils import TensorBoardLogger
 import torch
