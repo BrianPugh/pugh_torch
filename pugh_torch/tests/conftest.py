@@ -121,7 +121,7 @@ def assert_img_equal(img1, img2, thresh=0.001, resize=True):
 
 
 @pytest.fixture
-def assert_img_equal(request, tmpdir):
+def assert_img_equal(request):
     """Compares the provided file to the one recorded in the tests's data_path.
 
     The input image has the same constraints/requirements as described in
