@@ -4,13 +4,14 @@ from torch import nn
 
 from ..utils import TensorBoardLogger
 
+
 class TensorBoardCallback(Callback):
-    """ Base class for pytorch-lightning callbacks.
+    """Base class for pytorch-lightning callbacks.
 
     Can only be used with ``pugh_torch.utils.TensorBoardLogger``
     """
 
-    def __init__(self, *, logging_batch_interval=20,  **kwargs):
+    def __init__(self, *, logging_batch_interval=20, **kwargs):
         """
         Parameters
         ----------
@@ -24,10 +25,11 @@ class TensorBoardCallback(Callback):
         self.logging_kwargs = kwargs
 
     def on_train_batch_end(self, trainer, pl_module, batch, batch_idx, dataloader_idx):
-        """  Just some validation checks.
-        """
+        """Just some validation checks."""
 
-        assert isinstance(trainer.logger, TensorBoardLogger), "Can only be used with pugh_torch.utils.TensorBoardLogger"
+        assert isinstance(
+            trainer.logger, TensorBoardLogger
+        ), "Can only be used with pugh_torch.utils.TensorBoardLogger"
 
         if not hasattr(pl_module, "last_logits"):
             m = """please track the last_logits in the training_step like so:
@@ -35,5 +37,3 @@ class TensorBoardCallback(Callback):
                     self.last_logits = your_logits
             """
             raise AttributeError(m)
-
-

@@ -1,8 +1,9 @@
 import torch
 from .tensorboard_base import TensorBoardCallback
 
+
 class TensorBoardAddClassification(TensorBoardCallback):
-    """ Adds the rgb, ground truth label, and the network prediction
+    """Adds the rgb, ground truth label, and the network prediction
     to tensorboard.
     """
 
@@ -50,4 +51,10 @@ class TensorBoardAddClassification(TensorBoardCallback):
 
             labels.append(f"Truth: {gt} ({gt_class})\nPred: {pred} ({pred_class})")
 
-        trainer.logger.experiment.add_rgb("train/output", x, global_step=trainer.global_step, labels=labels, **self.logging_kwargs)
+        trainer.logger.experiment.add_rgb(
+            "train/output",
+            x,
+            global_step=trainer.global_step,
+            labels=labels,
+            **self.logging_kwargs,
+        )

@@ -1,7 +1,8 @@
 from .tensorboard_base import TensorBoardCallback
 
+
 class TensorBoardAddSS(TensorBoardCallback):
-    """ Adds the rgb, ground truth segmentation, and the network prediction
+    """Adds the rgb, ground truth segmentation, and the network prediction
     to tensorboard.
     """
 
@@ -14,4 +15,11 @@ class TensorBoardAddSS(TensorBoardCallback):
         # pick the last batch and labels
         x, y = batch[:2]
 
-        trainer.logger.experiment.add_ss("train/output", x, pl_module.last_logits, y, global_step=trainer.global_step, **self.logging_kwargs)
+        trainer.logger.experiment.add_ss(
+            "train/output",
+            x,
+            pl_module.last_logits,
+            y,
+            global_step=trainer.global_step,
+            **self.logging_kwargs
+        )
