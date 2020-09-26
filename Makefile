@@ -52,6 +52,7 @@ build: ## run tox / run tests and lint
 
 lint:
 	black pugh_torch
+	black experiments
 
 check-lint:
 	tox -e lint
