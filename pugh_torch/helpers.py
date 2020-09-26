@@ -2,9 +2,12 @@ from PIL import Image, ImageDraw, ImageFont
 from pathlib import Path
 from tqdm import tqdm
 import hashlib
+import inspect
 import numpy as np
 import re
 import requests
+
+from .exceptions import ShouldNeverHappenError
 
 
 def camel_to_snake(s):
@@ -211,3 +214,82 @@ def download(url, path=None, overwrite=False, sha1_hash=None):
             compare_hash(sha1_hash, actual_hash)
 
     return file_path
+
+def calling_scope(name, index=1, strict=True):
+    """ Gets an object from the calling scope.
+
+    This uses a bunch of hacky stuff and may be fragile.
+
+    Parameters
+    ----------
+    name : str
+        Object in the calling scope to get.
+    index : int
+        How many frames to go up in the stack. Defaults to 1 (direct caller).
+    strict: bool
+        If ``True``, only search the specified frame's local and global scope.
+        Otherwise, iterate up the stack until the object is found.
+
+    Returns
+    -------
+    obj
+       Object from caller scope.
+    """
+
+    name = str(name)
+    frame = inspect.stack()[index][0]
+    while True:
+        if name in frame.f_locals:
+            return frame.f_locals[name]
+        elif name in frame.f_globals:
+            return frame.f_globals[name]
+        elif strict:
+            raise KeyError(f"\"{name}\" not in calling scope")
+        else:
+            frame = frame.f_back
+            if frame is None:
+                raise KeyError(f"\"{name}\" not in calling scope")
+
+    raise ShouldNeverHappenError
+
+def to_obj(s, index=0):
+    """ Converts str to its respective object in caller's scope.
+
+    This can be thought of converting the string into the object available
+    in the caller's scope.
+
+    Useful for specifying programmatic objects in Hydra configs.
+
+    Example:
+        # Assuming we are in a method where this is available
+        assert self.foo.bar == to_obj("self.foo.bar")
+
+    Parameters
+    ----------
+    s : obj or str
+        Object to convert into it's callable equivalent.
+        If this is already an object, it justs passes it through.
+    index : int
+        Scope to search, where 0 means the caller's scope, 1 is the caller's caller
+        scope, etc.
+
+    Returns
+    -------
+    callable
+        Callable equivalent represented by the input.
+    """
+
+    if isinstance(s, str):
+        components = s.split('.')
+        root_str = components[0]
+
+        output = calling_scope(root_str, index=index+2)
+
+        for component in components[1:]:
+            output = getattr(output, component)
+
+        return output
+    else:
+        # Identity pass-thru
+        return s
+

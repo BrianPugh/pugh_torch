@@ -4,3 +4,7 @@ class HashMismatchError(Exception):
 
 class DataUnavailableError(Exception):
     """Data is missing from disk and isn't readily available to easily download."""
+
+
+class ShouldNeverHappenError(Exception):
+    """Portions of code have been reached that the developer never intended."""
