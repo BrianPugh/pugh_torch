@@ -1,0 +1,4 @@
+# @package _group_
+name: MyModel
+num_classes: 100
+block: Bottleneck

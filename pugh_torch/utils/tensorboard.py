@@ -2,6 +2,7 @@ import torch
 from torch.utils import tensorboard as tb
 import cv2
 import numpy as np
+from pathlib import Path
 
 from ..transforms import imagenet
 from ..mappings.color import get_palette
@@ -272,6 +273,6 @@ if pl is not None:
                 rank_zero_only.rank == 0
             ), "tried to init log dirs in non global_rank=0"
             if self.root_dir:
-                self._fs.makedirs(self.root_dir, exist_ok=True)
+                Path(self.root_dir).mkdir(parents=True, exist_ok=True)
             self._experiment = SummaryWriter(log_dir=self.log_dir, **self._kwargs)
             return self._experiment

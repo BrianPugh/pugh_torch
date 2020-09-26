@@ -24,10 +24,15 @@ A big part of this repo is a framework to quickly be able to iterate on ideas.
 To accomplish this, we provide the following:
 * A docker container `brianpugh/pugh_torch` that contains many dependencies
   experimenters would like to use.
-    * You can pull and launch this container via `./docker_run.sh`
-    * This will map ~/.pugh_torch and the local copy of the git repo 
+    * You can pull the docker image and launch the container via:
+        ```
+        docker pull brianpugh/pugh_torch
+        ./docker_run.sh
+        ```
+    * This will map `~/.pugh_torch` and the local copy of the git repo 
       into the container. You may change this if you like.
-    * This will also pass in any available GPUs
+      This will also pass in any available GPUs and set other common
+      docker flags for running/training neural nets.
     * This container runs a VNC server, incase you need to perform some visual
       actions, like using `matplotlib.pyplot`
 * A unified training driver `experiments/train.py` to run experiments.
@@ -38,8 +43,9 @@ To accomplish this, we provide the following:
           ```
           python3 train.py template dataset=cifar100 model=cifar100
           ```
-* A template project `experiments/template` that should get you going. We
-  leverage the following libraries:
+* A template project `experiments/template` that should get you going. The goal
+  here is to  provide maximum flexibility while minimizing "project startup
+  costs". We leverage the following libraries:
     * [Hydra](https://github.com/facebookresearch/hydra) for managing experiment
       hyperparameters and other configuration. It's a good idea to make your 
       code configurable via this configuration rather than directly tweaking 
