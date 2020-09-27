@@ -1,9 +1,11 @@
 from PIL import Image, ImageDraw, ImageFont
 from pathlib import Path
 from tqdm import tqdm
+from contextlib import contextmanager
 import hashlib
 import inspect
 import numpy as np
+import os
 import re
 import requests
 
@@ -293,3 +295,23 @@ def to_obj(s, index=0):
         # Identity pass-thru
         return s
 
+@contextmanager
+def working_dir(newdir):
+    """
+    Changes working directory and returns to previous on exit.
+
+    Usage:
+        with working_dir("my_experiment_path"):
+            # do stuff within `my_experiment_path/`
+        # Now we are back in the original working directory
+
+    Parameters
+    ----------
+    new
+    """
+    prevdir = os.getcwd()
+    os.chdir(os.path.expanduser(newdir))
+    try:
+        yield
+    finally:
+        os.chdir(prevdir)
