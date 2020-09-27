@@ -6,3 +6,4 @@ except ImportError:
 else:
     from .tensorboard_add_classification import TensorBoardAddClassification
     from .tensorboard_add_ss import TensorBoardAddSS
+    from .model_checkpoint import ModelCheckpoint

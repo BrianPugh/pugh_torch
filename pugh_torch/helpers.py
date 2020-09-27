@@ -1,15 +1,20 @@
 from PIL import Image, ImageDraw, ImageFont
+from contextlib import contextmanager
+from datetime import datetime
 from pathlib import Path
 from tqdm import tqdm
-from contextlib import contextmanager
 import hashlib
 import inspect
 import numpy as np
 import os
 import re
 import requests
+import logging
 
 from .exceptions import ShouldNeverHappenError
+
+
+log = logging.getLogger(__name__)
 
 
 def camel_to_snake(s):
@@ -315,3 +320,77 @@ def working_dir(newdir):
         yield
     finally:
         os.chdir(prevdir)
+
+def most_recent_run(outputs_path, fmts=["%Y-%m-%d", "%H-%M-%S"]):
+    """Get the most recent Hydra run folder.
+
+    Parameters
+    ----------
+    outputs_path : pathlib.Path or str
+        The root Hydra outputs directory
+    fmts : list
+        Optional list of string formats of how to interpret the folders.
+
+    Returns
+    -------
+    pathlib.Path
+        Most recent output path.
+    """
+
+    cur_path = Path(outputs_path).resolve()
+
+    for fmt in fmts:
+        fmt = str(fmt)
+        times = [datetime.strptime(str(f.name), fmt) for f in cur_path.iterdir() if f.is_dir()]
+        cur_path = cur_path / max(times).strftime(fmt)
+
+    return cur_path
+
+def most_recent_checkpoint(outputs_path):
+    """Get the most recent valid checkpoint path.
+
+    Searches over all the subdirectories in `outputs_paths/` and returns
+    the most recent found checkpoint path.
+
+    Relies on ModelCheckpoint(save_last=True)
+
+    Parameters
+    ----------
+    outputs_path : pathlib.Path or str
+        The root Hydra outputs directory
+
+    Raises
+    ------
+    FileNotFoundError
+        If the most recent checkpoint can not be found.
+
+    Returns
+    -------
+    pathlib.Path
+        Most recent output path.
+    """
+
+    day_fmt = "%Y-%m-%d"
+    time_fmt = "%H-%M-%S"
+
+    outputs_path = Path(outputs_path).resolve()
+
+    days = [datetime.strptime(str(f.name), day_fmt) for f in outputs_path.iterdir() if f.is_dir()]
+    days = sorted(days, reverse=True)
+    for day in days:
+        day_str = day.strftime(day_fmt)
+        day_path = outputs_path / day_str
+        times = [datetime.strptime(str(f.name), time_fmt) for f in day_path.iterdir() if f.is_dir()]
+        times = sorted(times, reverse=True)
+        for time in times:
+            time_str = time.strftime(time_fmt)
+            experiment_id = f"{day_str}/{time_str}"
+            experiment_path = outputs_path / experiment_id 
+            ckpt_path = experiment_path / 'default/version_0/checkpoints/last.ckpt'
+            if ckpt_path.is_file():
+                return ckpt_path
+            else:
+                log.warn(f"Recent experiment \"{experiment_id}\" did not have a checkpoint. Searching next run.")
+
+    raise FileNotFoundError("Could not find most recent checkpoint")
+
