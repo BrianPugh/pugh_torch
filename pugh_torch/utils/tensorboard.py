@@ -109,7 +109,8 @@ class SummaryWriter(tb.SummaryWriter):
         rgb_transform = self._parse_rgb_transform(rgb_transform)
         labels = self._parse_labels(labels, n_images)
 
-        rgbs = rgb_transform(rgbs)
+        for i, rgb in enumerate(rgbs):
+            rgbs[i] = rgb_transform(rgb)
         rgbs = rgbs.cpu().numpy()
         rgbs = np.clip(rgbs, 0, 1)
         rgbs = np.transpose(rgbs, (0, 2, 3, 1))  # (B, H, W, 3)
