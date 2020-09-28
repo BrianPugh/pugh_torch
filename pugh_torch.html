@@ -226,6 +226,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pugh_torch.callbacks.html">pugh_torch.callbacks package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="pugh_torch.callbacks.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pugh_torch.callbacks.html#pugh-torch-callbacks-model-checkpoint-module">pugh_torch.callbacks.model_checkpoint module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pugh_torch.callbacks.html#pugh-torch-callbacks-tensorboard-add-classification-module">pugh_torch.callbacks.tensorboard_add_classification module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pugh_torch.callbacks.html#pugh-torch-callbacks-tensorboard-add-ss-module">pugh_torch.callbacks.tensorboard_add_ss module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pugh_torch.callbacks.html#pugh-torch-callbacks-tensorboard-base-module">pugh_torch.callbacks.tensorboard_base module</a></li>
@@ -273,6 +274,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pugh_torch.modules.html">pugh_torch.modules package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pugh_torch.modules.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pugh_torch.modules.html#module-pugh_torch.modules.conv">pugh_torch.modules.conv module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pugh_torch.modules.html#module-pugh_torch.modules">Module contents</a></li>
 </ul>
 </li>
@@ -310,6 +313,13 @@
 <p>Occurs when a file does not have the expected hash.</p>
 </dd></dl>
 
+<dl class="exception">
+<dt id="pugh_torch.exceptions.ShouldNeverHappenError">
+<em class="property">exception </em><code class="sig-prename descclassname">pugh_torch.exceptions.</code><code class="sig-name descname">ShouldNeverHappenError</code><a class="reference internal" href="_modules/pugh_torch/exceptions.html#ShouldNeverHappenError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.exceptions.ShouldNeverHappenError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Portions of code have been reached that the developer never intended.</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-pugh_torch.helpers">
 <span id="pugh-torch-helpers-module"></span><h2>pugh_torch.helpers module<a class="headerlink" href="#module-pugh_torch.helpers" title="Permalink to this headline">¶</a></h2>
@@ -340,6 +350,29 @@ Ignored if <code class="docutils literal notranslate"><span class="pre">font_siz
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pugh_torch.helpers.calling_scope">
+<code class="sig-prename descclassname">pugh_torch.helpers.</code><code class="sig-name descname">calling_scope</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">index=1</em>, <em class="sig-param">strict=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/helpers.html#calling_scope"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.helpers.calling_scope" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets an object from the calling scope.</p>
+<p>This uses a bunch of hacky stuff and may be fragile.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Object in the calling scope to get.</p></li>
+<li><p><strong>index</strong> (<em>int</em>) – How many frames to go up in the stack. Defaults to 1 (direct caller).</p></li>
+<li><p><strong>strict</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, only search the specified frame’s local and global scope.
+Otherwise, iterate up the stack until the object is found.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Object from caller scope.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>obj</p>
 </dd>
 </dl>
 </dd></dl>
@@ -402,6 +435,98 @@ existing file when hash is specified but doesn’t match.</p></li>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>pathlib.Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pugh_torch.helpers.most_recent_checkpoint">
+<code class="sig-prename descclassname">pugh_torch.helpers.</code><code class="sig-name descname">most_recent_checkpoint</code><span class="sig-paren">(</span><em class="sig-param">outputs_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/helpers.html#most_recent_checkpoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.helpers.most_recent_checkpoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the most recent valid checkpoint path.</p>
+<p>Searches over all the subdirectories in <cite>outputs_paths/</cite> and returns
+the most recent found checkpoint path.</p>
+<p>Relies on ModelCheckpoint(save_last=True)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>outputs_path</strong> (<em>pathlib.Path or str</em>) – The root Hydra outputs directory</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>FileNotFoundError</strong> – If the most recent checkpoint can not be found.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Most recent output path.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pathlib.Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pugh_torch.helpers.most_recent_run">
+<code class="sig-prename descclassname">pugh_torch.helpers.</code><code class="sig-name descname">most_recent_run</code><span class="sig-paren">(</span><em class="sig-param">outputs_path, fmts=['%Y-%m-%d', '%H-%M-%S']</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/helpers.html#most_recent_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.helpers.most_recent_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the most recent Hydra run folder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>outputs_path</strong> (<em>pathlib.Path or str</em>) – The root Hydra outputs directory</p></li>
+<li><p><strong>fmts</strong> (<em>list</em>) – Optional list of string formats of how to interpret the folders.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Most recent output path.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pathlib.Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pugh_torch.helpers.to_obj">
+<code class="sig-prename descclassname">pugh_torch.helpers.</code><code class="sig-name descname">to_obj</code><span class="sig-paren">(</span><em class="sig-param">s</em>, <em class="sig-param">index=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/helpers.html#to_obj"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.helpers.to_obj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts str to its respective object in caller’s scope.</p>
+<p>This can be thought of converting the string into the object available
+in the caller’s scope.</p>
+<p>Useful for specifying programmatic objects in Hydra configs.</p>
+<dl class="simple">
+<dt>Example:</dt><dd><p># Assuming we are in a method where this is available
+assert self.foo.bar == to_obj(“self.foo.bar”)</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> (<em>obj or str</em>) – Object to convert into it’s callable equivalent.
+If this is already an object, it justs passes it through.</p></li>
+<li><p><strong>index</strong> (<em>int</em>) – Scope to search, where 0 means the caller’s scope, 1 is the caller’s caller
+scope, etc.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Callable equivalent represented by the input.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>callable</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pugh_torch.helpers.working_dir">
+<code class="sig-prename descclassname">pugh_torch.helpers.</code><code class="sig-name descname">working_dir</code><span class="sig-paren">(</span><em class="sig-param">newdir</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/helpers.html#working_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.helpers.working_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Changes working directory and returns to previous on exit.</p>
+<dl>
+<dt>Usage:</dt><dd><dl class="simple">
+<dt>with working_dir(“my_experiment_path”):</dt><dd><p># do stuff within <cite>my_experiment_path/</cite></p>
+</dd>
+</dl>
+<p># Now we are back in the original working directory</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>new</strong></p>
 </dd>
 </dl>
 </dd></dl>

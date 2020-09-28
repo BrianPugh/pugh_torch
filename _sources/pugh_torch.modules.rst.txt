@@ -1,6 +1,18 @@
 pugh\_torch.modules package
 ===========================
 
+Submodules
+----------
+
+pugh\_torch.modules.conv module
+-------------------------------
+
+.. automodule:: pugh_torch.modules.conv
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
 Module contents
 ---------------
 

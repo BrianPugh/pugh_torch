@@ -4,6 +4,14 @@ pugh\_torch.callbacks package
 Submodules
 ----------
 
+pugh\_torch.callbacks.model\_checkpoint module
+----------------------------------------------
+
+.. automodule:: pugh_torch.callbacks.model_checkpoint
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pugh\_torch.callbacks.tensorboard\_add\_classification module
 -------------------------------------------------------------
 

@@ -194,12 +194,22 @@
             
   <h1>Source code for pugh_torch.helpers</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageDraw</span><span class="p">,</span> <span class="n">ImageFont</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
 <span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">ShouldNeverHappenError</span>
+
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="camel_to_snake"><a class="viewcode-back" href="../../pugh_torch.html#pugh_torch.helpers.camel_to_snake">[docs]</a><span class="k">def</span> <span class="nf">camel_to_snake</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
@@ -406,6 +416,197 @@
             <span class="n">compare_hash</span><span class="p">(</span><span class="n">sha1_hash</span><span class="p">,</span> <span class="n">actual_hash</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">file_path</span></div>
+
+
+<div class="viewcode-block" id="calling_scope"><a class="viewcode-back" href="../../pugh_torch.html#pugh_torch.helpers.calling_scope">[docs]</a><span class="k">def</span> <span class="nf">calling_scope</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Gets an object from the calling scope.</span>
+
+<span class="sd">    This uses a bunch of hacky stuff and may be fragile.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Object in the calling scope to get.</span>
+<span class="sd">    index : int</span>
+<span class="sd">        How many frames to go up in the stack. Defaults to 1 (direct caller).</span>
+<span class="sd">    strict: bool</span>
+<span class="sd">        If ``True``, only search the specified frame&#39;s local and global scope.</span>
+<span class="sd">        Otherwise, iterate up the stack until the object is found.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    obj</span>
+<span class="sd">       Object from caller scope.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="n">index</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">frame</span><span class="o">.</span><span class="n">f_locals</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">frame</span><span class="o">.</span><span class="n">f_locals</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">frame</span><span class="o">.</span><span class="n">f_globals</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">frame</span><span class="o">.</span><span class="n">f_globals</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">strict</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&quot; not in calling scope&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">frame</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">f_back</span>
+            <span class="k">if</span> <span class="n">frame</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&quot; not in calling scope&#39;</span><span class="p">)</span>
+
+    <span class="k">raise</span> <span class="n">ShouldNeverHappenError</span></div>
+
+
+<div class="viewcode-block" id="to_obj"><a class="viewcode-back" href="../../pugh_torch.html#pugh_torch.helpers.to_obj">[docs]</a><span class="k">def</span> <span class="nf">to_obj</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Converts str to its respective object in caller&#39;s scope.</span>
+
+<span class="sd">    This can be thought of converting the string into the object available</span>
+<span class="sd">    in the caller&#39;s scope.</span>
+
+<span class="sd">    Useful for specifying programmatic objects in Hydra configs.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        # Assuming we are in a method where this is available</span>
+<span class="sd">        assert self.foo.bar == to_obj(&quot;self.foo.bar&quot;)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    s : obj or str</span>
+<span class="sd">        Object to convert into it&#39;s callable equivalent.</span>
+<span class="sd">        If this is already an object, it justs passes it through.</span>
+<span class="sd">    index : int</span>
+<span class="sd">        Scope to search, where 0 means the caller&#39;s scope, 1 is the caller&#39;s caller</span>
+<span class="sd">        scope, etc.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    callable</span>
+<span class="sd">        Callable equivalent represented by the input.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">components</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+        <span class="n">root_str</span> <span class="o">=</span> <span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">output</span> <span class="o">=</span> <span class="n">calling_scope</span><span class="p">(</span><span class="n">root_str</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">components</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">component</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">output</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Identity pass-thru</span>
+        <span class="k">return</span> <span class="n">s</span></div>
+
+
+<div class="viewcode-block" id="working_dir"><a class="viewcode-back" href="../../pugh_torch.html#pugh_torch.helpers.working_dir">[docs]</a><span class="nd">@contextmanager</span>
+<span class="k">def</span> <span class="nf">working_dir</span><span class="p">(</span><span class="n">newdir</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Changes working directory and returns to previous on exit.</span>
+
+<span class="sd">    Usage:</span>
+<span class="sd">        with working_dir(&quot;my_experiment_path&quot;):</span>
+<span class="sd">            # do stuff within `my_experiment_path/`</span>
+<span class="sd">        # Now we are back in the original working directory</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    new</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">prevdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">newdir</span><span class="p">))</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">yield</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">prevdir</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="most_recent_run"><a class="viewcode-back" href="../../pugh_torch.html#pugh_torch.helpers.most_recent_run">[docs]</a><span class="k">def</span> <span class="nf">most_recent_run</span><span class="p">(</span><span class="n">outputs_path</span><span class="p">,</span> <span class="n">fmts</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;%H-%M-%S&quot;</span><span class="p">]):</span>
+    <span class="sd">&quot;&quot;&quot;Get the most recent Hydra run folder.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    outputs_path : pathlib.Path or str</span>
+<span class="sd">        The root Hydra outputs directory</span>
+<span class="sd">    fmts : list</span>
+<span class="sd">        Optional list of string formats of how to interpret the folders.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pathlib.Path</span>
+<span class="sd">        Most recent output path.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">cur_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">outputs_path</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">fmt</span> <span class="ow">in</span> <span class="n">fmts</span><span class="p">:</span>
+        <span class="n">fmt</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">fmt</span><span class="p">)</span>
+        <span class="n">times</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">),</span> <span class="n">fmt</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">cur_path</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()</span>
+        <span class="p">]</span>
+        <span class="n">cur_path</span> <span class="o">=</span> <span class="n">cur_path</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">times</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">fmt</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">cur_path</span></div>
+
+
+<div class="viewcode-block" id="most_recent_checkpoint"><a class="viewcode-back" href="../../pugh_torch.html#pugh_torch.helpers.most_recent_checkpoint">[docs]</a><span class="k">def</span> <span class="nf">most_recent_checkpoint</span><span class="p">(</span><span class="n">outputs_path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the most recent valid checkpoint path.</span>
+
+<span class="sd">    Searches over all the subdirectories in `outputs_paths/` and returns</span>
+<span class="sd">    the most recent found checkpoint path.</span>
+
+<span class="sd">    Relies on ModelCheckpoint(save_last=True)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    outputs_path : pathlib.Path or str</span>
+<span class="sd">        The root Hydra outputs directory</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    FileNotFoundError</span>
+<span class="sd">        If the most recent checkpoint can not be found.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pathlib.Path</span>
+<span class="sd">        Most recent output path.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">day_fmt</span> <span class="o">=</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span>
+    <span class="n">time_fmt</span> <span class="o">=</span> <span class="s2">&quot;%H-%M-%S&quot;</span>
+
+    <span class="n">outputs_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">outputs_path</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+
+    <span class="n">days</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">),</span> <span class="n">day_fmt</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">outputs_path</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()</span>
+    <span class="p">]</span>
+    <span class="n">days</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">days</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">day</span> <span class="ow">in</span> <span class="n">days</span><span class="p">:</span>
+        <span class="n">day_str</span> <span class="o">=</span> <span class="n">day</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">day_fmt</span><span class="p">)</span>
+        <span class="n">day_path</span> <span class="o">=</span> <span class="n">outputs_path</span> <span class="o">/</span> <span class="n">day_str</span>
+        <span class="n">times</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">),</span> <span class="n">time_fmt</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">day_path</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()</span>
+        <span class="p">]</span>
+        <span class="n">times</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">time</span> <span class="ow">in</span> <span class="n">times</span><span class="p">:</span>
+            <span class="n">time_str</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">time_fmt</span><span class="p">)</span>
+            <span class="n">experiment_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">day_str</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">time_str</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">experiment_path</span> <span class="o">=</span> <span class="n">outputs_path</span> <span class="o">/</span> <span class="n">experiment_id</span>
+            <span class="n">ckpt_path</span> <span class="o">=</span> <span class="n">experiment_path</span> <span class="o">/</span> <span class="s2">&quot;default/version_0/checkpoints/last.ckpt&quot;</span>
+            <span class="k">if</span> <span class="n">ckpt_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+                <span class="k">return</span> <span class="n">ckpt_path</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;Recent experiment &quot;</span><span class="si">{</span><span class="n">experiment_id</span><span class="si">}</span><span class="s1">&quot; did not have a checkpoint. Searching next run.&#39;</span>
+                <span class="p">)</span>
+
+    <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">&quot;Could not find most recent checkpoint&quot;</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

@@ -210,19 +210,78 @@
 <a class="reference external image-reference" href="https://github.com/BrianPugh/pugh_torch/actions"><img alt="Build Status" src="https://github.com/BrianPugh/pugh_torch/workflows/Build%20Master/badge.svg" /></a>
 <a class="reference external image-reference" href="https://BrianPugh.github.io/pugh_torch"><img alt="Documentation" src="https://github.com/BrianPugh/pugh_torch/workflows/Documentation/badge.svg" /></a>
 <a class="reference external image-reference" href="https://codecov.io/gh/BrianPugh/pugh_torch"><img alt="Code Coverage" src="https://codecov.io/gh/BrianPugh/pugh_torch/branch/master/graph/badge.svg" /></a>
-<p>Functions, losses, and module blocks to share between experiments.</p>
+<p>Functions, losses, module blocks to share between experiments.</p>
 <hr class="docutils" />
-<div class="section" id="features">
-<h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="package-features">
+<h2>Package Features<a class="headerlink" href="#package-features" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Additional methods to TensorBoard summary writer for adding normalized images and semantic segmentation images.</p></li>
 <li><p>hetero_cross_entropy for cross_entropy loss across heterogeneous datasets</p></li>
+<li><p>Convenient dataset downloading/unpacking to <code class="docutils literal notranslate"><span class="pre">~/.pugh_torch/datasets/</span></code>.</p>
+<ul>
+<li><p>You can override this via the ENV variable <code class="docutils literal notranslate"><span class="pre">ROOT_DATASET_PATH</span></code>.</p></li>
+</ul>
+</li>
 </ul>
 </div>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <p><strong>Stable Release:</strong> <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">pugh_torch</span></code><span class="raw-html-m2r"><br></span>
 <strong>Development Head:</strong> <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">git+https://github.com/BrianPugh/pugh_torch.git</span></code></p>
+</div>
+<div class="section" id="experiments">
+<h2>Experiments<a class="headerlink" href="#experiments" title="Permalink to this headline">¶</a></h2>
+<p>A big part of this repo is a framework to quickly be able to iterate on ideas.</p>
+<p>To accomplish this, we provide the following:</p>
+<ul>
+<li><p>A docker container <code class="docutils literal notranslate"><span class="pre">brianpugh/pugh_torch</span></code> that contains many dependencies
+experimenters would like to use.</p>
+<ul>
+<li><p>You can pull the docker image and launch the container via:
+.. code-block:: guess</p>
+<blockquote>
+<div><p>docker pull brianpugh/pugh_torch
+./docker_run.sh</p>
+</div></blockquote>
+</li>
+<li><p>This will map <code class="docutils literal notranslate"><span class="pre">~/.pugh_torch</span></code> and the local copy of the git repo
+into the container. You may change this if you like.
+This will also pass in any available GPUs and set other common
+docker flags for running/training neural nets.</p></li>
+<li><p>This container runs a VNC server, incase you need to perform some visual
+actions, like using <code class="docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code></p></li>
+</ul>
+</li>
+<li><p>A unified training driver <code class="docutils literal notranslate"><span class="pre">experiments/train.py</span></code> to run experiments.</p>
+<ul>
+<li><p>From the <code class="docutils literal notranslate"><span class="pre">experiments/</span></code> folder, run <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">train.py</span> <span class="pre">template</span></code> to begin
+training the default resnet50 architecture on ImageNet.</p></li>
+<li><p>ImageNet cannot be automatically downloaded (see the error raised). To
+get training started with an easier-to-obtain dataset, run:
+.. code-block:: guess</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">python3</span> <span class="pre">train.py</span> <span class="pre">template</span> <span class="pre">dataset=cifar100</span> <span class="pre">model=cifar100</span>
+<span class="pre">`</span></code></p>
+</div></blockquote>
+</li>
+</ul>
+</li>
+<li><p>A template project <code class="docutils literal notranslate"><span class="pre">experiments/template</span></code> that should get you going. The goal
+here is to  provide maximum flexibility while minimizing “project startup
+costs”. We leverage the following libraries:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/facebookresearch/hydra">Hydra</a> for managing experiment
+hyperparameters and other configuration. It’s a good idea to make your
+code configurable via this configuration rather than directly tweaking
+code to make experiments more trackable and reproduceable.</p></li>
+<li><p><a class="reference external" href="https://github.com/PyTorchLightning/pytorch-lightning">PyTorch-Lightning</a>
+for general project organization and training.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pugh_torch</span></code> for various tweaks and helpers that make using the above
+libraries easier for common projects and tasks.</p></li>
+</ul>
+</li>
+</ul>
 </div>
 <div class="section" id="documentation">
 <h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
