@@ -7,11 +7,14 @@
 # This is the absolute path to this git repo.
 DIRECTORY=$(cd `dirname $0` && pwd)
 
+DOCKER_URI=brianpugh/pugh-torch:${1:-latest}
+
 # For x11 forwarding
 xhost +local:root
 
 mkdir -p $HOME/.pugh_torch
 
+# DataLoader workers need access to shared memory, so we set --ipc=host
 docker \
     run -it \
     --gpus all \
@@ -19,6 +22,6 @@ docker \
     -v $DIRECTORY:/root/pugh_torch \
     --ipc=host \
     --net=host \
-    brianpugh/pugh-torch:${1:-latest}
+    ${DOCKER_URI}
 
 xhost -local:root

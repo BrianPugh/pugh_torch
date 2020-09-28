@@ -39,6 +39,8 @@ def assert_imagenet(loader):
         assert image.min() >= 0
         assert image.shape == (16, 3, 224, 224)
         assert label.shape == (16,)
+        assert label.max() < 1000
+        assert label.min() > 0
         # TODO: We could/should make more assertions like label range and stuff.
 
 

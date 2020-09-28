@@ -1,3 +1,6 @@
+seed: 1234
+
 defaults:
     - trainer: default
-    - dataset: default
+    - dataset: imagenet
+    - model: imagenet

@@ -3,30 +3,23 @@
 This is basically resnet50, just to get you started.
 """
 
+import logging
+
 import torch
 from torch import nn
 import torch.nn.functional as F
+from torch.utils.data import DataLoader
+
+import pugh_torch as pt
+from pugh_torch.modules import conv3x3, conv1x1
+
 import pytorch_lightning as pl
 from pytorch_lightning.metrics.functional import accuracy
 
+import albumentations as A
+from albumentations.pytorch import ToTensorV2
 
-def conv3x3(in_planes, out_planes, stride=1, groups=1, dilation=1):
-    """3x3 convolution with padding"""
-    return nn.Conv2d(
-        in_planes,
-        out_planes,
-        kernel_size=3,
-        stride=stride,
-        padding=dilation,
-        groups=groups,
-        bias=False,
-        dilation=dilation,
-    )
-
-
-def conv1x1(in_planes, out_planes, stride=1):
-    """1x1 convolution"""
-    return nn.Conv2d(in_planes, out_planes, kernel_size=1, stride=stride, bias=False)
+log = logging.getLogger(__name__)
 
 
 class Bottleneck(nn.Module):
@@ -107,30 +100,40 @@ class MyModel(pl.LightningModule):
     def __init__(
         self,
         *,
+        cfg=None,
         block=Bottleneck,
         layers=[3, 4, 6, 3],
         num_classes=1000,
         zero_init_residual=False,
+        dilation=1,
         groups=1,
         width_per_group=64,
         replace_stride_with_dilation=None,
         norm_layer=None,
         learning_rate=0.002,
+        in_planes=64,
         **kwargs,
     ):
         """Defaults are ResNet50"""
 
         super().__init__()
-        self.learning_rate = (
-            learning_rate  # This will be overwritten by learning rate finder.
+
+        # NOTE: Only access this for pytorch-lightning related hooks.
+        # Do not rely on cfg for network hyperparameters.
+        # Use conventional arguments for constructing your architecture.
+        self.cfg = cfg
+
+        self.learning_rate = learning_rate  # This may be overwritten by lr finder
+
+        self.block = block = pt.to_obj(block)
+        self.norm_layer = norm_layer = (
+            nn.BatchNorm2d if norm_layer is None else pt.to_obj(norm_layer)
         )
 
-        if norm_layer is None:
-            norm_layer = nn.BatchNorm2d
-        self._norm_layer = norm_layer
+        self.in_planes = in_planes
+        self.dilation = dilation
+        self.num_classes = num_classes
 
-        self.in_planes = 64
-        self.dilation = 1
         if replace_stride_with_dilation is None:
             # each element in the tuple indicates if we should replace
             # the 2x2 stride with a dilated convolution instead
@@ -179,7 +182,7 @@ class MyModel(pl.LightningModule):
                     nn.init.constant_(m.bn2.weight, 0)
 
     def _make_layer(self, block, planes, blocks, stride=1, dilate=False):
-        norm_layer = self._norm_layer
+        norm_layer = self.norm_layer
         downsample = None
         previous_dilation = self.dilation
         if dilate:
@@ -255,7 +258,11 @@ class MyModel(pl.LightningModule):
     def _log_common(self, result, split, logits, target, loss):
         pred = torch.argmax(logits, dim=-1)
         result.log(f"{split}/loss", loss, prog_bar=True)
-        result.log(f"{split}/acc", accuracy(pred, target), prog_bar=True)
+        try:
+            result.log(f"{split}/acc", accuracy(pred, target), prog_bar=True)
+        except RuntimeError:
+            # see: https://github.com/PyTorchLightning/pytorch-lightning/issues/3006
+            pass
 
     def _compute_loss(self, pred, target):
         return F.cross_entropy(pred, target)
@@ -289,4 +296,73 @@ class MyModel(pl.LightningModule):
         return result
 
     def configure_optimizers(self):
-        return torch.optim.Adam(self.parameters(), lr=self.learning_rate)
+        return torch.optim.AdamW(self.parameters(), lr=self.learning_rate)
+
+    def configure_callbacks(self):
+        """Moves trainer callback declaration into the model so the same
+        training script can be shared across experiments.
+
+        This is not standard pytorch-lightning
+
+        Returns
+        -------
+        callbacks : list
+            List of callback objects to initialize the Trainer object with.
+        """
+        from pugh_torch.callbacks import TensorBoardAddClassification
+
+        callbacks = [
+            TensorBoardAddClassification(rgb_transform="imagenet"),
+        ]
+        return callbacks
+
+    def train_dataloader(self):
+        transform = A.Compose(
+            [
+                A.Resize(256, 256),
+                A.RandomCrop(224, 224),
+                A.HorizontalFlip(),
+                A.Normalize(
+                    mean=[0.485, 0.456, 0.406],  # this is RGB order.
+                    std=[0.229, 0.224, 0.225],
+                ),
+                ToTensorV2(),
+            ]
+        )
+
+        dataset = pt.datasets.get("classification", self.cfg.dataset.name)(
+            "train", transform=transform
+        )
+        loader = DataLoader(
+            dataset,
+            shuffle=True,
+            pin_memory=self.cfg.dataset.pin_memory,
+            num_workers=self.cfg.dataset.num_workers,
+            batch_size=self.cfg.dataset.batch_size,
+        )
+        return loader
+
+    def val_dataloader(self):
+        transform = A.Compose(
+            [
+                A.Resize(256, 256),
+                A.CenterCrop(224, 224),
+                A.Normalize(
+                    mean=[0.485, 0.456, 0.406],  # this is RGB order.
+                    std=[0.229, 0.224, 0.225],
+                ),
+                ToTensorV2(),
+            ]
+        )
+
+        dataset = pt.datasets.get("classification", self.cfg.dataset.name)(
+            "val", transform=transform
+        )
+        loader = DataLoader(
+            dataset,
+            shuffle=False,
+            pin_memory=self.cfg.dataset.pin_memory,
+            num_workers=self.cfg.dataset.num_workers,
+            batch_size=self.cfg.dataset.batch_size,
+        )
+        return loader

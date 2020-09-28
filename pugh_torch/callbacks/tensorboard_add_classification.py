@@ -14,9 +14,18 @@ class TensorBoardAddClassification(TensorBoardCallback):
         classes : list
             If provided, the predictions will contain the appropriate annotation.
             `len(classes)`` should equal the number of networ output channels.
+            If this is available under ``trainer``.
         """
         super().__init__(**kwargs)
         self.classes = classes
+
+    def on_train_start(self, trainer, pl_module):
+        if self.classes is None:
+            # Attempt to initialize the ``classes`` attributes from ``dataset.classes``
+            try:
+                self.classes = trainer.train_dataloader.dataset.classes
+            except AttributeError:
+                pass
 
     def on_train_batch_end(self, trainer, pl_module, batch, batch_idx, dataloader_idx):
         if (batch_idx + 1) % self.logging_batch_interval != 0:

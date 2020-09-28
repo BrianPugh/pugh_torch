@@ -2,9 +2,6 @@
 
 PYTHON := python3
 
-train:
-	$(PYTHON) train.py
-
 test:
 	$(PYTHON) -m pytest tests
 

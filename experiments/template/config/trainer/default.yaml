@@ -1,92 +1,92 @@
-trainer:
-    # See https://pytorch-lightning.readthedocs.io/en/stable/trainer.html
-    
-    ##########
-    # 16-bit #
-    ##########
-    # 16-bit/Apex-related configurations
-    #precision: 32  # See Apex installation if you want to use 16-bit
-    #amp_level: "O2"
-    #amp_backend: 'native'
+# @package _group_
+# See https://pytorch-lightning.readthedocs.io/en/stable/trainer.html
 
-    # clip the gradient norm computed over all model parameters together.
-    # 0 means no clipping
-    gradient_clip_val: 0
+##########
+# 16-bit #
+##########
+# 16-bit/Apex-related configurations
+#precision: 32  # See Apex installation if you want to use 16-bit
+#amp_level: "O2"
+#amp_backend: 'native'
 
-    # Used if you want to check the val dataset less than once per epoch.
-    # If you have a small dataset you might want to check validation every n epochs
-    check_val_every_n_epoch: 1
+# clip the gradient norm computed over all model parameters together.
+# 0 means no clipping
+gradient_clip_val: 0
 
-    # Used if you want to check the val dataset more frequently than once per epoch.
-    # Runs the val dataset every this many training epochs
-    val_check_interval: 1.0
+# Used if you want to check the val dataset less than once per epoch.
+# If you have a small dataset you might want to check validation every n epochs
+check_val_every_n_epoch: 1
 
-    max_epochs: 1000
-    min_epochs: 1
+# Used if you want to check the val dataset more frequently than once per epoch.
+# Runs the val dataset every this many training epochs
+val_check_interval: 1.0
 
-    ########
-    # Misc #
-    ########
-    deterministic: False  # False -> ; True -> reproduceable
-    terminate_on_nan: True
-    auto_lr_find: True
+max_epochs: 1000
+min_epochs: 1
 
-    #############
-    # Debugging #
-    #############
-    #limit_train_batches: 1.0  # What percentage of training dataset to check. Useful when debugging or testing something that happens at the end of an epoch.
-    #limit_val_batches: 1.0
-    #limit_test_batches: 1.0
+########
+# Misc #
+########
+deterministic: False  # False -> ; True -> reproduceable
+terminate_on_nan: True
+auto_lr_find: True
 
-     # Runs 1 batch of train, test and val to find any bugs (ie: a sort of unit test).
-    fast_dev_run: False
+#############
+# Debugging #
+#############
+#limit_train_batches: 1.0  # What percentage of training dataset to run per epoch. Useful when debugging or testing something that happens at the end of an epoch.
+#limit_val_batches: 1.0
+#limit_test_batches: 1.0
 
-    # Sanity check runs n validation batches before starting the training routine.
-    num_sanity_val_steps: 2
+ # Runs 1 batch of train, test and val to find any bugs (ie: a sort of unit test).
+fast_dev_run: False
 
-    # Uses this much data of the training set. Useful for quickly debugging or trying to overfit on purpose.
-    #overfit_batches: 0.01
-    
-    #log_gpu_memory: "min_max"  # This slows performance, but might help debug. Valid values: {"min_max", "all"}
-    
-    #profiler: True  # More advanced profilers will have to be defined in code.
+# Sanity check runs n validation batches before starting the training routine.
+num_sanity_val_steps: 2
+
+# Uses this much data of the training set. Useful for quickly debugging or trying to overfit on purpose.
+#overfit_batches: 0.01
+
+#log_gpu_memory: "min_max"  # This slows performance, but might help debug. Valid values: {"min_max", "all"}
+
+#profiler: True  # More advanced profilers will have to be defined in code.
 
 
-    ########################
-    # Logging and Printing #
-    ########################
-    log_save_interval: 100  # Write-to-disk every this many iterations
-    row_log_interval: 50  # Record to log (in memory) every this many iterations
+########################
+# Logging and Printing #
+########################
+log_save_interval: 100  # Write-to-disk every this many iterations
+row_log_interval: 50  # Record to log (in memory) every this many iterations
 
-    # Prints a summary of the weights when training begins. Options: ‘full’, ‘top’, None.
-    weights_summary: 'top'
+# Prints a summary of the weights when training begins. Options: ‘full’, ‘top’, None.
+weights_summary: 'top'
 
-    ##########################
-    # Multi-GPU and Batching #
-    ##########################
-    gpus: 1  # Assuming you want to train on 1 gpu; if a list, says which gpus to train on.
+##########################
+# Multi-GPU and Batching #
+##########################
+gpus: 1  # Assuming you want to train on 1 gpu; if a list, says which gpus to train on.
 
-    auto_select_gpus: True
+auto_select_gpus: True
 
-    #This flag is likely to increase the speed of your system if your input sizes don’t change.#
-    benchmark: False
+#This flag is likely to increase the speed of your system if your input sizes don’t change.#
+benchmark: False
 
-    # Enable synchronization between batchnorm layers across all GPUs.
-    # This should probably be enabled if the batch-size-per-gpu is low
-    # i.e. set to True for large models
-    sync_batchnorm: False
+# Enable synchronization between batchnorm layers across all GPUs.
+# This should probably be enabled if the batch-size-per-gpu is low
+# i.e. set to True for large models
+sync_batchnorm: False
 
-    # Use this if you need large-batch operations (like BatchNorm) but have limited GPU memory.
-    # Results in an effective batch*accumulate_grad_batches batchsize.
-    accumulate_grad_batches: 1
+# Use this if you need large-batch operations (like BatchNorm) but have limited GPU memory.
+# Results in an effective batch*accumulate_grad_batches batchsize.
+accumulate_grad_batches: 1
 
-    #########
-    # Paths #
-    #########
-    #weights_save_path=None  # TODO: maybe autoset this up
-    #default_root_dir=None  # TODO: this is cwd(), but maybe it should be a subdir
+#########
+# Paths #
+#########
+#weights_save_path=None  # TODO: maybe autoset this up
+#default_root_dir=None  # TODO: this is cwd(), but maybe it should be a subdir
 
-    #############
-    # Recurrent #
-    #############
-    #truncated_bptt_steps:
+#############
+# Recurrent #
+#############
+#truncated_bptt_steps:
