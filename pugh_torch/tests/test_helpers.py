@@ -36,22 +36,27 @@ def test_add_text_under_img_grayscale(chelsea, assert_img_equal):
 
 
 def test_to_obj_class():
-    class Bar():
+    class Bar:
         class_var = "some_bar_class_var"
 
     class Foo:
         class_var = "some_foo_class_var"
         bar_var = Bar()
 
-        def bar(self,):
+        def bar(
+            self,
+        ):
             return "bar_return"
 
-        def bar_nested(self,):
+        def bar_nested(
+            self,
+        ):
             return helpers.to_obj("self.bar_var.class_var")
 
-        def baz(self,):
+        def baz(
+            self,
+        ):
             return helpers.to_obj("self.class_var")
-            
 
     foo = Foo()
 
@@ -61,4 +66,3 @@ def test_to_obj_class():
     assert foo == helpers.to_obj(foo)
     assert "some_foo_class_var" == foo.baz()
     assert "some_bar_class_var" == foo.bar_nested()
-

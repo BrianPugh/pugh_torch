@@ -222,8 +222,9 @@ def download(url, path=None, overwrite=False, sha1_hash=None):
 
     return file_path
 
+
 def calling_scope(name, index=1, strict=True):
-    """ Gets an object from the calling scope.
+    """Gets an object from the calling scope.
 
     This uses a bunch of hacky stuff and may be fragile.
 
@@ -251,16 +252,17 @@ def calling_scope(name, index=1, strict=True):
         elif name in frame.f_globals:
             return frame.f_globals[name]
         elif strict:
-            raise KeyError(f"\"{name}\" not in calling scope")
+            raise KeyError(f'"{name}" not in calling scope')
         else:
             frame = frame.f_back
             if frame is None:
-                raise KeyError(f"\"{name}\" not in calling scope")
+                raise KeyError(f'"{name}" not in calling scope')
 
     raise ShouldNeverHappenError
 
+
 def to_obj(s, index=0):
-    """ Converts str to its respective object in caller's scope.
+    """Converts str to its respective object in caller's scope.
 
     This can be thought of converting the string into the object available
     in the caller's scope.
@@ -287,10 +289,10 @@ def to_obj(s, index=0):
     """
 
     if isinstance(s, str):
-        components = s.split('.')
+        components = s.split(".")
         root_str = components[0]
 
-        output = calling_scope(root_str, index=index+2)
+        output = calling_scope(root_str, index=index + 2)
 
         for component in components[1:]:
             output = getattr(output, component)
@@ -299,6 +301,7 @@ def to_obj(s, index=0):
     else:
         # Identity pass-thru
         return s
+
 
 @contextmanager
 def working_dir(newdir):
@@ -321,6 +324,7 @@ def working_dir(newdir):
     finally:
         os.chdir(prevdir)
 
+
 def most_recent_run(outputs_path, fmts=["%Y-%m-%d", "%H-%M-%S"]):
     """Get the most recent Hydra run folder.
 
@@ -341,10 +345,15 @@ def most_recent_run(outputs_path, fmts=["%Y-%m-%d", "%H-%M-%S"]):
 
     for fmt in fmts:
         fmt = str(fmt)
-        times = [datetime.strptime(str(f.name), fmt) for f in cur_path.iterdir() if f.is_dir()]
+        times = [
+            datetime.strptime(str(f.name), fmt)
+            for f in cur_path.iterdir()
+            if f.is_dir()
+        ]
         cur_path = cur_path / max(times).strftime(fmt)
 
     return cur_path
+
 
 def most_recent_checkpoint(outputs_path):
     """Get the most recent valid checkpoint path.
@@ -375,22 +384,31 @@ def most_recent_checkpoint(outputs_path):
 
     outputs_path = Path(outputs_path).resolve()
 
-    days = [datetime.strptime(str(f.name), day_fmt) for f in outputs_path.iterdir() if f.is_dir()]
+    days = [
+        datetime.strptime(str(f.name), day_fmt)
+        for f in outputs_path.iterdir()
+        if f.is_dir()
+    ]
     days = sorted(days, reverse=True)
     for day in days:
         day_str = day.strftime(day_fmt)
         day_path = outputs_path / day_str
-        times = [datetime.strptime(str(f.name), time_fmt) for f in day_path.iterdir() if f.is_dir()]
+        times = [
+            datetime.strptime(str(f.name), time_fmt)
+            for f in day_path.iterdir()
+            if f.is_dir()
+        ]
         times = sorted(times, reverse=True)
         for time in times:
             time_str = time.strftime(time_fmt)
             experiment_id = f"{day_str}/{time_str}"
-            experiment_path = outputs_path / experiment_id 
-            ckpt_path = experiment_path / 'default/version_0/checkpoints/last.ckpt'
+            experiment_path = outputs_path / experiment_id
+            ckpt_path = experiment_path / "default/version_0/checkpoints/last.ckpt"
             if ckpt_path.is_file():
                 return ckpt_path
             else:
-                log.warn(f"Recent experiment \"{experiment_id}\" did not have a checkpoint. Searching next run.")
+                log.warn(
+                    f'Recent experiment "{experiment_id}" did not have a checkpoint. Searching next run.'
+                )
 
     raise FileNotFoundError("Could not find most recent checkpoint")
-

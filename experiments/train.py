@@ -79,12 +79,15 @@ sys.path.insert(0, str(experiment_path))
 # We switch the working directory so that hydra's automatic path handling
 # happens within the experiment directory.
 with working_dir(experiment_path):
+
     @hydra.main(config_path="config", config_name="config")
     def train(cfg):
         # Note: inside this function, the current working directory is:
         #    my_experiment/outputs/%Y-%m-%d/%H-%M-%S/
 
-        log.info(f"Training experiment {experiment_name} with the following config:\n{OmegaConf.to_yaml(cfg)}")
+        log.info(
+            f"Training experiment {experiment_name} with the following config:\n{OmegaConf.to_yaml(cfg)}"
+        )
 
         pl.seed_everything(cfg.seed)
 
@@ -94,33 +97,49 @@ with working_dir(experiment_path):
             cfg.trainer.auto_lr_find = False
 
         model_kwargs = {
-                "cfg": cfg,
-                **cfg.model,
-                }
+            "cfg": cfg,
+            **cfg.model,
+        }
 
         trainer_kwargs = {
-                "logger": TensorBoardLogger("."),
-                "checkpoint_callback": pt.callbacks.ModelCheckpoint(save_last=True, monitor='val_loss'),
-                **cfg.trainer,
-                }
+            "logger": TensorBoardLogger("."),
+            "checkpoint_callback": pt.callbacks.ModelCheckpoint(
+                save_last=True, monitor="val_loss"
+            ),
+            **cfg.trainer,
+        }
 
-        exclusive_flags = ['resume_last_run', 'resume_check']
-        assert 1 >= sum([key in cfg for key in exclusive_flags]), f"Only 1 of {str(exclusive_flags)} can be specified"
+        exclusive_flags = ["resume_last_run", "resume_check"]
+        assert 1 >= sum(
+            [key in cfg for key in exclusive_flags]
+        ), f"Only 1 of {str(exclusive_flags)} can be specified"
 
         # Determine the loading of any states/weights
-        outputs_path = Path('./../..').resolve()  # Gets the experiment's outputs directory
-        if cfg.get('resume_last_run', False):
-            #trainer_kwargs['resume_from_checkpoint'] = str(most_recent_run(outputs_path) / 'default/version_0/checkpoints/last.ckpt')
-            trainer_kwargs['resume_from_checkpoint'] = most_recent_checkpoint(outputs_path)
-        elif cfg.get('resume_checkpoint', None):
+        outputs_path = Path(
+            "./../.."
+        ).resolve()  # Gets the experiment's outputs directory
+        if cfg.get("resume_last_run", False):
+            # trainer_kwargs['resume_from_checkpoint'] = str(most_recent_run(outputs_path) / 'default/version_0/checkpoints/last.ckpt')
+            trainer_kwargs["resume_from_checkpoint"] = most_recent_checkpoint(
+                outputs_path
+            )
+        elif cfg.get("resume_checkpoint", None):
             # This handles absolute paths fine
-            trainer_kwargs['resume_from_checkpoint'] = outputs_path / cfg.resume_checkpoint
+            trainer_kwargs["resume_from_checkpoint"] = (
+                outputs_path / cfg.resume_checkpoint
+            )
 
-        if 'resume_from_checkpoint' in trainer_kwargs:
-            if not trainer_kwargs['resume_from_checkpoint'].is_file():
-                raise FileNotFoundError(f"Resume checkpoint \"{str(trainer_kwargs['resume_from_checkpoint'])}\" does not exist")
-            trainer_kwargs['resume_from_checkpoint'] = str(trainer_kwargs['resume_from_checkpoint'])
-            log.info(f"Resuming training from \"{trainer_kwargs['resume_from_checkpoint']}\"")
+        if "resume_from_checkpoint" in trainer_kwargs:
+            if not trainer_kwargs["resume_from_checkpoint"].is_file():
+                raise FileNotFoundError(
+                    f"Resume checkpoint \"{str(trainer_kwargs['resume_from_checkpoint'])}\" does not exist"
+                )
+            trainer_kwargs["resume_from_checkpoint"] = str(
+                trainer_kwargs["resume_from_checkpoint"]
+            )
+            log.info(
+                f"Resuming training from \"{trainer_kwargs['resume_from_checkpoint']}\""
+            )
 
         # Instantiate Model to Train
         exec(f"from model import {cfg.model.name} as Model", globals())
@@ -131,12 +150,12 @@ with working_dir(experiment_path):
             callbacks = model.configure_callbacks()
         except AttributeError:
             log.info("No additional callbacks registered.")
-            callbacks = [] 
+            callbacks = []
         else:
             log.info(f"Registering callbacks:")
             for callback in callbacks:
                 log.info(f"    {str(callback)}")
-        trainer_kwargs['callbacks'] = callbacks
+        trainer_kwargs["callbacks"] = callbacks
 
         # Instantiate Trainer
         trainer = Trainer(**trainer_kwargs)

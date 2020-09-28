@@ -21,6 +21,7 @@ from albumentations.pytorch import ToTensorV2
 
 log = logging.getLogger(__name__)
 
+
 class Bottleneck(nn.Module):
     """
     Bottleneck in torchvision places the stride for downsampling at 3x3 convolution(self.conv2)
@@ -121,11 +122,13 @@ class MyModel(pl.LightningModule):
         # Do not rely on cfg for network hyperparameters.
         # Use conventional arguments for constructing your architecture.
         self.cfg = cfg
-        
-        self.learning_rate = learning_rate # This may be overwritten by lr finder
+
+        self.learning_rate = learning_rate  # This may be overwritten by lr finder
 
         self.block = block = pt.to_obj(block)
-        self.norm_layer = norm_layer = nn.BatchNorm2d if norm_layer is None else pt.to_obj(norm_layer)
+        self.norm_layer = norm_layer = (
+            nn.BatchNorm2d if norm_layer is None else pt.to_obj(norm_layer)
+        )
 
         self.in_planes = in_planes
         self.dilation = dilation
@@ -296,7 +299,7 @@ class MyModel(pl.LightningModule):
         return torch.optim.Adam(self.parameters(), lr=self.learning_rate)
 
     def configure_callbacks(self):
-        """ Moves trainer callback declaration into the model so the same
+        """Moves trainer callback declaration into the model so the same
         training script can be shared across experiments.
 
         This is not standard pytorch-lightning
@@ -307,9 +310,10 @@ class MyModel(pl.LightningModule):
             List of callback objects to initialize the Trainer object with.
         """
         from pugh_torch.callbacks import TensorBoardAddClassification
+
         callbacks = [
-                TensorBoardAddClassification(),
-                ]
+            TensorBoardAddClassification(),
+        ]
         return callbacks
 
     def train_dataloader(self):
@@ -325,9 +329,17 @@ class MyModel(pl.LightningModule):
                 ToTensorV2(),
             ]
         )
-        
-        dataset = pt.datasets.get("classification", self.cfg.dataset.name)("train", transform=transform)
-        loader = DataLoader(dataset, shuffle=True, pin_memory=self.cfg.dataset.pin_memory, num_workers=self.cfg.dataset.num_workers, batch_size=self.cfg.dataset.batch_size)
+
+        dataset = pt.datasets.get("classification", self.cfg.dataset.name)(
+            "train", transform=transform
+        )
+        loader = DataLoader(
+            dataset,
+            shuffle=True,
+            pin_memory=self.cfg.dataset.pin_memory,
+            num_workers=self.cfg.dataset.num_workers,
+            batch_size=self.cfg.dataset.batch_size,
+        )
         return loader
 
     def val_dataloader(self):
@@ -343,6 +355,14 @@ class MyModel(pl.LightningModule):
             ]
         )
 
-        dataset = pt.datasets.get("classification", self.cfg.dataset.name)("val", transform=transform)
-        loader = DataLoader(dataset, shuffle=False, pin_memory=self.cfg.dataset.pin_memory, num_workers=self.cfg.dataset.num_workers, batch_size=self.cfg.dataset.batch_size)
+        dataset = pt.datasets.get("classification", self.cfg.dataset.name)(
+            "val", transform=transform
+        )
+        loader = DataLoader(
+            dataset,
+            shuffle=False,
+            pin_memory=self.cfg.dataset.pin_memory,
+            num_workers=self.cfg.dataset.num_workers,
+            batch_size=self.cfg.dataset.batch_size,
+        )
         return loader
