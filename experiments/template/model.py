@@ -296,7 +296,7 @@ class MyModel(pl.LightningModule):
         return result
 
     def configure_optimizers(self):
-        return torch.optim.Adam(self.parameters(), lr=self.learning_rate)
+        return torch.optim.AdamW(self.parameters(), lr=self.learning_rate)
 
     def configure_callbacks(self):
         """Moves trainer callback declaration into the model so the same
@@ -319,7 +319,7 @@ class MyModel(pl.LightningModule):
     def train_dataloader(self):
         transform = A.Compose(
             [
-                A.SmallestMaxSize(256),
+                A.Resize(256, 256),
                 A.RandomCrop(224, 224),
                 A.HorizontalFlip(),
                 A.Normalize(
@@ -345,7 +345,7 @@ class MyModel(pl.LightningModule):
     def val_dataloader(self):
         transform = A.Compose(
             [
-                A.SmallestMaxSize(256),
+                A.Resize(256, 256),
                 A.CenterCrop(224, 224),
                 A.Normalize(
                     mean=[0.485, 0.456, 0.406],  # this is RGB order.
