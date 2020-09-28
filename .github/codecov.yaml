@@ -20,4 +20,4 @@ comment:
   require_changes: no
 
 ignore:
-  - "pugh_torch/tests"  # Don't include the test folder in overall coverage
+  - "pugh_torch/tests/"  # Don't include the test folder in overall coverage
