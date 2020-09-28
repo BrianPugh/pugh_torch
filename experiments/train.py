@@ -108,15 +108,18 @@ with working_dir(experiment_path):
         assert 1 >= sum([key in cfg for key in exclusive_flags]), f"Only 1 of {str(exclusive_flags)} can be specified"
 
         # Determine the loading of any states/weights
+        outputs_path = Path('./../..').resolve()  # Gets the experiment's outputs directory
         if cfg.get('resume_last_run', False):
-            outputs_path = Path('./../..').resolve()  # Gets the experiment's outputs directory
             #trainer_kwargs['resume_from_checkpoint'] = str(most_recent_run(outputs_path) / 'default/version_0/checkpoints/last.ckpt')
-            trainer_kwargs['resume_from_checkpoint'] = str(most_recent_checkpoint(outputs_path))
+            trainer_kwargs['resume_from_checkpoint'] = most_recent_checkpoint(outputs_path)
         elif cfg.get('resume_checkpoint', None):
-            import ipdb as pdb; pdb.set_trace()
-            trainer_kwargs['resume_from_checkpoint'] = cfg.resume_checkpoint
+            # This handles absolute paths fine
+            trainer_kwargs['resume_from_checkpoint'] = outputs_path / cfg.resume_checkpoint
 
         if 'resume_from_checkpoint' in trainer_kwargs:
+            if not trainer_kwargs['resume_from_checkpoint'].is_file():
+                raise FileNotFoundError(f"Resume checkpoint \"{str(trainer_kwargs['resume_from_checkpoint'])}\" does not exist")
+            trainer_kwargs['resume_from_checkpoint'] = str(trainer_kwargs['resume_from_checkpoint'])
             log.info(f"Resuming training from \"{trainer_kwargs['resume_from_checkpoint']}\"")
 
         # Instantiate Model to Train
