@@ -312,7 +312,7 @@ class MyModel(pl.LightningModule):
         from pugh_torch.callbacks import TensorBoardAddClassification
 
         callbacks = [
-            TensorBoardAddClassification(),
+            TensorBoardAddClassification(rgb_transform="imagenet"),
         ]
         return callbacks
 

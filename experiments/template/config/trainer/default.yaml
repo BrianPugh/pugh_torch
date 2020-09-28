@@ -21,7 +21,6 @@ check_val_every_n_epoch: 1
 # Runs the val dataset every this many training epochs
 val_check_interval: 1.0
 
-# NOTE: max_epochs WILL be overwritten if supplied by the dataset
 max_epochs: 1000
 min_epochs: 1
 

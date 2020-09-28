@@ -5,4 +5,3 @@ pin_memory: True
 num_workers: 4
 
 batch_size: 16
-max_epochs: 1000 
