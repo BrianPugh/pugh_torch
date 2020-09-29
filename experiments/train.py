@@ -173,7 +173,7 @@ with working_dir(experiment_path):
         trainer = Trainer(**trainer_kwargs)
 
         if auto_lr_find:
-            lr_finder = trainer.lr_find(model, max_lr=0.05)
+            lr_finder = trainer.lr_find(model, max_lr=0.01)
 
             new_lr = lr_finder.suggestion()
             log.info(
