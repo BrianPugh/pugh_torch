@@ -9,6 +9,7 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
+from torch.optim.lr_scheduler import LambdaLR
 
 import pugh_torch as pt
 from pugh_torch.modules import conv3x3, conv1x1
@@ -296,7 +297,17 @@ class MyModel(pl.LightningModule):
         return result
 
     def configure_optimizers(self):
-        return torch.optim.AdamW(self.parameters(), lr=self.learning_rate)
+        optimizers = []
+        schedulers = []
+
+        optimizers.append(torch.optim.AdamW(self.parameters(), lr=self.learning_rate))
+        schedulers.append(
+            LambdaLR(
+                optimizers[0], lambda epoch: 1
+            )  # simple identity for demonstration
+        )
+
+        return optimizers, schedulers
 
     def configure_callbacks(self):
         """Moves trainer callback declaration into the model so the same

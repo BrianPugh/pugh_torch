@@ -11,15 +11,15 @@
 
 # clip the gradient norm computed over all model parameters together.
 # 0 means no clipping
-gradient_clip_val: 0
+#gradient_clip_val: 0
 
 # Used if you want to check the val dataset less than once per epoch.
 # If you have a small dataset you might want to check validation every n epochs
-check_val_every_n_epoch: 1
+#check_val_every_n_epoch: 1
 
 # Used if you want to check the val dataset more frequently than once per epoch.
 # Runs the val dataset every this many training epochs
-val_check_interval: 1.0
+#val_check_interval: 1.0
 
 max_epochs: 1000
 min_epochs: 1
@@ -69,7 +69,7 @@ gpus: 1  # Assuming you want to train on 1 gpu; if a list, says which gpus to tr
 auto_select_gpus: True
 
 #This flag is likely to increase the speed of your system if your input sizes don’t change.#
-benchmark: False
+benchmark: True
 
 # Enable synchronization between batchnorm layers across all GPUs.
 # This should probably be enabled if the batch-size-per-gpu is low
@@ -78,7 +78,7 @@ sync_batchnorm: False
 
 # Use this if you need large-batch operations (like BatchNorm) but have limited GPU memory.
 # Results in an effective batch*accumulate_grad_batches batchsize.
-accumulate_grad_batches: 1
+#accumulate_grad_batches: 1
 
 #########
 # Paths #

@@ -34,9 +34,10 @@ import os
 import sys
 import logging
 from pathlib import Path
+import matplotlib.pyplot as plt
 
 import pugh_torch as pt
-from pugh_torch.helpers import working_dir, most_recent_checkpoint
+from pugh_torch.helpers import working_dir, most_recent_checkpoint, plot_to_np
 from pugh_torch.utils import TensorBoardLogger
 import pytorch_lightning as pl
 from pytorch_lightning import Trainer
@@ -165,8 +166,31 @@ with working_dir(experiment_path):
         callbacks.append(LearningRateMonitor())
         trainer_kwargs["callbacks"] = callbacks
 
+        # We customize the lr finder a bit after trainer creation
+        auto_lr_find = trainer_kwargs.pop("auto_lr_find", False)
+
         # Instantiate Trainer
         trainer = Trainer(**trainer_kwargs)
+
+        if auto_lr_find:
+            lr_finder = trainer.lr_find(model, max_lr=0.05)
+
+            new_lr = lr_finder.suggestion()
+            log.info(
+                f"Updating existing learning rate {model.learning_rate} to the suggested learning rate {new_lr}"
+            )
+
+            # Add the finder plot image to tensorboard
+            fig = lr_finder.plot(suggest=True)
+            lr_finder_plt = plot_to_np(fig)
+            plt.close(fig)
+
+            trainer.logger.experiment.add_image(
+                "auto_lr_finder", lr_finder_plt, 0, dataformats="HWC"
+            )
+
+            # Actually update the model
+            model.learning_rate = new_lr
 
         # Begin/Resume training process.
         trainer.fit(model)
