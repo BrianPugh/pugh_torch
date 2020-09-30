@@ -10,7 +10,7 @@ Typical use:
     # Resuming and Loading Weights #
     ################################
     # Common trainer overrides are at the root level.
-    # Only one (or None!) of these resume/finetune configurations should be set.
+    # Only one (or None!) of these resume configurations should be set.
     #
     # If a provided path is relative, it MUST be relative to the specific 
     # experiment's outputs/ directory.
@@ -19,7 +19,7 @@ Typical use:
     #      # structure:
     #      #    pugh_torch/experiments/my_experiment/outputs/2020-09-27/10-43-40/default/version_0/checkpoints
     #
-    #      python3 train.py my_experiment resume_checkpoint=2020-09-27/10-43-40/default/version_0/checkpoints 
+    #      python3 train.py my_experiment +resume_checkpoint=2020-09-27/10-43-40/default/version_0/checkpoints 
 
     # Load the latest checkpoint from the latest run.
     # Note: this continues that training in a new output directory.
@@ -28,22 +28,25 @@ Typical use:
     # Load a specific checkpoint.
     # This checkpoint path is relative
     python3 train.py my_experiment_name +resume_checkpoint=path/to/checkpoint.ckpt
-
-    # Load only the weights of a checkpoint.
-    # Not strict about all the weights fitting the new model architecture.
-    python3 train.py me_experiment_name +fine_tune=path/to/checkpoint.ckpt
 """
 
 import os
 import sys
 import logging
 from pathlib import Path
+import matplotlib.pyplot as plt
 
 import pugh_torch as pt
-from pugh_torch.helpers import working_dir, most_recent_checkpoint
+from pugh_torch.helpers import working_dir, most_recent_checkpoint, plot_to_np
 from pugh_torch.utils import TensorBoardLogger
 import pytorch_lightning as pl
 from pytorch_lightning import Trainer
+
+try:  # TODO: only import Monitor once pytorch-lightning v0.9.1 is released.
+    from pytorch_lightning.callbacks import LearningRateMonitor
+except ImportError:
+    from pytorch_lightning.callbacks import LearningRateLogger as LearningRateMonitor
+
 
 from omegaconf import OmegaConf
 import hydra
@@ -70,6 +73,8 @@ except IndexError:
     print(_usage)
     sys.exit(1)
 
+
+experiment_name = experiment_name.strip("/")
 experiment_path = this_file_dir / experiment_name
 if not experiment_path.is_dir():
     raise FileNotFoundError(f"No such directory {experiment_path}")
@@ -80,6 +85,8 @@ sys.path.insert(0, str(experiment_path))
 # happens within the experiment directory.
 with working_dir(experiment_path):
 
+    # TODO: something in hydra's parsing is preventing us from calling
+    # train.py from other directories.
     @hydra.main(config_path="config", config_name="config")
     def train(cfg):
         # Note: inside this function, the current working directory is:
@@ -155,10 +162,35 @@ with working_dir(experiment_path):
             log.info(f"Registering callbacks:")
             for callback in callbacks:
                 log.info(f"    {str(callback)}")
+        # Add common callbacks
+        callbacks.append(LearningRateMonitor())
         trainer_kwargs["callbacks"] = callbacks
+
+        # We customize the lr finder a bit after trainer creation
+        auto_lr_find = trainer_kwargs.pop("auto_lr_find", False)
 
         # Instantiate Trainer
         trainer = Trainer(**trainer_kwargs)
+
+        if auto_lr_find:
+            lr_finder = trainer.lr_find(model, max_lr=0.01)
+
+            new_lr = lr_finder.suggestion()
+            log.info(
+                f"Updating existing learning rate {model.learning_rate} to the suggested learning rate {new_lr}"
+            )
+
+            # Add the finder plot image to tensorboard
+            fig = lr_finder.plot(suggest=True)
+            lr_finder_plt = plot_to_np(fig)
+            plt.close(fig)
+
+            trainer.logger.experiment.add_image(
+                "auto_lr_finder", lr_finder_plt, 0, dataformats="HWC"
+            )
+
+            # Actually update the model
+            model.learning_rate = new_lr
 
         # Begin/Resume training process.
         trainer.fit(model)

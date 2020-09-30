@@ -412,3 +412,29 @@ def most_recent_checkpoint(outputs_path):
                 )
 
     raise FileNotFoundError("Could not find most recent checkpoint")
+
+
+def plot_to_np(fig):
+    """Converts a matplotlib.pyplot figure into a numpy array.
+
+    Parameters
+    ----------
+    fig : matplotlib.figure.Figure
+        Figure that you would like converted
+
+    Returns
+    -------
+    numpy.ndarray
+        Rasterized figure as an RGB-ordered numpy array
+    """
+
+    # Force a draw so we can grab the pixel buffer
+    fig.canvas.draw()
+
+    # grab the pixel buffer and dump it into a numpy array
+    output = np.array(fig.canvas.renderer.buffer_rgba())
+
+    # Most stuff expects RGB, so we'll chop of the alpha channel
+    output = output[..., :3]
+
+    return output

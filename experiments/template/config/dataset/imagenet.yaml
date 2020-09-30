@@ -2,6 +2,6 @@
 name: imagenet
 
 pin_memory: True
-num_workers: 4
+num_workers: 8
 
-batch_size: 16
+batch_size: 64  # Fits on an 8GB GPU
