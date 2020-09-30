@@ -438,3 +438,42 @@ def plot_to_np(fig):
     output = output[..., :3]
 
     return output
+
+
+def move_dim(input, src, dst):
+    """Pops dimension ``src`` and inserts it at dimension ``dst``, shifting
+    all the remaining dimensions down one.
+
+    Primarily useful when the dimensionality of ``input`` is unknown.
+
+    Example:
+        foo = torch.rand(2,1,5,10)
+        bar = move_dim(foo, -1, 1)
+        assert bar.shape == (2, 10, 1, 5)
+
+    Parameters
+    ----------
+    input : torch.Tensor
+    src : int
+        Source dimension index to pop.
+    dst : int
+        Dimension index to insert.
+        NOTE: this index is the dimension AFTER the ``src`` destination has
+        been popped. This only matters if src <= dst.
+        Also note: -1 means the second to last dimension.
+        Example:
+            foo = torch.rand(2,1,5,10)
+            bar = move_dim(foo, 1, -1)
+            assert bar.shape == (2, 5, 1, 10)
+        To have the dst be the actual last dim, use ``input.ndim - 1`` or the
+        special value ``None``
+
+    """
+
+    dims = list(range(input.ndim))
+    src = dims.pop(src)  # incase src was a negative number
+    if dst is None:
+        dims.append(src)
+    else:
+        dims.insert(dst, src)
+    return input.permute(*dims)
