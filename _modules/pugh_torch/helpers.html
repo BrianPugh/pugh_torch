@@ -607,6 +607,32 @@
                 <span class="p">)</span>
 
     <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">&quot;Could not find most recent checkpoint&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="plot_to_np"><a class="viewcode-back" href="../../pugh_torch.html#pugh_torch.helpers.plot_to_np">[docs]</a><span class="k">def</span> <span class="nf">plot_to_np</span><span class="p">(</span><span class="n">fig</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Converts a matplotlib.pyplot figure into a numpy array.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fig : matplotlib.figure.Figure</span>
+<span class="sd">        Figure that you would like converted</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy.ndarray</span>
+<span class="sd">        Rasterized figure as an RGB-ordered numpy array</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Force a draw so we can grab the pixel buffer</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+
+    <span class="c1"># grab the pixel buffer and dump it into a numpy array</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">fig</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">buffer_rgba</span><span class="p">())</span>
+
+    <span class="c1"># Most stuff expects RGB, so we&#39;ll chop of the alpha channel</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">output</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">output</span></div>
 </pre></div>
 
            </div>
