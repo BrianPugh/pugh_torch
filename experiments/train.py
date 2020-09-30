@@ -34,7 +34,6 @@ import os
 import sys
 import logging
 from pathlib import Path
-import matplotlib.pyplot as plt
 
 import pugh_torch as pt
 from pugh_torch.helpers import working_dir, most_recent_checkpoint, plot_to_np
@@ -181,13 +180,8 @@ with working_dir(experiment_path):
             )
 
             # Add the finder plot image to tensorboard
-            fig = lr_finder.plot(suggest=True)
-            lr_finder_plt = plot_to_np(fig)
-            plt.close(fig)
-
-            trainer.logger.experiment.add_image(
-                "auto_lr_finder", lr_finder_plt, 0, dataformats="HWC"
-            )
+            lr_finder_fig = lr_finder.plot(suggest=True)
+            trainer.logger.experiment.add_image("auto_lr_finder", lr_finder_fig, 0)
 
             # Actually update the model
             model.learning_rate = new_lr
