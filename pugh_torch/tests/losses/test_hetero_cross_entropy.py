@@ -82,7 +82,7 @@ def test_hetero_cross_entropy_super_only_simple():
     actual_loss.backward()
     actual_loss = actual_loss.detach().numpy()
 
-    assert np.isclose(0.9401897, actual_loss)
+    assert np.isclose(0.12692809, actual_loss)
 
 
 def test_hetero_cross_entropy_super_only(pred):
@@ -106,7 +106,7 @@ def test_hetero_cross_entropy_super_only(pred):
     actual_loss.backward()  # This should always work
 
     actual_loss = actual_loss.detach().numpy()
-    assert np.isclose(actual_loss, 5.015609)
+    assert np.isclose(actual_loss, 0.14451277)
 
 
 def test_hetero_cross_entropy_all_invalid(pred):
@@ -176,7 +176,7 @@ def test_hetero_cross_entropy_complete(pred):
     assert not pred_grad[:, :, 1, 1].any()
 
     actual_loss = actual_loss.detach().numpy()
-    assert np.isclose(actual_loss, 4.2314653)
+    assert np.isclose(actual_loss, 3.4782794)
 
     updated_pred = pred - (0.1 * pred.grad)
     updated_pred_softmax = F.softmax(updated_pred, dim=1)
@@ -205,7 +205,7 @@ def test_hetero_cross_entropy_super_only_simple_alpha_near_zero():
     actual_loss.backward()
     actual_loss = actual_loss.detach().numpy()
 
-    assert np.isclose(0.9401897, actual_loss, rtol=0.01)
+    assert np.isclose(0.12692809, actual_loss, rtol=0.01)
 
 
 def test_hetero_cross_entropy_smoothing_complete_alpha_near_zero(pred):
@@ -253,7 +253,7 @@ def test_hetero_cross_entropy_smoothing_complete_alpha_near_zero(pred):
     assert not pred_grad[:, :, 1, 1].any()
 
     actual_loss = actual_loss.detach().numpy()
-    assert np.isclose(actual_loss, 4.2314653, rtol=0.01)
+    assert np.isclose(actual_loss, 3.4782794, rtol=0.01)
 
     updated_pred = pred - (0.1 * pred.grad)
     updated_pred_softmax = F.softmax(updated_pred, dim=1)

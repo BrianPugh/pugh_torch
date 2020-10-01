@@ -126,25 +126,28 @@ def hetero_cross_entropy(
         if torch.any(super_mask) and num_super_classes > 0:
             super_pred = pred[:, super_mask]  # (C, n_pix)
 
+            super_pred_exp = torch.exp(super_pred)
+
+            numerator = torch.log(super_pred_exp[super_hot].sum(dim=0))
+            denominator = torch.log(super_pred_exp.sum(dim=0))
+
+            super_nll = -(numerator - denominator).mean()
+
             if alpha == 0:
-                super_pred_exp = torch.exp(super_pred)
-                exemplar_super_loss = super_pred[super_hot].mean() - torch.log(
-                    super_pred_exp.sum()
-                )
-                super_loss = super_loss - exemplar_super_loss
+                exemplar_super_loss = super_nll
             else:
                 # Handles the case where a superclass label should really
                 # be not in the superclass
-                super_uniform = alpha / (num_super_classes + 1)
-                non_super_uniform = super_uniform / num_non_super_classes
 
-                smooth_target = torch.full_like(super_pred, non_super_uniform)
-                smooth_target[super_hot] = (
-                    (1 - alpha) / num_super_classes
-                ) + super_uniform
+                super_weight = (1 - alpha) + (alpha / 2)
 
-                log_probs = F.log_softmax(super_pred, dim=0)
+                non_super_numerator = torch.log(super_pred_exp[~super_hot].sum(dim=0))
+                non_super_nll = -(non_super_numerator - denominator).mean()
 
-                super_loss = super_loss - (smooth_target * log_probs).sum(dim=0).mean()
+                exemplar_super_loss = (super_weight * super_nll) + (
+                    (alpha / 2) * non_super_nll
+                )
+
+            super_loss = super_loss + exemplar_super_loss
 
     return ce_loss + super_loss
