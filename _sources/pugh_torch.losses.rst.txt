@@ -12,6 +12,14 @@ pugh\_torch.losses.hetero\_cross\_entropy module
    :undoc-members:
    :show-inheritance:
 
+pugh\_torch.losses.label\_smoothing module
+------------------------------------------
+
+.. automodule:: pugh_torch.losses.label_smoothing
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 
 Module contents
 ---------------

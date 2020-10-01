@@ -633,6 +633,45 @@
     <span class="n">output</span> <span class="o">=</span> <span class="n">output</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
 
     <span class="k">return</span> <span class="n">output</span></div>
+
+
+<div class="viewcode-block" id="move_dim"><a class="viewcode-back" href="../../pugh_torch.html#pugh_torch.helpers.move_dim">[docs]</a><span class="k">def</span> <span class="nf">move_dim</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Pops dimension ``src`` and inserts it at dimension ``dst``, shifting</span>
+<span class="sd">    all the remaining dimensions down one.</span>
+
+<span class="sd">    Primarily useful when the dimensionality of ``input`` is unknown.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        foo = torch.rand(2,1,5,10)</span>
+<span class="sd">        bar = move_dim(foo, -1, 1)</span>
+<span class="sd">        assert bar.shape == (2, 10, 1, 5)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input : torch.Tensor</span>
+<span class="sd">    src : int</span>
+<span class="sd">        Source dimension index to pop.</span>
+<span class="sd">    dst : int</span>
+<span class="sd">        Dimension index to insert.</span>
+<span class="sd">        NOTE: this index is the dimension AFTER the ``src`` destination has</span>
+<span class="sd">        been popped. This only matters if src &lt;= dst.</span>
+<span class="sd">        Also note: -1 means the second to last dimension.</span>
+<span class="sd">        Example:</span>
+<span class="sd">            foo = torch.rand(2,1,5,10)</span>
+<span class="sd">            bar = move_dim(foo, 1, -1)</span>
+<span class="sd">            assert bar.shape == (2, 5, 1, 10)</span>
+<span class="sd">        To have the dst be the actual last dim, use ``input.ndim - 1`` or the</span>
+<span class="sd">        special value ``None``</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">dims</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">ndim</span><span class="p">))</span>
+    <span class="n">src</span> <span class="o">=</span> <span class="n">dims</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>  <span class="c1"># incase src was a negative number</span>
+    <span class="k">if</span> <span class="n">dst</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dims</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">dst</span><span class="p">,</span> <span class="n">src</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">input</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="o">*</span><span class="n">dims</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

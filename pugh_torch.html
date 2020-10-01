@@ -260,6 +260,7 @@
 <li class="toctree-l1"><a class="reference internal" href="pugh_torch.losses.html">pugh_torch.losses package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="pugh_torch.losses.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pugh_torch.losses.html#module-pugh_torch.losses.hetero_cross_entropy">pugh_torch.losses.hetero_cross_entropy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pugh_torch.losses.html#module-pugh_torch.losses.label_smoothing">pugh_torch.losses.label_smoothing module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pugh_torch.losses.html#module-pugh_torch.losses">Module contents</a></li>
 </ul>
 </li>
@@ -478,6 +479,41 @@ the most recent found checkpoint path.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>pathlib.Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pugh_torch.helpers.move_dim">
+<code class="sig-prename descclassname">pugh_torch.helpers.</code><code class="sig-name descname">move_dim</code><span class="sig-paren">(</span><em class="sig-param">input</em>, <em class="sig-param">src</em>, <em class="sig-param">dst</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/helpers.html#move_dim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.helpers.move_dim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pops dimension <code class="docutils literal notranslate"><span class="pre">src</span></code> and inserts it at dimension <code class="docutils literal notranslate"><span class="pre">dst</span></code>, shifting
+all the remaining dimensions down one.</p>
+<p>Primarily useful when the dimensionality of <code class="docutils literal notranslate"><span class="pre">input</span></code> is unknown.</p>
+<dl class="simple">
+<dt>Example:</dt><dd><p>foo = torch.rand(2,1,5,10)
+bar = move_dim(foo, -1, 1)
+assert bar.shape == (2, 10, 1, 5)</p>
+</dd>
+</dl>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul>
+<li><p><strong>input</strong> (<em>torch.Tensor</em>)</p></li>
+<li><p><strong>src</strong> (<em>int</em>) – Source dimension index to pop.</p></li>
+<li><p><strong>dst</strong> (<em>int</em>) – Dimension index to insert.
+NOTE: this index is the dimension AFTER the <code class="docutils literal notranslate"><span class="pre">src</span></code> destination has
+been popped. This only matters if src &lt;= dst.
+Also note: -1 means the second to last dimension.
+Example:</p>
+<blockquote>
+<div><p>foo = torch.rand(2,1,5,10)
+bar = move_dim(foo, 1, -1)
+assert bar.shape == (2, 5, 1, 10)</p>
+</div></blockquote>
+<p>To have the dst be the actual last dim, use <code class="docutils literal notranslate"><span class="pre">input.ndim</span> <span class="pre">-</span> <span class="pre">1</span></code> or the
+special value <code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

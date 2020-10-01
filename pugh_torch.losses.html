@@ -216,7 +216,7 @@
 <span id="pugh-torch-losses-hetero-cross-entropy-module"></span><h2>pugh_torch.losses.hetero_cross_entropy module<a class="headerlink" href="#module-pugh_torch.losses.hetero_cross_entropy" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="pugh_torch.losses.hetero_cross_entropy.hetero_cross_entropy">
-<code class="sig-prename descclassname">pugh_torch.losses.hetero_cross_entropy.</code><code class="sig-name descname">hetero_cross_entropy</code><span class="sig-paren">(</span><em class="sig-param">preds</em>, <em class="sig-param">targets</em>, <em class="sig-param">availables</em>, <em class="sig-param">*</em>, <em class="sig-param">super_index=0</em>, <em class="sig-param">ignore_index=-100</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/losses/hetero_cross_entropy.html#hetero_cross_entropy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.losses.hetero_cross_entropy.hetero_cross_entropy" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pugh_torch.losses.hetero_cross_entropy.</code><code class="sig-name descname">hetero_cross_entropy</code><span class="sig-paren">(</span><em class="sig-param">preds</em>, <em class="sig-param">targets</em>, <em class="sig-param">availables</em>, <em class="sig-param">*</em>, <em class="sig-param">super_index=0</em>, <em class="sig-param">ignore_index=-100</em>, <em class="sig-param">alpha=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/losses/hetero_cross_entropy.html#hetero_cross_entropy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.losses.hetero_cross_entropy.hetero_cross_entropy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cross Entropy Loss for Heterogenous Datasets.</p>
 <p>Basically a cross-entropy-loss for when you are training on multiple
 datasets where some of the datasets may have some of the classes labeled
@@ -263,6 +263,9 @@ May be negative.</p></li>
 in the dataset it came from. Typically this is a “background”, “unknown”,
 or “other” class.
 May be negative.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – If nonzero, enables label smoothing. This will divide up
+the smoothing weight amongst the superclass labels such that the total
+weight is equivalent to a single class not in the superclass.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -275,8 +278,43 @@ May be negative.</p></li>
 </dd></dl>
 
 </div>
+<div class="section" id="module-pugh_torch.losses.label_smoothing">
+<span id="pugh-torch-losses-label-smoothing-module"></span><h2>pugh_torch.losses.label_smoothing module<a class="headerlink" href="#module-pugh_torch.losses.label_smoothing" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pugh_torch.losses.label_smoothing.label_smoothing">
+<code class="sig-prename descclassname">pugh_torch.losses.label_smoothing.</code><code class="sig-name descname">label_smoothing</code><span class="sig-paren">(</span><em class="sig-param">input</em>, <em class="sig-param">target</em>, <em class="sig-param">weight=None</em>, <em class="sig-param">size_average=None</em>, <em class="sig-param">reduce=None</em>, <em class="sig-param">reduction='mean'</em>, <em class="sig-param">ignore_index=-100</em>, <em class="sig-param">alpha=0.1</em>, <em class="sig-param">num_classes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/losses/label_smoothing.html#label_smoothing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.losses.label_smoothing.label_smoothing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the smoothed labels and applies cross-entropy loss.</p>
+<dl class="simple">
+<dt>The smoothed target label is computed as:</dt><dd><p>y_ls = (1 - alpha) * y_hot + alpha / n_classes</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input</strong> (<em>tensor.Tensor</em>) – (B, C, …) Network logits</p></li>
+<li><p><strong>target</strong> (<em>tensor.LongTnsor</em>) – (B, …) Ground truth label indices</p></li>
+<li><p><strong>weight</strong> (<em>tensor.Tensor</em>) – (C, …)</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – Smoothing value in range [0,1).
+If this value is 0, then this is the same as vanilla cross-entropy.
+If this value is 1, then you get a uniform distribution, which
+wouldn’t be very useful.
+Defaults to 0.1</p></li>
+<li><p><strong>num_classes</strong> (<em>int</em>) – [optional] Used to compute smoothing amount.
+if not provided, defaults to the number of classes inferred by the <code class="docutils literal notranslate"><span class="pre">input</span></code>
+shape.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
 <div class="section" id="module-pugh_torch.losses">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pugh_torch.losses" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pugh_torch.losses.reduction_str">
+<code class="sig-prename descclassname">pugh_torch.losses.</code><code class="sig-name descname">reduction_str</code><span class="sig-paren">(</span><em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/losses.html#reduction_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.losses.reduction_str" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 </div>
 
