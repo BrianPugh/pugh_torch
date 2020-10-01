@@ -1,5 +1,6 @@
 import pytest
 import cv2
+import torch
 from pugh_torch import helpers
 
 
@@ -66,3 +67,15 @@ def test_to_obj_class():
     assert foo == helpers.to_obj(foo)
     assert "some_foo_class_var" == foo.baz()
     assert "some_bar_class_var" == foo.bar_nested()
+
+
+def test_move_dim():
+    foo = torch.rand(2, 1, 5, 10)
+    bar = helpers.move_dim(foo, -1, 1)
+    assert bar.shape == (2, 10, 1, 5)
+
+
+def test_move_dim_last():
+    foo = torch.rand(2, 1, 5, 10)
+    bar = helpers.move_dim(foo, 1, -1)
+    assert bar.shape == (2, 5, 1, 10)
