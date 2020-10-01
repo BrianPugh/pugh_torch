@@ -181,7 +181,8 @@ with working_dir(experiment_path):
 
             # Add the finder plot image to tensorboard
             lr_finder_fig = lr_finder.plot(suggest=True)
-            trainer.logger.experiment.add_image("auto_lr_finder", lr_finder_fig, 0)
+
+            trainer.logger.experiment.add_figure("auto_lr_finder", lr_finder_fig, 0)
 
             # Actually update the model
             model.learning_rate = new_lr
