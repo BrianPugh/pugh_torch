@@ -95,59 +95,70 @@ def hetero_cross_entropy(
         num_super_classes = super_hot.sum().float()
         num_non_super_classes = (~super_hot).sum().float()
 
+        # Superclass loss
+        if torch.any(super_mask) and num_super_classes > 0:
+            def compute_super_loss():
+                super_pred = pred[:, super_mask]  # (C, n_pix)
+
+                super_pred_exp = torch.exp(super_pred)
+
+                super_numerator = torch.log(super_pred_exp[super_hot].sum(dim=0))
+                denominator = torch.log(super_pred_exp.sum(dim=0))
+
+                super_nll = -(super_numerator - denominator).mean()
+
+                if alpha == 0:
+                    exemplar_super_loss = super_nll
+                else:
+                    # Handles the case where a superclass label should really
+                    # be not in the superclass
+                    super_weight = (1 - alpha) + (alpha / 2)
+
+                    non_super_numerator = torch.log(super_pred_exp[~super_hot].sum(dim=0))
+                    non_super_nll = -(non_super_numerator - denominator).mean()
+
+                    exemplar_super_loss = (super_weight * super_nll) + (
+                        (alpha / 2) * non_super_nll
+                    )
+                return exemplar_super_loss
+
+            super_loss = super_loss + compute_super_loss()
+
         # Apply CE to inbound mask, excluding the super_index
         if torch.any(ce_mask):
-            ce_pred = pred[:, ce_mask]  # (C, n_valid)
-            ce_target = target[ce_mask]  # (n_valid)
-            if alpha == 0 or num_super_classes == 0:
-                ce_pred = ce_pred.transpose(0, 1)  # (n_valid, C)
-                ce_loss = ce_loss + F.cross_entropy(ce_pred, ce_target)
-            else:
-                # Handles the case where a nonsuperclass label should really
-                # be in the superclass
+            def compute_ce_loss():
+                ce_pred = pred[:, ce_mask]  # (C, n_valid)
+                ce_target = target[ce_mask]  # (n_valid)
+                if alpha == 0 or num_super_classes == 0:
+                    ce_pred = ce_pred.transpose(0, 1)  # (n_valid, C)
+                    return F.cross_entropy(ce_pred, ce_target)
+                else:
 
-                # Construct the smoothed target label
-                non_super_uniform = alpha / (num_non_super_classes + 1)
-                super_uniform = non_super_uniform / num_super_classes
+                    # Handles the case where a nonsuperclass label should really
+                    # be in the superclass
+                    uniform_weight = alpha / (num_non_super_classes + 1)
+                    ce_pred_exp = torch.exp(ce_pred)  # (C, n_valid)
 
-                one_hot = F.one_hot(ce_target, num_classes=pred.shape[0]).transpose(
-                    0, 1
-                )  # (C, n_valid)
-                uniform = torch.full_like(
-                    one_hot, non_super_uniform, dtype=torch.float
-                )  # (C, )
-                uniform[super_hot] = super_uniform
-                smooth_target = (1 - alpha) * one_hot + uniform  # (C, n_valid)
+                    # This is going to be a lil numerically unstable
+                    super_numerator = torch.log(ce_pred_exp[super_hot].sum(dim=0))  # (n_valid)
+                    denominator = torch.log(ce_pred_exp.sum(dim=0))  # (n_valid,)
 
-                log_probs = F.log_softmax(ce_pred, dim=0)  # (C, n_valid)
+                    super_nll = -(uniform_weight * (super_numerator - denominator)).mean()
 
-                ce_loss = ce_loss - (smooth_target * log_probs).sum(dim=0).mean()
+                    # Construct the smoothed target label
+                    one_hot = F.one_hot(ce_target, num_classes=ce_pred.shape[0]).transpose(
+                        0, 1
+                    )  # (C, n_valid)
+                    one_hot = one_hot[~super_hot]  # (C_nonsuper, n_valid)
+                    uniform = torch.full_like(one_hot, uniform_weight, dtype=torch.float)  # (C_nonsuper, )
+                    smooth_target = (1 - alpha) * one_hot + uniform  # (C_nonsuper, n_valid)
 
-        if torch.any(super_mask) and num_super_classes > 0:
-            super_pred = pred[:, super_mask]  # (C, n_pix)
+                    non_super_log_probs = ce_pred[~super_hot] - denominator  # (C_nonsuper, n_valid)
+                    #non_super_log_probs = F.log_softmax(ce_pred[~super_hot], dim=0)  # (C_nonsuper, n_valid)
+                    non_super_nll = -(smooth_target * non_super_log_probs).sum(dim=0).mean()  # Average over all pixels
+                    return non_super_nll + super_nll
 
-            super_pred_exp = torch.exp(super_pred)
+            ce_loss = ce_loss + compute_ce_loss()
 
-            numerator = torch.log(super_pred_exp[super_hot].sum(dim=0))
-            denominator = torch.log(super_pred_exp.sum(dim=0))
-
-            super_nll = -(numerator - denominator).mean()
-
-            if alpha == 0:
-                exemplar_super_loss = super_nll
-            else:
-                # Handles the case where a superclass label should really
-                # be not in the superclass
-
-                super_weight = (1 - alpha) + (alpha / 2)
-
-                non_super_numerator = torch.log(super_pred_exp[~super_hot].sum(dim=0))
-                non_super_nll = -(non_super_numerator - denominator).mean()
-
-                exemplar_super_loss = (super_weight * super_nll) + (
-                    (alpha / 2) * non_super_nll
-                )
-
-            super_loss = super_loss + exemplar_super_loss
 
     return ce_loss + super_loss
