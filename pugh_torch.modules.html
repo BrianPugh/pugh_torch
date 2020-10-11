@@ -212,6 +212,542 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="module-pugh_torch.modules.activation">
+<span id="pugh-torch-modules-activation-module"></span><h2>pugh_torch.modules.activation module<a class="headerlink" href="#module-pugh_torch.modules.activation" title="Permalink to this headline">¶</a></h2>
+<p>Easy interface for swapping out activation functions, especially those
+that may have different weight initialization methods.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>weights  &lt;- initialization depends on activation function &lt;—-</p></li>
+<li><p>normalization                                                 |</p></li>
+<li><p>activation &lt;—————————————————</p></li>
+</ul>
+</div></blockquote>
+<dl class="simple">
+<dt>To create a new activation, do the following:</dt><dd><ul class="simple">
+<li><p>Inherit from ActivationModule to register</p></li>
+<li><p>[optional] implement <code class="docutils literal notranslate"><span class="pre">init_layer</span></code> method</p></li>
+<li><p>[optional] implement <code class="docutils literal notranslate"><span class="pre">init_first_layer</span></code> method</p></li>
+</ul>
+</dd>
+<dt>One this is done, your activation function will me available as:</dt><dd><p>Activation(“myactivationlowercase”, <a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs)</p>
+</dd>
+</dl>
+<dl class="function">
+<dt id="pugh_torch.modules.activation.Activation">
+<code class="sig-prename descclassname">pugh_torch.modules.activation.</code><code class="sig-name descname">Activation</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">init_layers=None</em>, <em class="sig-param">*</em>, <em class="sig-param">first=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#Activation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.Activation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Activation Factory Function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Activation function type</p></li>
+<li><p><strong>init_layers</strong> (<em>nn.Module or list of nn.Module</em>) – Weights that need initialization based on</p></li>
+<li><p><strong>kwargs</strong> (<em>dict</em>) – Passed along to activation function constructor.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="pugh_torch.modules.activation.ActivationModule">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.activation.</code><code class="sig-name descname">ActivationModule</code><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#ActivationModule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.ActivationModule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Only used to automatically register activation functions.</p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+<dl class="method">
+<dt id="pugh_torch.modules.activation.ActivationModule.init_first_layer">
+<code class="sig-name descname">init_first_layer</code><span class="sig-paren">(</span><em class="sig-param">m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#ActivationModule.init_first_layer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.ActivationModule.init_first_layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this in child activation function</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pugh_torch.modules.activation.ActivationModule.init_layer">
+<code class="sig-name descname">init_layer</code><span class="sig-paren">(</span><em class="sig-param">m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#ActivationModule.init_layer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.ActivationModule.init_layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this in child activation function</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.ActivationModule.training">
+<code class="sig-name descname">training</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.ActivationModule.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pugh_torch.modules.activation.CELU">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.activation.</code><code class="sig-name descname">CELU</code><span class="sig-paren">(</span><em class="sig-param">alpha: float = 1.0</em>, <em class="sig-param">inplace: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#CELU"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.CELU" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.activation.CELU</span></code>, <a class="reference internal" href="#pugh_torch.modules.activation.ActivationModule" title="pugh_torch.modules.activation.ActivationModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.modules.activation.ActivationModule</span></code></a></p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.CELU.alpha">
+<code class="sig-name descname">alpha</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.CELU.alpha" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pugh_torch.modules.activation.CELU.init_layer">
+<code class="sig-name descname">init_layer</code><span class="sig-paren">(</span><em class="sig-param">m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#CELU.init_layer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.CELU.init_layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this in child activation function</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.CELU.inplace">
+<code class="sig-name descname">inplace</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.CELU.inplace" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pugh_torch.modules.activation.ELU">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.activation.</code><code class="sig-name descname">ELU</code><span class="sig-paren">(</span><em class="sig-param">alpha: float = 1.0</em>, <em class="sig-param">inplace: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#ELU"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.ELU" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.activation.ELU</span></code>, <a class="reference internal" href="#pugh_torch.modules.activation.ActivationModule" title="pugh_torch.modules.activation.ActivationModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.modules.activation.ActivationModule</span></code></a></p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.ELU.alpha">
+<code class="sig-name descname">alpha</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.ELU.alpha" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pugh_torch.modules.activation.ELU.init_layer">
+<code class="sig-name descname">init_layer</code><span class="sig-paren">(</span><em class="sig-param">m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#ELU.init_layer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.ELU.init_layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this in child activation function</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.ELU.inplace">
+<code class="sig-name descname">inplace</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.ELU.inplace" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pugh_torch.modules.activation.GELU">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.activation.</code><code class="sig-name descname">GELU</code><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#GELU"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.GELU" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.activation.GELU</span></code>, <a class="reference internal" href="#pugh_torch.modules.activation.ActivationModule" title="pugh_torch.modules.activation.ActivationModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.modules.activation.ActivationModule</span></code></a></p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+<dl class="method">
+<dt id="pugh_torch.modules.activation.GELU.init_layer">
+<code class="sig-name descname">init_layer</code><span class="sig-paren">(</span><em class="sig-param">m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#GELU.init_layer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.GELU.init_layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this in child activation function</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.GELU.training">
+<code class="sig-name descname">training</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.GELU.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pugh_torch.modules.activation.Hardshrink">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.activation.</code><code class="sig-name descname">Hardshrink</code><span class="sig-paren">(</span><em class="sig-param">lambd: float = 0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#Hardshrink"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.Hardshrink" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.activation.Hardshrink</span></code>, <a class="reference internal" href="#pugh_torch.modules.activation.ActivationModule" title="pugh_torch.modules.activation.ActivationModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.modules.activation.ActivationModule</span></code></a></p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+<dl class="method">
+<dt id="pugh_torch.modules.activation.Hardshrink.init_layer">
+<code class="sig-name descname">init_layer</code><span class="sig-paren">(</span><em class="sig-param">m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#Hardshrink.init_layer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.Hardshrink.init_layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this in child activation function</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.Hardshrink.lambd">
+<code class="sig-name descname">lambd</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.Hardshrink.lambd" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pugh_torch.modules.activation.Hardsigmoid">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.activation.</code><code class="sig-name descname">Hardsigmoid</code><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#Hardsigmoid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.Hardsigmoid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.activation.Hardsigmoid</span></code>, <a class="reference internal" href="#pugh_torch.modules.activation.ActivationModule" title="pugh_torch.modules.activation.ActivationModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.modules.activation.ActivationModule</span></code></a></p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+<dl class="method">
+<dt id="pugh_torch.modules.activation.Hardsigmoid.init_layer">
+<code class="sig-name descname">init_layer</code><span class="sig-paren">(</span><em class="sig-param">m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#Hardsigmoid.init_layer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.Hardsigmoid.init_layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this in child activation function</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.Hardsigmoid.training">
+<code class="sig-name descname">training</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.Hardsigmoid.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pugh_torch.modules.activation.Hardswish">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.activation.</code><code class="sig-name descname">Hardswish</code><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#Hardswish"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.Hardswish" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.activation.Hardswish</span></code>, <a class="reference internal" href="#pugh_torch.modules.activation.ActivationModule" title="pugh_torch.modules.activation.ActivationModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.modules.activation.ActivationModule</span></code></a></p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+<dl class="method">
+<dt id="pugh_torch.modules.activation.Hardswish.init_layer">
+<code class="sig-name descname">init_layer</code><span class="sig-paren">(</span><em class="sig-param">m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#Hardswish.init_layer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.Hardswish.init_layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this in child activation function</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.Hardswish.training">
+<code class="sig-name descname">training</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.Hardswish.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pugh_torch.modules.activation.Hardtanh">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.activation.</code><code class="sig-name descname">Hardtanh</code><span class="sig-paren">(</span><em class="sig-param">min_val: float = -1.0</em>, <em class="sig-param">max_val: float = 1.0</em>, <em class="sig-param">inplace: bool = False</em>, <em class="sig-param">min_value: Optional[float] = None</em>, <em class="sig-param">max_value: Optional[float] = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#Hardtanh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.Hardtanh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.activation.Hardtanh</span></code>, <a class="reference internal" href="#pugh_torch.modules.activation.ActivationModule" title="pugh_torch.modules.activation.ActivationModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.modules.activation.ActivationModule</span></code></a></p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+<dl class="method">
+<dt id="pugh_torch.modules.activation.Hardtanh.init_layer">
+<code class="sig-name descname">init_layer</code><span class="sig-paren">(</span><em class="sig-param">m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#Hardtanh.init_layer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.Hardtanh.init_layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this in child activation function</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.Hardtanh.inplace">
+<code class="sig-name descname">inplace</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.Hardtanh.inplace" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.Hardtanh.max_val">
+<code class="sig-name descname">max_val</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.Hardtanh.max_val" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.Hardtanh.min_val">
+<code class="sig-name descname">min_val</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.Hardtanh.min_val" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pugh_torch.modules.activation.LeakyReLU">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.activation.</code><code class="sig-name descname">LeakyReLU</code><span class="sig-paren">(</span><em class="sig-param">negative_slope: float = 0.01</em>, <em class="sig-param">inplace: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#LeakyReLU"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.LeakyReLU" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.activation.LeakyReLU</span></code>, <a class="reference internal" href="#pugh_torch.modules.activation.ActivationModule" title="pugh_torch.modules.activation.ActivationModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.modules.activation.ActivationModule</span></code></a></p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+<dl class="method">
+<dt id="pugh_torch.modules.activation.LeakyReLU.init_layer">
+<code class="sig-name descname">init_layer</code><span class="sig-paren">(</span><em class="sig-param">m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#LeakyReLU.init_layer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.LeakyReLU.init_layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this in child activation function</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.LeakyReLU.inplace">
+<code class="sig-name descname">inplace</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.LeakyReLU.inplace" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.LeakyReLU.negative_slope">
+<code class="sig-name descname">negative_slope</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.LeakyReLU.negative_slope" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pugh_torch.modules.activation.LogSigmoid">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.activation.</code><code class="sig-name descname">LogSigmoid</code><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#LogSigmoid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.LogSigmoid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.activation.LogSigmoid</span></code>, <a class="reference internal" href="#pugh_torch.modules.activation.ActivationModule" title="pugh_torch.modules.activation.ActivationModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.modules.activation.ActivationModule</span></code></a></p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+<dl class="method">
+<dt id="pugh_torch.modules.activation.LogSigmoid.init_layer">
+<code class="sig-name descname">init_layer</code><span class="sig-paren">(</span><em class="sig-param">m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#LogSigmoid.init_layer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.LogSigmoid.init_layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this in child activation function</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.LogSigmoid.training">
+<code class="sig-name descname">training</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.LogSigmoid.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pugh_torch.modules.activation.MultiheadAttention">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.activation.</code><code class="sig-name descname">MultiheadAttention</code><span class="sig-paren">(</span><em class="sig-param">embed_dim</em>, <em class="sig-param">num_heads</em>, <em class="sig-param">dropout=0.0</em>, <em class="sig-param">bias=True</em>, <em class="sig-param">add_bias_kv=False</em>, <em class="sig-param">add_zero_attn=False</em>, <em class="sig-param">kdim=None</em>, <em class="sig-param">vdim=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#MultiheadAttention"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.MultiheadAttention" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.activation.MultiheadAttention</span></code>, <a class="reference internal" href="#pugh_torch.modules.activation.ActivationModule" title="pugh_torch.modules.activation.ActivationModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.modules.activation.ActivationModule</span></code></a></p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.MultiheadAttention.bias_k">
+<code class="sig-name descname">bias_k</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.MultiheadAttention.bias_k" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.MultiheadAttention.bias_v">
+<code class="sig-name descname">bias_v</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.MultiheadAttention.bias_v" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pugh_torch.modules.activation.PReLU">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.activation.</code><code class="sig-name descname">PReLU</code><span class="sig-paren">(</span><em class="sig-param">num_parameters: int = 1</em>, <em class="sig-param">init: float = 0.25</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#PReLU"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.PReLU" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.activation.PReLU</span></code>, <a class="reference internal" href="#pugh_torch.modules.activation.ActivationModule" title="pugh_torch.modules.activation.ActivationModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.modules.activation.ActivationModule</span></code></a></p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+<dl class="method">
+<dt id="pugh_torch.modules.activation.PReLU.init_layer">
+<code class="sig-name descname">init_layer</code><span class="sig-paren">(</span><em class="sig-param">m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#PReLU.init_layer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.PReLU.init_layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this in child activation function</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.PReLU.num_parameters">
+<code class="sig-name descname">num_parameters</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.PReLU.num_parameters" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pugh_torch.modules.activation.RReLU">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.activation.</code><code class="sig-name descname">RReLU</code><span class="sig-paren">(</span><em class="sig-param">lower: float = 0.125</em>, <em class="sig-param">upper: float = 0.3333333333333333</em>, <em class="sig-param">inplace: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#RReLU"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.RReLU" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.activation.RReLU</span></code>, <a class="reference internal" href="#pugh_torch.modules.activation.ActivationModule" title="pugh_torch.modules.activation.ActivationModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.modules.activation.ActivationModule</span></code></a></p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+<dl class="method">
+<dt id="pugh_torch.modules.activation.RReLU.init_layer">
+<code class="sig-name descname">init_layer</code><span class="sig-paren">(</span><em class="sig-param">m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#RReLU.init_layer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.RReLU.init_layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this in child activation function</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.RReLU.inplace">
+<code class="sig-name descname">inplace</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.RReLU.inplace" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.RReLU.lower">
+<code class="sig-name descname">lower</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.RReLU.lower" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.RReLU.upper">
+<code class="sig-name descname">upper</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.RReLU.upper" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pugh_torch.modules.activation.ReLU">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.activation.</code><code class="sig-name descname">ReLU</code><span class="sig-paren">(</span><em class="sig-param">inplace: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#ReLU"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.ReLU" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.activation.ReLU</span></code>, <a class="reference internal" href="#pugh_torch.modules.activation.ActivationModule" title="pugh_torch.modules.activation.ActivationModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.modules.activation.ActivationModule</span></code></a></p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+<dl class="method">
+<dt id="pugh_torch.modules.activation.ReLU.init_layer">
+<code class="sig-name descname">init_layer</code><span class="sig-paren">(</span><em class="sig-param">m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#ReLU.init_layer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.ReLU.init_layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this in child activation function</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.ReLU.inplace">
+<code class="sig-name descname">inplace</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.ReLU.inplace" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pugh_torch.modules.activation.ReLU6">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.activation.</code><code class="sig-name descname">ReLU6</code><span class="sig-paren">(</span><em class="sig-param">inplace: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#ReLU6"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.ReLU6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.activation.ReLU6</span></code>, <a class="reference internal" href="#pugh_torch.modules.activation.ActivationModule" title="pugh_torch.modules.activation.ActivationModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.modules.activation.ActivationModule</span></code></a></p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+<dl class="method">
+<dt id="pugh_torch.modules.activation.ReLU6.init_layer">
+<code class="sig-name descname">init_layer</code><span class="sig-paren">(</span><em class="sig-param">m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#ReLU6.init_layer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.ReLU6.init_layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this in child activation function</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.ReLU6.inplace">
+<code class="sig-name descname">inplace</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.ReLU6.inplace" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.ReLU6.max_val">
+<code class="sig-name descname">max_val</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.ReLU6.max_val" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.ReLU6.min_val">
+<code class="sig-name descname">min_val</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.ReLU6.min_val" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pugh_torch.modules.activation.SELU">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.activation.</code><code class="sig-name descname">SELU</code><span class="sig-paren">(</span><em class="sig-param">inplace: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#SELU"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.SELU" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.activation.SELU</span></code>, <a class="reference internal" href="#pugh_torch.modules.activation.ActivationModule" title="pugh_torch.modules.activation.ActivationModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.modules.activation.ActivationModule</span></code></a></p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+<dl class="method">
+<dt id="pugh_torch.modules.activation.SELU.init_layer">
+<code class="sig-name descname">init_layer</code><span class="sig-paren">(</span><em class="sig-param">m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#SELU.init_layer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.SELU.init_layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this in child activation function</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.SELU.inplace">
+<code class="sig-name descname">inplace</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.SELU.inplace" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pugh_torch.modules.activation.Sigmoid">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.activation.</code><code class="sig-name descname">Sigmoid</code><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#Sigmoid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.Sigmoid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.activation.Sigmoid</span></code>, <a class="reference internal" href="#pugh_torch.modules.activation.ActivationModule" title="pugh_torch.modules.activation.ActivationModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.modules.activation.ActivationModule</span></code></a></p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+<dl class="method">
+<dt id="pugh_torch.modules.activation.Sigmoid.init_layer">
+<code class="sig-name descname">init_layer</code><span class="sig-paren">(</span><em class="sig-param">m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#Sigmoid.init_layer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.Sigmoid.init_layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this in child activation function</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.Sigmoid.training">
+<code class="sig-name descname">training</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.Sigmoid.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pugh_torch.modules.activation.Sine">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.activation.</code><code class="sig-name descname">Sine</code><span class="sig-paren">(</span><em class="sig-param">frequency=30</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#Sine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.Sine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pugh_torch.modules.activation.ActivationModule" title="pugh_torch.modules.activation.ActivationModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.modules.activation.ActivationModule</span></code></a></p>
+<p>Implicit Neural Representations with Periodic Activation Functions
+<a class="reference external" href="https://arxiv.org/pdf/2006.09661.pdf">https://arxiv.org/pdf/2006.09661.pdf</a></p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+<dl class="method">
+<dt id="pugh_torch.modules.activation.Sine.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#Sine.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.Sine.forward" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pugh_torch.modules.activation.Sine.init_layer">
+<code class="sig-name descname">init_layer</code><span class="sig-paren">(</span><em class="sig-param">m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#Sine.init_layer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.Sine.init_layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this in child activation function</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.Sine.training">
+<code class="sig-name descname">training</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.Sine.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pugh_torch.modules.activation.Softplus">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.activation.</code><code class="sig-name descname">Softplus</code><span class="sig-paren">(</span><em class="sig-param">beta: int = 1</em>, <em class="sig-param">threshold: int = 20</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#Softplus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.Softplus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.activation.Softplus</span></code>, <a class="reference internal" href="#pugh_torch.modules.activation.ActivationModule" title="pugh_torch.modules.activation.ActivationModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.modules.activation.ActivationModule</span></code></a></p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.Softplus.beta">
+<code class="sig-name descname">beta</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.Softplus.beta" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pugh_torch.modules.activation.Softplus.init_layer">
+<code class="sig-name descname">init_layer</code><span class="sig-paren">(</span><em class="sig-param">m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#Softplus.init_layer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.Softplus.init_layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this in child activation function</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.Softplus.threshold">
+<code class="sig-name descname">threshold</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.Softplus.threshold" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pugh_torch.modules.activation.Softshrink">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.activation.</code><code class="sig-name descname">Softshrink</code><span class="sig-paren">(</span><em class="sig-param">lambd: float = 0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#Softshrink"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.Softshrink" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.activation.Softshrink</span></code>, <a class="reference internal" href="#pugh_torch.modules.activation.ActivationModule" title="pugh_torch.modules.activation.ActivationModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.modules.activation.ActivationModule</span></code></a></p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+<dl class="method">
+<dt id="pugh_torch.modules.activation.Softshrink.init_layer">
+<code class="sig-name descname">init_layer</code><span class="sig-paren">(</span><em class="sig-param">m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#Softshrink.init_layer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.Softshrink.init_layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this in child activation function</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.Softshrink.lambd">
+<code class="sig-name descname">lambd</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.Softshrink.lambd" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pugh_torch.modules.activation.Softsign">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.activation.</code><code class="sig-name descname">Softsign</code><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#Softsign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.Softsign" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.activation.Softsign</span></code>, <a class="reference internal" href="#pugh_torch.modules.activation.ActivationModule" title="pugh_torch.modules.activation.ActivationModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.modules.activation.ActivationModule</span></code></a></p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+<dl class="method">
+<dt id="pugh_torch.modules.activation.Softsign.init_layer">
+<code class="sig-name descname">init_layer</code><span class="sig-paren">(</span><em class="sig-param">m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#Softsign.init_layer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.Softsign.init_layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this in child activation function</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.Softsign.training">
+<code class="sig-name descname">training</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.Softsign.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pugh_torch.modules.activation.Tanh">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.activation.</code><code class="sig-name descname">Tanh</code><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#Tanh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.Tanh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.activation.Tanh</span></code>, <a class="reference internal" href="#pugh_torch.modules.activation.ActivationModule" title="pugh_torch.modules.activation.ActivationModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.modules.activation.ActivationModule</span></code></a></p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+<dl class="method">
+<dt id="pugh_torch.modules.activation.Tanh.init_layer">
+<code class="sig-name descname">init_layer</code><span class="sig-paren">(</span><em class="sig-param">m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#Tanh.init_layer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.Tanh.init_layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this in child activation function</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.Tanh.training">
+<code class="sig-name descname">training</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.Tanh.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pugh_torch.modules.activation.Tanhshrink">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.activation.</code><code class="sig-name descname">Tanhshrink</code><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#Tanhshrink"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.Tanhshrink" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.activation.Tanhshrink</span></code>, <a class="reference internal" href="#pugh_torch.modules.activation.ActivationModule" title="pugh_torch.modules.activation.ActivationModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.modules.activation.ActivationModule</span></code></a></p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+<dl class="method">
+<dt id="pugh_torch.modules.activation.Tanhshrink.init_layer">
+<code class="sig-name descname">init_layer</code><span class="sig-paren">(</span><em class="sig-param">m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#Tanhshrink.init_layer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.Tanhshrink.init_layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this in child activation function</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.Tanhshrink.training">
+<code class="sig-name descname">training</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.Tanhshrink.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pugh_torch.modules.activation.Threshold">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.activation.</code><code class="sig-name descname">Threshold</code><span class="sig-paren">(</span><em class="sig-param">threshold: float</em>, <em class="sig-param">value: float</em>, <em class="sig-param">inplace: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#Threshold"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.Threshold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.activation.Threshold</span></code>, <a class="reference internal" href="#pugh_torch.modules.activation.ActivationModule" title="pugh_torch.modules.activation.ActivationModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.modules.activation.ActivationModule</span></code></a></p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.Threshold.inplace">
+<code class="sig-name descname">inplace</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.Threshold.inplace" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.Threshold.threshold">
+<code class="sig-name descname">threshold</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.Threshold.threshold" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.activation.Threshold.value">
+<code class="sig-name descname">value</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.Threshold.value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-pugh_torch.modules.conv">
 <span id="pugh-torch-modules-conv-module"></span><h2>pugh_torch.modules.conv module<a class="headerlink" href="#module-pugh_torch.modules.conv" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
@@ -227,8 +763,71 @@
 </dd></dl>
 
 </div>
-<div class="section" id="pugh-torch-modules-lightning-module-module">
-<h2>pugh_torch.modules.lightning_module module<a class="headerlink" href="#pugh-torch-modules-lightning-module-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-pugh_torch.modules.init">
+<span id="pugh-torch-modules-init-module"></span><h2>pugh_torch.modules.init module<a class="headerlink" href="#module-pugh_torch.modules.init" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>Equivalent names:</dt><dd><ul class="simple">
+<li><p>he == kaming</p></li>
+<li><p>xavier == glorot</p></li>
+</ul>
+</dd>
+<dt>Rules of thumb collected from various sources:</dt><dd><ul class="simple">
+<li><p>Use He for ReLU</p></li>
+<li><p>Use xavier for tanh</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="function">
+<dt id="pugh_torch.modules.init.he">
+<code class="sig-prename descclassname">pugh_torch.modules.init.</code><code class="sig-name descname">he</code><span class="sig-paren">(</span><em class="sig-param">m</em>, <em class="sig-param">mode='fan_in'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/init.html#he"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.init.he" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="pugh_torch.modules.init.xavier">
+<code class="sig-prename descclassname">pugh_torch.modules.init.</code><code class="sig-name descname">xavier</code><span class="sig-paren">(</span><em class="sig-param">m</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/init.html#xavier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.init.xavier" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-pugh_torch.modules.lightning_module">
+<span id="pugh-torch-modules-lightning-module-module"></span><h2>pugh_torch.modules.lightning_module module<a class="headerlink" href="#module-pugh_torch.modules.lightning_module" title="Permalink to this headline">¶</a></h2>
+<p>Extends pytorch-lightning’s LightningModule for some
+quality of life improvements.</p>
+<dl class="class">
+<dt id="pugh_torch.modules.lightning_module.LightningModule">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.lightning_module.</code><code class="sig-name descname">LightningModule</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/lightning_module.html#LightningModule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.lightning_module.LightningModule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pytorch_lightning.core.lightning.LightningModule</span></code></p>
+<dl class="method">
+<dt id="pugh_torch.modules.lightning_module.LightningModule.configure_optimizers">
+<code class="sig-name descname">configure_optimizers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/lightning_module.html#LightningModule.configure_optimizers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.lightning_module.LightningModule.configure_optimizers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pretty good defaults, can be easily overrided</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pugh_torch.modules.lightning_module.LightningModule.load_state_dict">
+<code class="sig-name descname">load_state_dict</code><span class="sig-paren">(</span><em class="sig-param">state_dict</em>, <em class="sig-param">strict=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/lightning_module.html#LightningModule.load_state_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.lightning_module.LightningModule.load_state_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Confirms and logs the weights that you expect are loaded when
+<code class="docutils literal notranslate"><span class="pre">strict=False</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>changed</strong> (<em>list of str</em>) – Parameter names that were updated via loading the state_dict</p></li>
+<li><p><strong>unchanged</strong> (<em>list of str</em>) – Parameter names that were NOT updated via loading the state_dict</p></li>
+<li><p><strong>shape_mismatch</strong> (<em>list of str</em>) – Parameter names that were NOT updated via loading the state_dict
+due to the model’s paramemeter shape not matching the state_dict.
+This is strictly a subset of <code class="docutils literal notranslate"><span class="pre">unchanged</span></code>.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.lightning_module.LightningModule.training">
+<code class="sig-name descname">training</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.lightning_module.LightningModule.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-pugh_torch.modules">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pugh_torch.modules" title="Permalink to this headline">¶</a></h2>

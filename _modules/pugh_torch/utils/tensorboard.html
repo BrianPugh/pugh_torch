@@ -448,7 +448,7 @@
 
 <span class="k">if</span> <span class="n">pl</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 
-    <span class="k">class</span> <span class="nc">TensorBoardLogger</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">loggers</span><span class="o">.</span><span class="n">TensorBoardLogger</span><span class="p">):</span>
+<div class="viewcode-block" id="TensorBoardLogger"><a class="viewcode-back" href="../../../pugh_torch.utils.html#pugh_torch.utils.tensorboard.TensorBoardLogger">[docs]</a>    <span class="k">class</span> <span class="nc">TensorBoardLogger</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">loggers</span><span class="o">.</span><span class="n">TensorBoardLogger</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Same as default PyTorch Lightning TensorBoard Logger, but uses</span>
 <span class="sd">        the extended SummaryWriter defined in this file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -471,7 +471,7 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_dir</span><span class="p">:</span>
                 <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_dir</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_experiment</span> <span class="o">=</span> <span class="n">SummaryWriter</span><span class="p">(</span><span class="n">log_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">log_dir</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">)</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_experiment</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_experiment</span></div>
 </pre></div>
 
            </div>

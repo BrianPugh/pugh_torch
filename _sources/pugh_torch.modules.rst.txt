@@ -4,10 +4,26 @@ pugh\_torch.modules package
 Submodules
 ----------
 
+pugh\_torch.modules.activation module
+-------------------------------------
+
+.. automodule:: pugh_torch.modules.activation
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pugh\_torch.modules.conv module
 -------------------------------
 
 .. automodule:: pugh_torch.modules.conv
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pugh\_torch.modules.init module
+-------------------------------
+
+.. automodule:: pugh_torch.modules.init
    :members:
    :undoc-members:
    :show-inheritance:

@@ -212,17 +212,94 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="pugh-torch-callbacks-model-checkpoint-module">
-<h2>pugh_torch.callbacks.model_checkpoint module<a class="headerlink" href="#pugh-torch-callbacks-model-checkpoint-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-pugh_torch.callbacks.model_checkpoint">
+<span id="pugh-torch-callbacks-model-checkpoint-module"></span><h2>pugh_torch.callbacks.model_checkpoint module<a class="headerlink" href="#module-pugh_torch.callbacks.model_checkpoint" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pugh_torch.callbacks.model_checkpoint.ModelCheckpoint">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.callbacks.model_checkpoint.</code><code class="sig-name descname">ModelCheckpoint</code><span class="sig-paren">(</span><em class="sig-param">filepath: Optional[str] = None</em>, <em class="sig-param">monitor: Optional[str] = None</em>, <em class="sig-param">verbose: bool = False</em>, <em class="sig-param">save_last: Optional[bool] = None</em>, <em class="sig-param">save_top_k: Optional[int] = None</em>, <em class="sig-param">save_weights_only: bool = False</em>, <em class="sig-param">mode: str = 'auto'</em>, <em class="sig-param">period: int = 1</em>, <em class="sig-param">prefix: str = ''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/callbacks/model_checkpoint.html#ModelCheckpoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.callbacks.model_checkpoint.ModelCheckpoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pytorch_lightning.callbacks.model_checkpoint.ModelCheckpoint</span></code></p>
+</dd></dl>
+
 </div>
-<div class="section" id="pugh-torch-callbacks-tensorboard-add-classification-module">
-<h2>pugh_torch.callbacks.tensorboard_add_classification module<a class="headerlink" href="#pugh-torch-callbacks-tensorboard-add-classification-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-pugh_torch.callbacks.tensorboard_add_classification">
+<span id="pugh-torch-callbacks-tensorboard-add-classification-module"></span><h2>pugh_torch.callbacks.tensorboard_add_classification module<a class="headerlink" href="#module-pugh_torch.callbacks.tensorboard_add_classification" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pugh_torch.callbacks.tensorboard_add_classification.TensorBoardAddClassification">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.callbacks.tensorboard_add_classification.</code><code class="sig-name descname">TensorBoardAddClassification</code><span class="sig-paren">(</span><em class="sig-param">*</em>, <em class="sig-param">classes=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/callbacks/tensorboard_add_classification.html#TensorBoardAddClassification"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.callbacks.tensorboard_add_classification.TensorBoardAddClassification" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pugh_torch.callbacks.tensorboard_base.TensorBoardCallback" title="pugh_torch.callbacks.tensorboard_base.TensorBoardCallback"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.callbacks.tensorboard_base.TensorBoardCallback</span></code></a></p>
+<p>Adds the rgb, ground truth label, and the network prediction
+to tensorboard.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>classes</strong> (<em>list</em>) – If provided, the predictions will contain the appropriate annotation.
+<cite>len(classes)`</cite> should equal the number of networ output channels.
+If this is available under <code class="docutils literal notranslate"><span class="pre">trainer</span></code>.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="pugh_torch.callbacks.tensorboard_add_classification.TensorBoardAddClassification.on_train_batch_end">
+<code class="sig-name descname">on_train_batch_end</code><span class="sig-paren">(</span><em class="sig-param">trainer</em>, <em class="sig-param">pl_module</em>, <em class="sig-param">outputs</em>, <em class="sig-param">batch</em>, <em class="sig-param">batch_idx</em>, <em class="sig-param">dataloader_idx</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/callbacks/tensorboard_add_classification.html#TensorBoardAddClassification.on_train_batch_end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.callbacks.tensorboard_add_classification.TensorBoardAddClassification.on_train_batch_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Just some validation checks.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pugh_torch.callbacks.tensorboard_add_classification.TensorBoardAddClassification.on_train_start">
+<code class="sig-name descname">on_train_start</code><span class="sig-paren">(</span><em class="sig-param">trainer</em>, <em class="sig-param">pl_module</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/callbacks/tensorboard_add_classification.html#TensorBoardAddClassification.on_train_start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.callbacks.tensorboard_add_classification.TensorBoardAddClassification.on_train_start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when the train begins.</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="pugh-torch-callbacks-tensorboard-add-ss-module">
-<h2>pugh_torch.callbacks.tensorboard_add_ss module<a class="headerlink" href="#pugh-torch-callbacks-tensorboard-add-ss-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-pugh_torch.callbacks.tensorboard_add_ss">
+<span id="pugh-torch-callbacks-tensorboard-add-ss-module"></span><h2>pugh_torch.callbacks.tensorboard_add_ss module<a class="headerlink" href="#module-pugh_torch.callbacks.tensorboard_add_ss" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pugh_torch.callbacks.tensorboard_add_ss.TensorBoardAddSS">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.callbacks.tensorboard_add_ss.</code><code class="sig-name descname">TensorBoardAddSS</code><span class="sig-paren">(</span><em class="sig-param">*</em>, <em class="sig-param">logging_batch_interval=20</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/callbacks/tensorboard_add_ss.html#TensorBoardAddSS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.callbacks.tensorboard_add_ss.TensorBoardAddSS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pugh_torch.callbacks.tensorboard_base.TensorBoardCallback" title="pugh_torch.callbacks.tensorboard_base.TensorBoardCallback"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.callbacks.tensorboard_base.TensorBoardCallback</span></code></a></p>
+<p>Adds the rgb, ground truth segmentation, and the network prediction
+to tensorboard.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>logging_batch_interval</strong> (<em>int</em>) – Log image(s) every this many batches.</p></li>
+<li><p><strong>kwargs</strong> (<em>dict</em>) – Passed along to <code class="docutils literal notranslate"><span class="pre">SummaryWriter</span></code> method on hook</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="pugh_torch.callbacks.tensorboard_add_ss.TensorBoardAddSS.on_train_batch_end">
+<code class="sig-name descname">on_train_batch_end</code><span class="sig-paren">(</span><em class="sig-param">trainer</em>, <em class="sig-param">pl_module</em>, <em class="sig-param">outputs</em>, <em class="sig-param">batch</em>, <em class="sig-param">batch_idx</em>, <em class="sig-param">dataloader_idx</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/callbacks/tensorboard_add_ss.html#TensorBoardAddSS.on_train_batch_end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.callbacks.tensorboard_add_ss.TensorBoardAddSS.on_train_batch_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Just some validation checks.</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="pugh-torch-callbacks-tensorboard-base-module">
-<h2>pugh_torch.callbacks.tensorboard_base module<a class="headerlink" href="#pugh-torch-callbacks-tensorboard-base-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-pugh_torch.callbacks.tensorboard_base">
+<span id="pugh-torch-callbacks-tensorboard-base-module"></span><h2>pugh_torch.callbacks.tensorboard_base module<a class="headerlink" href="#module-pugh_torch.callbacks.tensorboard_base" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pugh_torch.callbacks.tensorboard_base.TensorBoardCallback">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.callbacks.tensorboard_base.</code><code class="sig-name descname">TensorBoardCallback</code><span class="sig-paren">(</span><em class="sig-param">*</em>, <em class="sig-param">logging_batch_interval=20</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/callbacks/tensorboard_base.html#TensorBoardCallback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.callbacks.tensorboard_base.TensorBoardCallback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pytorch_lightning.callbacks.base.Callback</span></code></p>
+<p>Base class for pytorch-lightning callbacks.</p>
+<p>Can only be used with <code class="docutils literal notranslate"><span class="pre">pugh_torch.utils.TensorBoardLogger</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>logging_batch_interval</strong> (<em>int</em>) – Log image(s) every this many batches.</p></li>
+<li><p><strong>kwargs</strong> (<em>dict</em>) – Passed along to <code class="docutils literal notranslate"><span class="pre">SummaryWriter</span></code> method on hook</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="pugh_torch.callbacks.tensorboard_base.TensorBoardCallback.on_train_batch_end">
+<code class="sig-name descname">on_train_batch_end</code><span class="sig-paren">(</span><em class="sig-param">trainer</em>, <em class="sig-param">pl_module</em>, <em class="sig-param">outputs</em>, <em class="sig-param">batch</em>, <em class="sig-param">batch_idx</em>, <em class="sig-param">dataloader_idx</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/callbacks/tensorboard_base.html#TensorBoardCallback.on_train_batch_end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.callbacks.tensorboard_base.TensorBoardCallback.on_train_batch_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Just some validation checks.</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-pugh_torch.callbacks">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pugh_torch.callbacks" title="Permalink to this headline">¶</a></h2>

@@ -280,6 +280,25 @@ If str, the same str will be appied under all images.</p></li>
 
 </dd></dl>
 
+<dl class="class">
+<dt id="pugh_torch.utils.tensorboard.TensorBoardLogger">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.utils.tensorboard.</code><code class="sig-name descname">TensorBoardLogger</code><span class="sig-paren">(</span><em class="sig-param">save_dir: str</em>, <em class="sig-param">name: Optional[str] = 'default'</em>, <em class="sig-param">version: Union[int</em>, <em class="sig-param">str</em>, <em class="sig-param">None] = None</em>, <em class="sig-param">log_graph: bool = False</em>, <em class="sig-param">default_hp_metric: bool = True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/utils/tensorboard.html#TensorBoardLogger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.utils.tensorboard.TensorBoardLogger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pytorch_lightning.loggers.tensorboard.TensorBoardLogger</span></code></p>
+<p>Same as default PyTorch Lightning TensorBoard Logger, but uses
+the extended SummaryWriter defined in this file.</p>
+<dl class="method">
+<dt id="pugh_torch.utils.tensorboard.TensorBoardLogger.experiment">
+<em class="property">property </em><code class="sig-name descname">experiment</code><a class="headerlink" href="#pugh_torch.utils.tensorboard.TensorBoardLogger.experiment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Actual tensorboard object. To use TensorBoard features in your
+<code class="xref py py-class docutils literal notranslate"><span class="pre">LightningModule</span></code> do the following.
+Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">experiment</span><span class="o">.</span><span class="n">some_tensorboard_function</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-pugh_torch.utils">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pugh_torch.utils" title="Permalink to this headline">¶</a></h2>

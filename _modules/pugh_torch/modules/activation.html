@@ -1,0 +1,499 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pugh_torch.modules.activation &mdash; Pugh Torch 0.3.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> Pugh Torch
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Package modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../pugh_torch.html">pugh_torch package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../pugh_torch.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../pugh_torch.augmentations.html">pugh_torch.augmentations package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pugh_torch.callbacks.html">pugh_torch.callbacks package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pugh_torch.datasets.html">pugh_torch.datasets package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pugh_torch.losses.html">pugh_torch.losses package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pugh_torch.mappings.html">pugh_torch.mappings package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pugh_torch.metrics.html">pugh_torch.metrics package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pugh_torch.modules.html">pugh_torch.modules package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pugh_torch.transforms.html">pugh_torch.transforms package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pugh_torch.utils.html">pugh_torch.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../pugh_torch.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../pugh_torch.html#module-pugh_torch.exceptions">pugh_torch.exceptions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../pugh_torch.html#module-pugh_torch.helpers">pugh_torch.helpers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../pugh_torch.html#module-pugh_torch">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#deploying">Deploying</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#development">Development</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#the-four-commands-you-need-to-know">The Four Commands You Need To Know</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#additional-optional-setup-steps">Additional Optional Setup Steps:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#suggested-git-branch-strategy">Suggested Git Branch Strategy</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../math.html">Math notation example</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Pugh Torch</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../pugh_torch.html">pugh_torch</a> &raquo;</li>
+        
+      <li>pugh_torch.modules.activation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pugh_torch.modules.activation</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Easy interface for swapping out activation functions, especially those</span>
+<span class="sd">that may have different weight initialization methods.</span>
+
+<span class="sd">    * weights  &lt;- initialization depends on activation function &lt;----</span>
+<span class="sd">    * normalization                                                 |</span>
+<span class="sd">    * activation &lt;---------------------------------------------------</span>
+
+<span class="sd">To create a new activation, do the following:</span>
+<span class="sd">    * Inherit from ActivationModule to register</span>
+<span class="sd">    * [optional] implement ``init_layer`` method</span>
+<span class="sd">    * [optional] implement ``init_first_layer`` method</span>
+<span class="sd">One this is done, your activation function will me available as:</span>
+<span class="sd">    Activation(&quot;myactivationlowercase&quot;, **kwargs)</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">init</span> <span class="k">as</span> <span class="n">wi</span>
+
+<span class="n">_activation_lookup</span> <span class="o">=</span> <span class="p">{}</span>
+
+
+<div class="viewcode-block" id="ActivationModule"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.ActivationModule">[docs]</a><span class="k">class</span> <span class="nc">ActivationModule</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Only used to automatically register activation functions.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init_subclass__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Automatic registration stuff&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init_subclass__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">_activation_lookup</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;Activation function &quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&quot; already exists: </span><span class="si">{</span><span class="n">_activation_lookup</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="p">)</span>
+        <span class="n">_activation_lookup</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span>
+
+<div class="viewcode-block" id="ActivationModule.init_layer"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.ActivationModule.init_layer">[docs]</a>    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">init_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Override this in child activation function</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="ActivationModule.init_first_layer"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.ActivationModule.init_first_layer">[docs]</a>    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">init_first_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Override this in child activation function</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_layer</span><span class="p">(</span><span class="n">m</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Activation"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.Activation">[docs]</a><span class="k">def</span> <span class="nf">Activation</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">init_layers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">first</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Activation Factory Function</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Activation function type</span>
+<span class="sd">    init_layers : nn.Module or list of nn.Module</span>
+<span class="sd">        Weights that need initialization based on</span>
+<span class="sd">    kwargs : dict</span>
+<span class="sd">        Passed along to activation function constructor.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">init_layers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">init_layers</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+            <span class="n">init_layers</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">init_layers</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">init_layers</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+
+    <span class="n">activation_obj</span> <span class="o">=</span> <span class="n">_activation_lookup</span><span class="p">[</span><span class="n">name</span><span class="p">](</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">init_layers</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">init_layer</span> <span class="ow">in</span> <span class="n">init_layers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">first</span><span class="p">:</span>
+                <span class="n">init_layer</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">activation_obj</span><span class="o">.</span><span class="n">init_first_layer</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">init_layer</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">activation_obj</span><span class="o">.</span><span class="n">init_layer</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">activation_obj</span></div>
+
+
+<div class="viewcode-block" id="Sine"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.Sine">[docs]</a><span class="k">class</span> <span class="nc">Sine</span><span class="p">(</span><span class="n">ActivationModule</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implicit Neural Representations with Periodic Activation Functions</span>
+<span class="sd">    https://arxiv.org/pdf/2006.09661.pdf</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># See paper sec. 3.2, final paragraph, and supplement Sec. 1.5 for discussion of factor 30</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frequency</span> <span class="o">=</span> <span class="n">frequency</span>
+
+<div class="viewcode-block" id="Sine.forward"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.Sine.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frequency</span> <span class="o">*</span> <span class="nb">input</span><span class="p">)</span></div>
+
+    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">init_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s2">&quot;weight&quot;</span><span class="p">):</span>
+            <span class="n">num_input</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">uniform_</span><span class="p">(</span>
+                <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">6</span> <span class="o">/</span> <span class="n">num_input</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">frequency</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">6</span> <span class="o">/</span> <span class="n">num_input</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">frequency</span><span class="p">,</span>
+            <span class="p">)</span>
+
+<div class="viewcode-block" id="Sine.init_layer"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.Sine.init_layer">[docs]</a>    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">init_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s2">&quot;weight&quot;</span><span class="p">):</span>
+            <span class="n">num_input</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">uniform_</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="n">num_input</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">num_input</span><span class="p">)</span></div></div>
+
+
+<span class="c1">#################################</span>
+<span class="c1"># torch.nn activation functions #</span>
+<span class="c1">#################################</span>
+
+
+<div class="viewcode-block" id="ELU"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.ELU">[docs]</a><span class="k">class</span> <span class="nc">ELU</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">ELU</span><span class="p">,</span> <span class="n">ActivationModule</span><span class="p">):</span>
+<div class="viewcode-block" id="ELU.init_layer"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.ELU.init_layer">[docs]</a>    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">init_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s2">&quot;weight&quot;</span><span class="p">):</span>
+            <span class="n">num_input</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">normal_</span><span class="p">(</span>
+                <span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.5505188080679277</span><span class="p">)</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">num_input</span><span class="p">)</span>
+            <span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Hardshrink"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.Hardshrink">[docs]</a><span class="k">class</span> <span class="nc">Hardshrink</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Hardshrink</span><span class="p">,</span> <span class="n">ActivationModule</span><span class="p">):</span>
+<div class="viewcode-block" id="Hardshrink.init_layer"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.Hardshrink.init_layer">[docs]</a>    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">init_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+        <span class="n">wi</span><span class="o">.</span><span class="n">xavier</span><span class="p">(</span><span class="n">m</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Hardsigmoid"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.Hardsigmoid">[docs]</a><span class="k">class</span> <span class="nc">Hardsigmoid</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Hardsigmoid</span><span class="p">,</span> <span class="n">ActivationModule</span><span class="p">):</span>
+<div class="viewcode-block" id="Hardsigmoid.init_layer"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.Hardsigmoid.init_layer">[docs]</a>    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">init_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+        <span class="n">wi</span><span class="o">.</span><span class="n">xavier</span><span class="p">(</span><span class="n">m</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Hardtanh"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.Hardtanh">[docs]</a><span class="k">class</span> <span class="nc">Hardtanh</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Hardtanh</span><span class="p">,</span> <span class="n">ActivationModule</span><span class="p">):</span>
+<div class="viewcode-block" id="Hardtanh.init_layer"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.Hardtanh.init_layer">[docs]</a>    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">init_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+        <span class="n">wi</span><span class="o">.</span><span class="n">xavier</span><span class="p">(</span><span class="n">m</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Hardswish"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.Hardswish">[docs]</a><span class="k">class</span> <span class="nc">Hardswish</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Hardswish</span><span class="p">,</span> <span class="n">ActivationModule</span><span class="p">):</span>
+<div class="viewcode-block" id="Hardswish.init_layer"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.Hardswish.init_layer">[docs]</a>    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">init_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+        <span class="n">wi</span><span class="o">.</span><span class="n">he</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">nonlinearity</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="LeakyReLU"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.LeakyReLU">[docs]</a><span class="k">class</span> <span class="nc">LeakyReLU</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">,</span> <span class="n">ActivationModule</span><span class="p">):</span>
+<div class="viewcode-block" id="LeakyReLU.init_layer"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.LeakyReLU.init_layer">[docs]</a>    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">init_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+        <span class="n">wi</span><span class="o">.</span><span class="n">he</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">nonlinearity</span><span class="o">=</span><span class="s2">&quot;leaky_relu&quot;</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="LogSigmoid"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.LogSigmoid">[docs]</a><span class="k">class</span> <span class="nc">LogSigmoid</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">LogSigmoid</span><span class="p">,</span> <span class="n">ActivationModule</span><span class="p">):</span>
+<div class="viewcode-block" id="LogSigmoid.init_layer"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.LogSigmoid.init_layer">[docs]</a>    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">init_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+        <span class="n">wi</span><span class="o">.</span><span class="n">xavier</span><span class="p">(</span><span class="n">m</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="MultiheadAttention"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.MultiheadAttention">[docs]</a><span class="k">class</span> <span class="nc">MultiheadAttention</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">MultiheadAttention</span><span class="p">,</span> <span class="n">ActivationModule</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="PReLU"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.PReLU">[docs]</a><span class="k">class</span> <span class="nc">PReLU</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">PReLU</span><span class="p">,</span> <span class="n">ActivationModule</span><span class="p">):</span>
+<div class="viewcode-block" id="PReLU.init_layer"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.PReLU.init_layer">[docs]</a>    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">init_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+        <span class="n">wi</span><span class="o">.</span><span class="n">he</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">nonlinearity</span><span class="o">=</span><span class="s2">&quot;leaky_relu&quot;</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="ReLU"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.ReLU">[docs]</a><span class="k">class</span> <span class="nc">ReLU</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">,</span> <span class="n">ActivationModule</span><span class="p">):</span>
+<div class="viewcode-block" id="ReLU.init_layer"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.ReLU.init_layer">[docs]</a>    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">init_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+        <span class="n">wi</span><span class="o">.</span><span class="n">he</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">nonlinearity</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="ReLU6"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.ReLU6">[docs]</a><span class="k">class</span> <span class="nc">ReLU6</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU6</span><span class="p">,</span> <span class="n">ActivationModule</span><span class="p">):</span>
+<div class="viewcode-block" id="ReLU6.init_layer"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.ReLU6.init_layer">[docs]</a>    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">init_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+        <span class="n">wi</span><span class="o">.</span><span class="n">he</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">nonlinearity</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="RReLU"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.RReLU">[docs]</a><span class="k">class</span> <span class="nc">RReLU</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">RReLU</span><span class="p">,</span> <span class="n">ActivationModule</span><span class="p">):</span>
+<div class="viewcode-block" id="RReLU.init_layer"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.RReLU.init_layer">[docs]</a>    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">init_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+        <span class="n">wi</span><span class="o">.</span><span class="n">he</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">nonlinearity</span><span class="o">=</span><span class="s2">&quot;leaky_relu&quot;</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="SELU"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.SELU">[docs]</a><span class="k">class</span> <span class="nc">SELU</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">SELU</span><span class="p">,</span> <span class="n">ActivationModule</span><span class="p">):</span>
+<div class="viewcode-block" id="SELU.init_layer"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.SELU.init_layer">[docs]</a>    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">init_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s2">&quot;weight&quot;</span><span class="p">):</span>
+            <span class="n">num_input</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">normal_</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="mi">1</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">num_input</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="CELU"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.CELU">[docs]</a><span class="k">class</span> <span class="nc">CELU</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">CELU</span><span class="p">,</span> <span class="n">ActivationModule</span><span class="p">):</span>
+<div class="viewcode-block" id="CELU.init_layer"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.CELU.init_layer">[docs]</a>    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">init_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s2">&quot;weight&quot;</span><span class="p">):</span>
+            <span class="n">num_input</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">normal_</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="mi">1</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">num_input</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="GELU"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.GELU">[docs]</a><span class="k">class</span> <span class="nc">GELU</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">GELU</span><span class="p">,</span> <span class="n">ActivationModule</span><span class="p">):</span>
+<div class="viewcode-block" id="GELU.init_layer"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.GELU.init_layer">[docs]</a>    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">init_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+        <span class="n">wi</span><span class="o">.</span><span class="n">he</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">nonlinearity</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Sigmoid"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.Sigmoid">[docs]</a><span class="k">class</span> <span class="nc">Sigmoid</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">,</span> <span class="n">ActivationModule</span><span class="p">):</span>
+<div class="viewcode-block" id="Sigmoid.init_layer"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.Sigmoid.init_layer">[docs]</a>    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">init_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+        <span class="n">wi</span><span class="o">.</span><span class="n">xavier</span><span class="p">(</span><span class="n">m</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Softplus"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.Softplus">[docs]</a><span class="k">class</span> <span class="nc">Softplus</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Softplus</span><span class="p">,</span> <span class="n">ActivationModule</span><span class="p">):</span>
+<div class="viewcode-block" id="Softplus.init_layer"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.Softplus.init_layer">[docs]</a>    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">init_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+        <span class="n">wi</span><span class="o">.</span><span class="n">he</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">nonlinearity</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Softshrink"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.Softshrink">[docs]</a><span class="k">class</span> <span class="nc">Softshrink</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Softshrink</span><span class="p">,</span> <span class="n">ActivationModule</span><span class="p">):</span>
+<div class="viewcode-block" id="Softshrink.init_layer"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.Softshrink.init_layer">[docs]</a>    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">init_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+        <span class="n">wi</span><span class="o">.</span><span class="n">xavier</span><span class="p">(</span><span class="n">m</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Softsign"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.Softsign">[docs]</a><span class="k">class</span> <span class="nc">Softsign</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Softsign</span><span class="p">,</span> <span class="n">ActivationModule</span><span class="p">):</span>
+<div class="viewcode-block" id="Softsign.init_layer"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.Softsign.init_layer">[docs]</a>    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">init_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+        <span class="n">wi</span><span class="o">.</span><span class="n">xavier</span><span class="p">(</span><span class="n">m</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Tanh"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.Tanh">[docs]</a><span class="k">class</span> <span class="nc">Tanh</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Tanh</span><span class="p">,</span> <span class="n">ActivationModule</span><span class="p">):</span>
+<div class="viewcode-block" id="Tanh.init_layer"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.Tanh.init_layer">[docs]</a>    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">init_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+        <span class="n">wi</span><span class="o">.</span><span class="n">xavier</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">gain</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">calculate_gain</span><span class="p">(</span><span class="s2">&quot;tanh&quot;</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="Tanhshrink"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.Tanhshrink">[docs]</a><span class="k">class</span> <span class="nc">Tanhshrink</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Tanhshrink</span><span class="p">,</span> <span class="n">ActivationModule</span><span class="p">):</span>
+<div class="viewcode-block" id="Tanhshrink.init_layer"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.Tanhshrink.init_layer">[docs]</a>    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">init_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+        <span class="n">wi</span><span class="o">.</span><span class="n">xavier</span><span class="p">(</span><span class="n">m</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Threshold"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.activation.Threshold">[docs]</a><span class="k">class</span> <span class="nc">Threshold</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Threshold</span><span class="p">,</span> <span class="n">ActivationModule</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Brian Pugh
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
