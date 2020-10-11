@@ -37,6 +37,7 @@ test_requirements = [
     "pytest-mock>=3.3.1",
     "pytest-raises>=0.11",
     "pytest>=5.4.3",
+    "pytorch-lightning>=1.0.0rc4",
 ]
 
 dev_requirements = [
@@ -58,7 +59,6 @@ experiment_requirements = [
     "ipdb",
     "matplotlib>=3.0.3",
     "open3d>=0.10.0.0",
-    "pytorch-lightning>=1.0.0rc4",
     "scipy>=1.5.1",
     "tqdm>=4.45.0",
 ]
