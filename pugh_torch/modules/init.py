@@ -11,9 +11,9 @@ import torch
 from torch import nn
 
 
-def xavier(m):
+def xavier(m, **kwargs):
     if hasattr(m, "weight"):
-        nn.init.xavier_uniform_(m.weight)
+        nn.init.xavier_uniform_(m.weight, **kwargs)
 
 
 def he(m, mode="fan_in", **kwargs):

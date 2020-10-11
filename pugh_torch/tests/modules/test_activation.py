@@ -48,6 +48,7 @@ def test_activation_factory_function_init_first_layer():
     fn = pt.modules.Activation("simpleinheritedreluwithinit", fc, first=True)
     assert (fc.weight == 2).all()
 
+
 def test_sine_fn():
     input = np.arange(0, 5, 100)
     expected = np.sin(input)
@@ -56,11 +57,13 @@ def test_sine_fn():
     actual = fn(input).numpy()
     assert np.isclose(expected, actual).all()
 
+
 def test_sine_first_layer():
     input = np.arange(0, 5, 100)
     expected = np.sin(input)
     fc = nn.Linear(2, 2)
     fn = pt.modules.Activation("sine", fc, first=True)
+
 
 def test_sine_layer():
     input = np.arange(0, 5, 100)
