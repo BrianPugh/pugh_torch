@@ -16,7 +16,7 @@ One this is done, your activation function will me available as:
 
 import torch
 from torch import nn
-import pugh_torch.modules.init as wi
+from . import init as wi
 
 _activation_lookup = {}
 
