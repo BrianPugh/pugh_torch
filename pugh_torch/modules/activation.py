@@ -242,7 +242,7 @@ class Softsign(nn.Softsign, ActivationModule):
 class Tanh(nn.Tanh, ActivationModule):
     @torch.no_grad()
     def init_layer(self, m):
-        wi.xavier(m)
+        wi.xavier(m, gain=nn.init.calculate_gain("tanh"))
 
 
 class Tanhshrink(nn.Tanhshrink, ActivationModule):
