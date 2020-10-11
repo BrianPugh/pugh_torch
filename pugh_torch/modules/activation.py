@@ -1,0 +1,94 @@
+""" Easy interface for swapping out activation functions, especially those
+that may have different weight initialization methods.
+
+    * weights  <- initialization depends on activation function <----
+    * normalization                                                 |
+    * activation <---------------------------------------------------
+
+To create a new activation, do the following:
+    * Inherit from ActivationModule to register
+    * [optional] implement ``init_layer`` method
+    * [optional] implement ``init_first_layer`` method
+One this is done, your activation function will me available as:
+    Activation("myactivationlowercase", **kwargs)
+
+"""
+
+import torch
+from torch import nn
+
+_activation_lookup = {}
+
+
+class ActivationModule(nn.Module):
+    """Only used to automatically register activation functions."""
+
+    def __init_subclass__(cls, **kwargs):
+        """Automatic registration stuff"""
+        super().__init_subclass__(**kwargs)
+        name = cls.__name__.lower()
+        if name in _activation_lookup:
+            raise ValueError(
+                f'Activation function "{name}" already exists: {_activation_lookup[name]}'
+            )
+        _activation_lookup[name] = cls
+
+    @torch.no_grad()
+    def init_layer(self, m):
+        """
+        Override this in child activation function
+        """
+        pass
+
+    @torch.no_grad()
+    def init_first_layer(self, m):
+        """
+        Override this in child activation function
+        """
+
+        return self.init_layer(m)
+
+
+def Activation(name, init_layers=None, *, first=False, **kwargs):
+    """Activation Factory Function
+
+    Parameters
+    ----------
+    name : str
+        Activation function type
+    init_layers : nn.Module or list of nn.Module
+        Weights that need initialization based on
+    kwargs : dict
+        Passed along to activation function constructor.
+    """
+
+    name = name.lower()
+
+    if init_layers is not None:
+        if isinstance(init_layers, nn.Module):
+            init_layers = [
+                init_layers,
+            ]
+        assert isinstance(init_layers, list)
+
+    activation_obj = _activation_lookup[name](**kwargs)
+
+    if init_layers:
+        for init_layer in init_layers:
+            if first:
+                init_layer.apply(activation_obj.init_first_layer)
+            else:
+                init_layer.apply(activation_obj.init_layer)
+
+    return activation_obj
+
+
+class Sine(ActivationModule):
+    """
+    Implicit Neural Representations with Periodic Activation Functions
+    https://arxiv.org/pdf/2006.09661.pdf
+    """
+
+    def forward(self, input):
+        # See paper sec. 3.2, final paragraph, and supplement Sec. 1.5 for discussion of factor 30
+        return torch.sin(30 * input)
