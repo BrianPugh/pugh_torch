@@ -12,6 +12,14 @@ pugh\_torch.modules.conv module
    :undoc-members:
    :show-inheritance:
 
+pugh\_torch.modules.lightning\_module module
+--------------------------------------------
+
+.. automodule:: pugh_torch.modules.lightning_module
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 
 Module contents
 ---------------
