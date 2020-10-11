@@ -20,7 +20,6 @@ jobs:
       run: |
         pip3 install --upgrade pip
         pip3 install scikit-build
-        pip3 install pytorch-lightning
         pip3 install .[test]
     - name: Test with pytest
       run: |
