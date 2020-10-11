@@ -97,7 +97,7 @@ class Bottleneck(nn.Module):
         return out
 
 
-class MyModel(pl.LightningModule):
+class MyModel(pt.LightningModule):
     def __init__(
         self,
         *,
@@ -256,11 +256,11 @@ class MyModel(pl.LightningModule):
     # PyTorch Lightning Stuff #
     ###########################
 
-    def _log_common(self, result, split, logits, target, loss):
+    def _log_common(self, split, logits, target, loss):
         pred = torch.argmax(logits, dim=-1)
-        result.log(f"{split}/loss", loss, prog_bar=True)
+        self.log(f"{split}/loss", loss, prog_bar=True)
         try:
-            result.log(f"{split}/acc", accuracy(pred, target), prog_bar=True)
+            self.log(f"{split}/acc", accuracy(pred, target), prog_bar=True)
         except RuntimeError:
             # see: https://github.com/PyTorchLightning/pytorch-lightning/issues/3006
             pass
@@ -273,15 +273,12 @@ class MyModel(pl.LightningModule):
 
         x, y = batch
         logits = self(x)
-        self.last_logits = logits
+        self.last_logits = logits  # Commonly used in callbacks
         loss = self._compute_loss(logits, y)
 
-        # self.logger.experiment.add_image  # TODO: probably in a hook
+        self._log_common("train", logits, y, loss)
 
-        result = pl.TrainResult(minimize=loss)
-        self._log_common(result, "train", logits, y, loss)
-
-        return result
+        return loss
 
     def validation_step(self, batch, batch_nb):
         """"""
@@ -291,10 +288,9 @@ class MyModel(pl.LightningModule):
         logits = self(x)
         loss = self._compute_loss(logits, y)
 
-        result = pl.EvalResult(checkpoint_on=loss)
-        self._log_common(result, "val", logits, y, loss)
+        self._log_common("val", logits, y, loss)
 
-        return result
+        return loss
 
     def configure_optimizers(self):
         optimizers = []

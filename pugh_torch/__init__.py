@@ -28,3 +28,10 @@ import pugh_torch.mappings
 import pugh_torch.modules
 import pugh_torch.transforms
 import pugh_torch.utils
+
+try:
+    import pytorch_lightning
+except ImportError:
+    pass
+else:
+    from pugh_torch.modules import LightningModule
