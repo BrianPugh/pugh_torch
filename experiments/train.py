@@ -69,7 +69,7 @@ import matplotlib
 # matplotlib.pyplot is used when generating the auto_lr_find graph
 try:
     subprocess.check_output(
-        ['python', '-c', 'import matplotlib.pyplot as plt; plt.figure()'],
+        ["python", "-c", "import matplotlib.pyplot as plt; plt.figure()"],
         stderr=subprocess.DEVNULL,
     )
 except subprocess.CalledProcessError:
@@ -127,7 +127,7 @@ with working_dir(experiment_path):
 
         # Currently auto_lr_rate doesn't work when fast_dev_run=True
         # TODO: Remove this if this gets fixed upstream
-        #if cfg.trainer.fast_dev_run:
+        # if cfg.trainer.fast_dev_run:
         #    cfg.trainer.auto_lr_find = False
 
         model_kwargs = {
@@ -237,7 +237,9 @@ with working_dir(experiment_path):
         if auto_lr_find and not trainer_kwargs.get("resume_from_checkpoint"):
             # automatically find the learning rate if enabled and if we are
             # not resuming training from a checkpoint (NOT fine tune-tuning).
-            lr_finder = trainer.tuner.lr_find(model, min_lr=1e-6, max_lr=1e-2, early_stop_threshold=5)
+            lr_finder = trainer.tuner.lr_find(
+                model, min_lr=1e-6, max_lr=1e-2, early_stop_threshold=5
+            )
 
             new_lr = lr_finder.suggestion()
             log.info(

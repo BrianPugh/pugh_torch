@@ -24,7 +24,9 @@ class TensorBoardCallback(Callback):
         self.logging_batch_interval = logging_batch_interval
         self.logging_kwargs = kwargs
 
-    def on_train_batch_end(self, trainer, pl_module, outputs, batch, batch_idx, dataloader_idx):
+    def on_train_batch_end(
+        self, trainer, pl_module, outputs, batch, batch_idx, dataloader_idx
+    ):
         """Just some validation checks."""
 
         assert isinstance(
