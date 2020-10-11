@@ -42,7 +42,7 @@ def test_callback_action(mocker, tmp_path, fake_trainer, fake_batch, fake_pl_mod
     dataloader_idx = 0
 
     callback.on_train_batch_end(
-        fake_trainer, fake_pl_module, fake_batch, batch_idx, dataloader_idx
+        fake_trainer, fake_pl_module, [], fake_batch, batch_idx, dataloader_idx
     )
 
     fake_trainer.logger.experiment.add_rgb.assert_called_once()
@@ -65,7 +65,7 @@ def test_callback_skip(mocker, tmp_path, fake_batch, fake_trainer):
     dataloader_idx = 0
 
     callback.on_train_batch_end(
-        fake_trainer, fake_pl_module, fake_batch, batch_idx, dataloader_idx
+        fake_trainer, fake_pl_module, [], fake_batch, batch_idx, dataloader_idx
     )
     fake_trainer.logger.experiment.add_rgb.assert_not_called()
 
@@ -79,7 +79,7 @@ def test_callback_classes(
     dataloader_idx = 0
 
     callback.on_train_batch_end(
-        fake_trainer, fake_pl_module, fake_batch, batch_idx, dataloader_idx
+        fake_trainer, fake_pl_module, [], fake_batch, batch_idx, dataloader_idx
     )
 
     fake_trainer.logger.experiment.add_rgb.assert_called_once()
