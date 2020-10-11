@@ -27,11 +27,11 @@ class TensorBoardAddClassification(TensorBoardCallback):
             except AttributeError:
                 pass
 
-    def on_train_batch_end(self, trainer, pl_module, batch, batch_idx, dataloader_idx):
+    def on_train_batch_end(self, trainer, pl_module, outputs, batch, batch_idx, dataloader_idx):
         if (batch_idx + 1) % self.logging_batch_interval != 0:
             return
 
-        super().on_train_batch_end(trainer, pl_module, batch, batch_idx, dataloader_idx)
+        super().on_train_batch_end(trainer, pl_module, outputs, batch, batch_idx, dataloader_idx)
 
         # pick the last batch and labels
         x, y = batch[:2]
