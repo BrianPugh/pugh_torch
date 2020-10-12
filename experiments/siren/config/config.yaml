@@ -1,0 +1,6 @@
+seed: 1234
+
+defaults:
+    - trainer: default
+    - dataset: data_cat
+    - model: siren_default
