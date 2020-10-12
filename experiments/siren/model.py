@@ -157,12 +157,16 @@ class SIREN(pt.LightningModule):
         layers=[128, 128, 128, 128],
         activation="sine",
         learning_rate=0.002,
+        loss="mse_loss",
+        optimizer="adamw",
     ):
         super().__init__()
+        self.save_hyperparameters()
 
         self.cfg = cfg
 
         self.learning_rate = learning_rate
+        self.optimizer = optimizer
 
         model = []
         model.append(nn.Linear(2, layers[0]))
@@ -176,6 +180,8 @@ class SIREN(pt.LightningModule):
         # no final activation function
 
         self.model = nn.Sequential(*model)
+
+        self.loss_fn = pt.losses.get_functional_loss(loss)
 
     def forward(self, x):
         """
@@ -215,8 +221,14 @@ class SIREN(pt.LightningModule):
     def _log_common(self, split, logits, target, loss):
         self.log(f"{split}_loss", loss, prog_bar=True)
 
+    def _log_loss(self, split, pred, target):
+        # Makes it easier to directly compare techniques that have a different
+        # loss function
+        loss = F.mse_loss(pred, target)
+        self.log(f"{split}_mse_loss", loss, prog_bar=True)
+
     def _compute_loss(self, pred, target):
-        return F.mse_loss(pred, target)
+        return self.loss_fn(pred, target)
 
     def training_step(self, batch, batch_nb):
         """"""
@@ -227,6 +239,7 @@ class SIREN(pt.LightningModule):
         loss = self._compute_loss(logits, y)
 
         self._log_common("train", logits, y, loss)
+        self._log_loss("train", logits, y)
 
         return loss
 
@@ -255,6 +268,7 @@ class SIREN(pt.LightningModule):
         loss = self._compute_loss(logits, y)
 
         self._log_common("val", logits, y, loss)
+        self._log_loss("val", logits, y)
 
         return loss
 
@@ -273,7 +287,11 @@ class SIREN(pt.LightningModule):
         optimizers = []
         schedulers = []
 
-        optimizers.append(torch.optim.AdamW(self.parameters(), lr=self.learning_rate))
+        optimizers.append(
+            pt.optimizers.get_optimizer(self.cfg.model.optimizer)(
+                self.parameters(), lr=self.learning_rate
+            )
+        )
         schedulers.append(
             LambdaLR(
                 optimizers[0], lambda epoch: 1

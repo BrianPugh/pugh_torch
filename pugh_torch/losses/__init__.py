@@ -15,3 +15,16 @@ def reduction_str(s):
 
 from .hetero_cross_entropy import hetero_cross_entropy
 from .label_smoothing import label_smoothing
+
+functional_loss_lookup = {
+    "l1_loss": torch.nn.functional.l1_loss,
+    "mse_loss": torch.nn.functional.mse_loss,
+    "smooth_l1_loss": torch.nn.functional.smooth_l1_loss,
+    "huber_loss": torch.nn.functional.smooth_l1_loss,  # aka
+    "soft_margin_loss": torch.nn.functional.soft_margin_loss,
+}
+
+
+def get_functional_loss(s):
+    s = s.lower()
+    return functional_loss_lookup[s]
