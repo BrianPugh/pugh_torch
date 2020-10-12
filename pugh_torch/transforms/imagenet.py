@@ -6,7 +6,22 @@ import numpy as np
 __all__ = [
     "Normalize",
     "Unnormalize",
+    "np_normalize",
+    "np_unnormalize",
 ]
+
+
+def np_normalize(x):
+    x -= np.array([0.485, 0.456, 0.406]).reshape((1, 1, 3))
+    x /= np.array([0.229, 0.224, 0.225]).reshape((1, 1, 3))
+    return x
+
+
+def np_unnormalize(x):
+    x *= np.array([0.229, 0.224, 0.225]).reshape((1, 1, 3))
+    x += np.array([0.485, 0.456, 0.406]).reshape((1, 1, 3))
+    x = np.clip(x, 0, 1)
+    return x
 
 
 class Normalize:

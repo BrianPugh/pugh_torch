@@ -1,0 +1,3 @@
+# @package _group_
+pin_memory: True
+num_workers: 8

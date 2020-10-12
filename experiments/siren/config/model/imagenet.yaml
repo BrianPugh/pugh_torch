@@ -1,0 +1,4 @@
+# @package _group_
+name: SIREN
+layers: [128, 128, 128, 128]
+activation: "sine"
