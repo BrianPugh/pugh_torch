@@ -197,7 +197,7 @@ class SIREN(pt.LightningModule):
     ):
         # log the ground truth image to tensorboard for comparison
         img_path = this_file_dir / self.cfg.dataset.path
-        img = cv2.imread(str(img_path))
+        img = cv2.imread(str(img_path))[..., ::-1]
         if self.cfg.dataset.shape:
             shape = self.cfg.dataset.shape
             img = cv2.resize(img, (shape[1], shape[0]), interpolation=cv2.INTER_AREA)
@@ -209,7 +209,7 @@ class SIREN(pt.LightningModule):
         )
 
     def _log_common(self, split, logits, target, loss):
-        self.log(f"{split}/loss", loss, prog_bar=True)
+        self.log(f"{split}_loss", loss, prog_bar=True)
 
     def _compute_loss(self, pred, target):
         return F.mse_loss(pred, target)
