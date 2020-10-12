@@ -24,25 +24,30 @@ import cv2
 from scipy.interpolate import griddata
 import numpy as np
 from math import ceil
+from pathlib import Path
 
 log = logging.getLogger(__name__)
 
-# class ImagePixelIterator:
-#    def __init__(self, img, batch_size):
-#        self.img = img
-#        self.batch_size = batch_size
-#
-#        nx, ny = self.img.shape[1], self.img.shape[0]
-#        # (X, Y)
-#        self.meshgrid = np.meshgrid(np.arange(0, nx, 1), np.arange(0, ny, 1))
-#
-#    def __len__(self):
-#
-#    def __iter__(self):
-#        return self
-#
-#    def __next__(self):
-#        pass
+this_file_path = Path(__file__).resolve()
+this_file_dir = this_file_path.parent
+
+
+def unnormalize_pos(x, shape):
+    """
+    Parameters
+    ----------
+    x : numpy.ndarray
+        (N, 2) Array representing (x,y) coordinates in range [-1, 1]
+    shape : tuple of length 2
+        (H, W) of the image
+    """
+
+    x += 1
+    x /= 2
+    x[:, 0] *= shape[1] - 1
+    x[:, 1] *= shape[0] - 1
+    x = np.round(x).astype(np.int)
+    return x
 
 
 class SingleImageDataset(torch.utils.data.IterableDataset):
@@ -72,10 +77,6 @@ class SingleImageDataset(torch.utils.data.IterableDataset):
         if shape is None:
             shape = self.img.shape[:2]
         else:
-            if len(shape) == 1:
-                shape = shape[0]
-            if isinstance(shape, int):
-                shape = (shape, shape)
             assert len(shape) == 2
             self.img = cv2.resize(
                 self.img, (shape[1], shape[0]), interpolation=cv2.INTER_AREA
@@ -141,7 +142,7 @@ class SingleImageDataset(torch.utils.data.IterableDataset):
         else:
             raise NotImplementedError
 
-        return coord_normalized, rgb_values
+        return coord_normalized.astype(np.float32), rgb_values.astype(np.float32)
 
 
 class SIREN(pt.LightningModule):
@@ -191,16 +192,19 @@ class SIREN(pt.LightningModule):
     # PyTorch Lightning Stuff #
     ###########################
 
-    def on_train_start():
+    def on_train_start(
+        self,
+    ):
         # log the ground truth image to tensorboard for comparison
-        import ipdb as pdb
+        img_path = this_file_dir / self.cfg.dataset.path
+        img = cv2.imread(str(img_path))
+        if self.cfg.dataset.shape:
+            shape = self.cfg.dataset.shape
+            img = cv2.resize(img, (shape[1], shape[0]), interpolation=cv2.INTER_AREA)
 
-        pdb.set_trace()
-        # TODO read image and log it
-        self.cfg.dataset.path
         self.logger.experiment.add_image(
-            f"val/pred",
-            self.val_img,
+            f"ground_truth",
+            img,
             dataformats="HWC",
         )
 
@@ -222,7 +226,9 @@ class SIREN(pt.LightningModule):
 
         return loss
 
-    def on_validation_epoch_start():
+    def on_validation_epoch_start(
+        self,
+    ):
         # Create an empty image to populate as we iterate over the image
         img_shape = (*self.cfg.dataset.shape, 3)
         self.val_img = np.zeros(img_shape)
@@ -236,8 +242,11 @@ class SIREN(pt.LightningModule):
 
         # Populate the predicted image
         x_np = x.cpu().numpy()
-        y_np = y.cpu().numpy()
-        self.val_img[x[:, 1], x[:, 0]] = y_np
+        logits_np = logits.cpu().numpy()
+
+        x_np = unnormalize_pos(x_np, self.cfg.dataset.shape)
+
+        self.val_img[x_np[:, 1], x_np[:, 0]] = logits_np
 
         loss = self._compute_loss(logits, y)
 
@@ -245,7 +254,7 @@ class SIREN(pt.LightningModule):
 
         return loss
 
-    def on_validation_epoch_end():
+    def on_validation_epoch_end(self):
         # unnormalize and log the image to tensorboard
 
         self.val_img = pt.transforms.imagenet.np_unnormalize(self.val_img)
@@ -279,42 +288,45 @@ class SIREN(pt.LightningModule):
         callbacks : list
             List of callback objects to initialize the Trainer object with.
         """
-        from pugh_torch.callbacks import TensorBoardAddClassification
 
-        callbacks = [
-            TensorBoardAddClassification(rgb_transform="imagenet"),
-        ]
+        callbacks = []
         return callbacks
 
     def train_dataloader(self):
-        dataset = SingleImageDataset(self.cfg.dataset.path)
-        dataset = pt.datasets.get("classification", self.cfg.dataset.name)(
-            "train", transform=transform
+        dataset = SingleImageDataset(
+            this_file_dir / self.cfg.dataset.path,
+            batch_size=self.cfg.dataset.batch_size,
+            shape=self.cfg.dataset.shape,
+            mode="train",
         )
+
         loader = DataLoader(
             dataset,
-            shuffle=True,
             pin_memory=self.cfg.dataset.pin_memory,
             num_workers=self.cfg.dataset.num_workers,
-            # batch_size=self.cfg.dataset.batch_size,
             batch_size=None,  # Disable dataloader batching
             batch_sampler=None,  # Disable dataloader batching
             worker_init_fn=lambda _: np.random.seed(
                 int(torch.initial_seed()) % (2 ** 32 - 1)
             ),
         )
+
         return loader
 
     def val_dataloader(self):
-
-        dataset = pt.datasets.get("classification", self.cfg.dataset.name)(
-            "val", transform=transform
+        dataset = SingleImageDataset(
+            this_file_dir / self.cfg.dataset.path,
+            batch_size=self.cfg.dataset.batch_size,
+            shape=self.cfg.dataset.shape,
+            mode="val",
         )
+
         loader = DataLoader(
             dataset,
             shuffle=False,
             pin_memory=self.cfg.dataset.pin_memory,
-            num_workers=self.cfg.dataset.num_workers,
-            batch_size=self.cfg.dataset.batch_size,
+            batch_size=None,  # Disable dataloader batching
+            batch_sampler=None,  # Disable dataloader batching
         )
+
         return loader
