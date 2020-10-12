@@ -13,7 +13,16 @@ optimizer_lookup = {
     "sgd": torch.optim.SGD,
 }
 
+from .base import Optimizer
+
+from .lookahead import *
+from .ralamb import *
+from .rangerlars import *
+
 
 def get_optimizer(s):
     s = s.lower()
     return optimizer_lookup[s]
+
+
+get = get_optimizer
