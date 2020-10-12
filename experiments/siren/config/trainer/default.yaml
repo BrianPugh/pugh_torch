@@ -15,7 +15,7 @@
 
 # Used if you want to check the val dataset less than once per epoch.
 # If you have a small dataset you might want to check validation every n epochs
-check_val_every_n_epoch: 10
+check_val_every_n_epoch: 20
 
 # Used if you want to check the val dataset more frequently than once per epoch.
 # Runs the val dataset every this many training epochs
