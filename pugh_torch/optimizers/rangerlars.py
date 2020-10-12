@@ -6,6 +6,7 @@ Modified from:
 import torch, math
 from .lookahead import *
 from .ralamb import *
+from . import optimizer_lookup
 
 # RAdam + LARS + LookAHead
 
@@ -16,3 +17,6 @@ from .ralamb import *
 def RangerLars(params, alpha=0.5, k=6, *args, **kwargs):
     ralamb = Ralamb(params, *args, **kwargs)
     return Lookahead(ralamb, alpha, k)
+
+
+optimizer_lookup["rangerlars"] = RangerLars
