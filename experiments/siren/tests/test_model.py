@@ -5,17 +5,20 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 from torchtest import assert_vars_change
 
-from model import MyModel as Model
+from model import SIREN
 
 
 @pytest.fixture
 def rand_inputs():
-    return torch.randn(2, 3, 100, 100)
+    return torch.randn(100, 2)
 
 
 @pytest.fixture
 def rand_targets():
-    return torch.randint(0, 10, (2,), dtype=torch.long)
+    return torch.randn(
+        100,
+        3,
+    )
 
 
 def test_variables_change(rand_inputs, rand_targets):
@@ -24,7 +27,7 @@ def test_variables_change(rand_inputs, rand_targets):
     """
 
     batch = [rand_inputs, rand_targets]
-    model = Model(num_classes=10)
+    model = SIREN()
 
     # print("Our list of parameters", [np[0] for np in model.named_parameters()])
 
@@ -32,7 +35,7 @@ def test_variables_change(rand_inputs, rand_targets):
     #  let's run a train step and see
     assert_vars_change(
         model=model,
-        loss_fn=F.cross_entropy,
+        loss_fn=F.mse_loss,
         optim=torch.optim.Adam(model.parameters()),
         batch=batch,
         device="cuda:0",

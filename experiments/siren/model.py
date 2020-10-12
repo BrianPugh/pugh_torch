@@ -150,7 +150,7 @@ class SIREN(pt.LightningModule):
         *,
         cfg=None,
         layers=[128, 128, 128, 128],
-        activationG="sine",
+        activation="sine",
         learning_rate=0.002,
     ):
         super().__init__()
@@ -168,8 +168,9 @@ class SIREN(pt.LightningModule):
             model.append(pt.modules.Activation(activation, model[-1]))
 
         model.append(nn.Linear(layers[-1], 3))
+        # no final activation function
 
-        self.model = nn.Sequential(model)
+        self.model = nn.Sequential(*model)
 
     def forward(self, x):
         """
@@ -190,17 +191,24 @@ class SIREN(pt.LightningModule):
     # PyTorch Lightning Stuff #
     ###########################
 
+    def on_train_start():
+        # log the ground truth image to tensorboard for comparison
+        import ipdb as pdb
+
+        pdb.set_trace()
+        # TODO read image and log it
+        self.cfg.dataset.path
+        self.logger.experiment.add_image(
+            f"val/pred",
+            self.val_img,
+            dataformats="HWC",
+        )
+
     def _log_common(self, split, logits, target, loss):
-        pred = torch.argmax(logits, dim=-1)
         self.log(f"{split}/loss", loss, prog_bar=True)
-        try:
-            self.log(f"{split}/acc", accuracy(pred, target), prog_bar=True)
-        except RuntimeError:
-            # see: https://github.com/PyTorchLightning/pytorch-lightning/issues/3006
-            pass
 
     def _compute_loss(self, pred, target):
-        return F.cross_entropy(pred, target)
+        return F.mse_loss(pred, target)
 
     def training_step(self, batch, batch_nb):
         """"""
@@ -214,17 +222,38 @@ class SIREN(pt.LightningModule):
 
         return loss
 
+    def on_validation_epoch_start():
+        # Create an empty image to populate as we iterate over the image
+        img_shape = (*self.cfg.dataset.shape, 3)
+        self.val_img = np.zeros(img_shape)
+
     def validation_step(self, batch, batch_nb):
         """"""
 
         # OPTIONAL
         x, y = batch
         logits = self(x)
+
+        # Populate the predicted image
+        x_np = x.cpu().numpy()
+        y_np = y.cpu().numpy()
+        self.val_img[x[:, 1], x[:, 0]] = y_np
+
         loss = self._compute_loss(logits, y)
 
         self._log_common("val", logits, y, loss)
 
         return loss
+
+    def on_validation_epoch_end():
+        # unnormalize and log the image to tensorboard
+
+        self.val_img = pt.transforms.imagenet.np_unnormalize(self.val_img)
+        self.logger.experiment.add_image(
+            f"val/pred",
+            self.val_img,
+            dataformats="HWC",
+        )
 
     def configure_optimizers(self):
         optimizers = []
