@@ -1,7 +1,7 @@
 import pytest
 import torch
 import numpy as np
-from model import SingleImageDataset
+from dataset import SingleImageDataset
 from torch.utils.data import DataLoader
 
 
@@ -41,7 +41,7 @@ def test_single_image_dataset_train(mocker, simple_img):
         )
     )
 
-    mock_random = mocker.patch("model.torch.rand")
+    mock_random = mocker.patch("dataset.torch.rand")
     mock_random.return_value = fake_random_data
 
     dataset = SingleImageDataset(simple_img, 3, normalize=False)
@@ -89,7 +89,7 @@ def test_single_image_dataset_train_interpolation(mocker, simple_img):
         )
     )
 
-    mock_random = mocker.patch("model.torch.rand")
+    mock_random = mocker.patch("dataset.torch.rand")
     mock_random.return_value = fake_random_data
 
     dataset = SingleImageDataset(simple_img, 3, normalize=False)
