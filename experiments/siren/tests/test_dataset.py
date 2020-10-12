@@ -31,15 +31,17 @@ def test_single_image_dataset_train(mocker, simple_img):
     """Tests basic training operation using nonrandom values"""
 
     # This is in X, Y cooridnates
-    fake_random_data = np.array(
-        [
-            [0, 0],  # top left
-            [0, 1],  # bottom left
-            [1, 0],  # top right
-        ]
+    fake_random_data = torch.Tensor(
+        np.array(
+            [
+                [0, 0],  # top left
+                [0, 1],  # bottom left
+                [1, 0],  # top right
+            ]
+        )
     )
 
-    mock_random = mocker.patch("model.np.random.rand")
+    mock_random = mocker.patch("model.torch.rand")
     mock_random.return_value = fake_random_data
 
     dataset = SingleImageDataset(simple_img, 3, normalize=False)
@@ -77,15 +79,17 @@ def test_single_image_dataset_train_interpolation(mocker, simple_img):
     """Interpolate very positionally similar values"""
 
     # This is in X, Y cooridnates
-    fake_random_data = np.array(
-        [
-            [0.001, 0],  # top left
-            [0, 0.999],  # bottom left
-            [0.999, 0],  # top right
-        ]
+    fake_random_data = torch.Tensor(
+        np.array(
+            [
+                [0.001, 0],  # top left
+                [0, 0.999],  # bottom left
+                [0.999, 0],  # top right
+            ]
+        )
     )
 
-    mock_random = mocker.patch("model.np.random.rand")
+    mock_random = mocker.patch("model.torch.rand")
     mock_random.return_value = fake_random_data
 
     dataset = SingleImageDataset(simple_img, 3, normalize=False)

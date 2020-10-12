@@ -16,4 +16,4 @@ clean:
 	rm -rf outputs
 
 tensorboard:
-	tensorboard --logdir outputs --port 6006 --host 0.0.0.0
+	tensorboard --logdir outputs --port 6006 --host 0.0.0.0 --samples_per_plugin images=1000

@@ -86,12 +86,16 @@ class SingleImageDataset(torch.utils.data.IterableDataset):
         # Normalize the image
         if normalize:
             self.img = pt.transforms.imagenet.np_normalize(self.img / 255)
-        self.flat_img = self.img.reshape((-1, 3))
+        self.img = torch.Tensor(self.img)
 
-        nx, ny = self.img.shape[1], self.img.shape[0]
+        self.flat_img = self.img.reshape((-1, 3))
+        self.img = self.img[None]
+        self.img = self.img.permute(0, 3, 1, 2)  # (B, H, W, C)
+
+        nx, ny = self.img.shape[2], self.img.shape[3]
         # (X, Y)
         meshgrid = np.meshgrid(np.arange(0, nx, 1), np.arange(0, ny, 1))
-        self.src_pts = (meshgrid[0].reshape(-1), meshgrid[1].reshape(-1))
+        self.src_pts = torch.Tensor((meshgrid[0].reshape(-1), meshgrid[1].reshape(-1)))
         self.src_pts_normalized = (
             2 * self.src_pts[0] / (self.shape[1] - 1) - 1,
             2 * self.src_pts[1] / (self.shape[0] - 1) - 1,
@@ -114,15 +118,14 @@ class SingleImageDataset(torch.utils.data.IterableDataset):
 
         if self.mode == "train":
             # Select random coordinates in range [-1, 1]
-            entropy = np.random.rand(self.batch_size, 2)
+            entropy = torch.rand(self.batch_size, 2)  # TODO maybe device
             coord_normalized = 2 * entropy - 1
-            coord_unnormalized = entropy * np.array(
-                (self.shape[1] - 1, self.shape[0] - 1)
-            ).reshape((1, 2))
-            coord_unnormalized = coord_unnormalized
 
             # interpolate at those points
-            rgb_values = griddata(self.src_pts, self.flat_img, coord_unnormalized)
+            rgb_values = F.grid_sample(
+                self.img, coord_normalized[None, :, None, :], align_corners=True
+            )
+            rgb_values = rgb_values[0, ..., 0].transpose(0, 1)
             self.pos += self.batch_size
         elif self.mode == "val":
             # Deterministcally return every pixel value in order
@@ -131,18 +134,19 @@ class SingleImageDataset(torch.utils.data.IterableDataset):
             if upper > self.n_pixels:
                 upper = self.n_pixels
 
-            coord_normalized = np.hstack(
+            coord_normalized = torch.cat(
                 (
                     self.src_pts_normalized[0][self.pos : upper, None],
                     self.src_pts_normalized[1][self.pos : upper, None],
-                )
+                ),
+                dim=1,
             )
             rgb_values = self.flat_img[self.pos : upper]
             self.pos = upper
         else:
             raise NotImplementedError
 
-        return coord_normalized.astype(np.float32), rgb_values.astype(np.float32)
+        return coord_normalized, rgb_values
 
 
 class SIREN(pt.LightningModule):
@@ -261,6 +265,7 @@ class SIREN(pt.LightningModule):
         self.logger.experiment.add_image(
             f"val/pred",
             self.val_img,
+            global_step=self.trainer.current_epoch,
             dataformats="HWC",
         )
 

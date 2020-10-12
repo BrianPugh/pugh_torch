@@ -15,13 +15,13 @@
 
 # Used if you want to check the val dataset less than once per epoch.
 # If you have a small dataset you might want to check validation every n epochs
-check_val_every_n_epoch: 20
+check_val_every_n_epoch: 50
 
 # Used if you want to check the val dataset more frequently than once per epoch.
 # Runs the val dataset every this many training epochs
 #val_check_interval: 1.0
 
-max_epochs: 10000
+max_epochs: 3000
 min_epochs: 1
 
 ########
@@ -60,6 +60,8 @@ log_every_n_steps: 50  # Record to log (in memory) every this many iterations
 
 # Prints a summary of the weights when training begins. Options: ‘full’, ‘top’, None.
 weights_summary: 'top'
+
+progress_bar_refresh_rate: 50
 
 ##########################
 # Multi-GPU and Batching #
