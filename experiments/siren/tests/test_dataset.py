@@ -73,6 +73,52 @@ def test_single_image_dataset_train(mocker, simple_img):
     assert n_iter == 9
 
 
+def test_single_image_dataset_train_interpolation(mocker, simple_img):
+    """Interpolate very positionally similar values"""
+
+    # This is in X, Y cooridnates
+    fake_random_data = np.array(
+        [
+            [0.001, 0],  # top left
+            [0, 0.999],  # bottom left
+            [0.999, 0],  # top right
+        ]
+    )
+
+    mock_random = mocker.patch("model.np.random.rand")
+    mock_random.return_value = fake_random_data
+
+    dataset = SingleImageDataset(simple_img, 3, normalize=False)
+    assert len(dataset) == 9
+
+    dataloader = DataLoader(dataset, batch_size=None, batch_sampler=None)
+
+    n_iter = 0
+    for x, y in dataloader:
+        n_iter += 1
+        x = x.numpy()
+        y = y.numpy()
+        expected_x = np.array(
+            [
+                [-0.998, -1],  # Top left
+                [-1, 0.998],  # Bottom left
+                [0.998, -1],  # Top right
+            ]
+        )
+        assert np.isclose(expected_x, x).all()
+
+        expected_y = np.array(
+            [
+                [1.0, 2.0, 3.0],
+                [4.0, 5.0, 6.0],
+                [7.0, 8.0, 9.0],
+            ]
+        )
+        assert np.isclose(expected_y, y, atol=0.05).all()
+
+    assert n_iter == 9
+
+
 def test_single_image_dataset_val(random_img):
     dataset = SingleImageDataset(random_img, 3, mode="val", normalize=False)
     dataloader = DataLoader(dataset, batch_size=None, batch_sampler=None)
