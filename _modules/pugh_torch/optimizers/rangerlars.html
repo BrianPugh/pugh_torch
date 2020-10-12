@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pugh_torch.losses.label_smoothing &mdash; Pugh Torch 0.3.1 documentation</title>
+  <title>pugh_torch.optimizers.rangerlars &mdash; Pugh Torch 0.3.1 documentation</title>
   
 
   
@@ -178,9 +178,9 @@
         
           <li><a href="../../pugh_torch.html">pugh_torch</a> &raquo;</li>
         
-          <li><a href="../losses.html">pugh_torch.losses</a> &raquo;</li>
+          <li><a href="../optimizers.html">pugh_torch.optimizers</a> &raquo;</li>
         
-      <li>pugh_torch.losses.label_smoothing</li>
+      <li>pugh_torch.optimizers.rangerlars</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -195,69 +195,29 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for pugh_torch.losses.label_smoothing</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">torch</span>
-<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
-<span class="kn">from</span> <span class="nn">..helpers</span> <span class="kn">import</span> <span class="n">move_dim</span>
+  <h1>Source code for pugh_torch.optimizers.rangerlars</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Modified from:</span>
+<span class="sd">    https://github.com/mgrankin/over9000</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">reduction_str</span>
+<span class="kn">import</span> <span class="nn">torch</span><span class="o">,</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">.lookahead</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.ralamb</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">optimizer_lookup</span>
+
+<span class="c1"># RAdam + LARS + LookAHead</span>
+
+<span class="c1"># Lookahead implementation from https://github.com/lonePatient/lookahead_pytorch/blob/master/optimizer.py</span>
+<span class="c1"># RAdam + LARS implementation from https://gist.github.com/redknightlois/c4023d393eb8f92bb44b2ab582d7ec20</span>
 
 
-<div class="viewcode-block" id="label_smoothing"><a class="viewcode-back" href="../../../pugh_torch.losses.html#pugh_torch.losses.label_smoothing.label_smoothing">[docs]</a><span class="k">def</span> <span class="nf">label_smoothing</span><span class="p">(</span>
-    <span class="nb">input</span><span class="p">,</span>
-    <span class="n">target</span><span class="p">,</span>
-    <span class="n">weight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">size_average</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">reduce</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">reduction</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span>
-    <span class="n">ignore_index</span><span class="o">=-</span><span class="mi">100</span><span class="p">,</span>
-    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
-    <span class="n">num_classes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-<span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Computes the smoothed labels and applies cross-entropy loss.</span>
+<div class="viewcode-block" id="RangerLars"><a class="viewcode-back" href="../../../pugh_torch.optimizers.html#pugh_torch.optimizers.rangerlars.RangerLars">[docs]</a><span class="k">def</span> <span class="nf">RangerLars</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">ralamb</span> <span class="o">=</span> <span class="n">Ralamb</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Lookahead</span><span class="p">(</span><span class="n">ralamb</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span></div>
 
-<span class="sd">    The smoothed target label is computed as:</span>
-<span class="sd">        y_ls = (1 - alpha) * y_hot + alpha / n_classes</span>
 
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    input : tensor.Tensor</span>
-<span class="sd">        (B, C, ...) Network logits</span>
-<span class="sd">    target : tensor.LongTnsor</span>
-<span class="sd">        (B, ...) Ground truth label indices</span>
-<span class="sd">    weight : tensor.Tensor</span>
-<span class="sd">        (C, ...)</span>
-<span class="sd">    alpha : float</span>
-<span class="sd">        Smoothing value in range [0,1).</span>
-<span class="sd">        If this value is 0, then this is the same as vanilla cross-entropy.</span>
-<span class="sd">        If this value is 1, then you get a uniform distribution, which</span>
-<span class="sd">        wouldn&#39;t be very useful.</span>
-<span class="sd">        Defaults to 0.1</span>
-<span class="sd">    num_classes : int</span>
-<span class="sd">        [optional] Used to compute smoothing amount.</span>
-<span class="sd">        if not provided, defaults to the number of classes inferred by the ``input``</span>
-<span class="sd">        shape.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">assert</span> <span class="mf">0.0</span> <span class="o">&lt;=</span> <span class="n">alpha</span> <span class="o">&lt;</span> <span class="mf">1.0</span>
-
-    <span class="k">if</span> <span class="n">weight</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
-
-    <span class="n">reducer</span> <span class="o">=</span> <span class="n">reduction_str</span><span class="p">(</span><span class="n">reduction</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">num_classes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">num_classes</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">uniform</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">/</span> <span class="n">num_classes</span><span class="p">)</span>
-    <span class="n">one_hot</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">one_hot</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="p">)</span>
-    <span class="n">one_hot</span> <span class="o">=</span> <span class="n">move_dim</span><span class="p">(</span><span class="n">one_hot</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">ignore_index</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">uniform</span><span class="p">[:,</span> <span class="n">ignore_index</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">one_hot</span><span class="p">[:,</span> <span class="n">ignore_index</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">smooth_target</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="n">one_hot</span> <span class="o">+</span> <span class="n">uniform</span>
-    <span class="n">log_probs</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">ce</span> <span class="o">=</span> <span class="p">(</span><span class="n">smooth_target</span> <span class="o">*</span> <span class="n">log_probs</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">loss</span> <span class="o">=</span> <span class="o">-</span><span class="n">reducer</span><span class="p">(</span><span class="n">ce</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">loss</span></div>
+<span class="n">optimizer_lookup</span><span class="p">[</span><span class="s2">&quot;rangerlars&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">RangerLars</span>
 </pre></div>
 
            </div>

@@ -104,6 +104,7 @@
 <li class="toctree-l4"><a class="reference internal" href="pugh_torch.mappings.html">pugh_torch.mappings package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pugh_torch.metrics.html">pugh_torch.metrics package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pugh_torch.modules.html">pugh_torch.modules package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.optimizers.html">pugh_torch.optimizers package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pugh_torch.transforms.html">pugh_torch.transforms package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pugh_torch.utils.html">pugh_torch.utils package</a></li>
 </ul>
@@ -362,12 +363,20 @@
       <li><a href="pugh_torch.modules.html#pugh_torch.modules.activation.GELU">GELU (class in pugh_torch.modules.activation)</a>
 </li>
       <li><a href="pugh_torch.datasets.html#pugh_torch.datasets.get">get() (in module pugh_torch.datasets)</a>
+
+      <ul>
+        <li><a href="pugh_torch.optimizers.html#pugh_torch.optimizers.get">(in module pugh_torch.optimizers)</a>
 </li>
+      </ul></li>
       <li><a href="pugh_torch.datasets.html#pugh_torch.datasets.get_dataset">get_dataset() (in module pugh_torch.datasets)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="pugh_torch.losses.html#pugh_torch.losses.get_functional_loss">get_functional_loss() (in module pugh_torch.losses)</a>
+</li>
       <li><a href="pugh_torch.html#pugh_torch.get_module_version">get_module_version() (in module pugh_torch)</a>
+</li>
+      <li><a href="pugh_torch.optimizers.html#pugh_torch.optimizers.get_optimizer">get_optimizer() (in module pugh_torch.optimizers)</a>
 </li>
       <li><a href="pugh_torch.mappings.html#pugh_torch.mappings.color.get_palette">get_palette() (in module pugh_torch.mappings.color)</a>
 </li>
@@ -489,13 +498,21 @@
       </ul></li>
       <li><a href="pugh_torch.modules.html#pugh_torch.modules.activation.LeakyReLU">LeakyReLU (class in pugh_torch.modules.activation)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pugh_torch.modules.html#pugh_torch.modules.lightning_module.LightningModule">LightningModule (class in pugh_torch.modules.lightning_module)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pugh_torch.modules.html#pugh_torch.modules.lightning_module.LightningModule.load_state_dict">load_state_dict() (pugh_torch.modules.lightning_module.LightningModule method)</a>
+
+      <ul>
+        <li><a href="pugh_torch.optimizers.html#pugh_torch.optimizers.lookahead.Lookahead.load_state_dict">(pugh_torch.optimizers.lookahead.Lookahead method)</a>
 </li>
+      </ul></li>
       <li><a href="pugh_torch.modules.html#pugh_torch.modules.activation.LogSigmoid">LogSigmoid (class in pugh_torch.modules.activation)</a>
+</li>
+      <li><a href="pugh_torch.optimizers.html#pugh_torch.optimizers.lookahead.Lookahead">Lookahead (class in pugh_torch.optimizers.lookahead)</a>
+</li>
+      <li><a href="pugh_torch.optimizers.html#pugh_torch.optimizers.lookahead.LookaheadAdam">LookaheadAdam() (in module pugh_torch.optimizers.lookahead)</a>
 </li>
       <li><a href="pugh_torch.modules.html#pugh_torch.modules.activation.RReLU.lower">lower (pugh_torch.modules.activation.RReLU attribute)</a>
 </li>
@@ -539,9 +556,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pugh_torch.modules.html#pugh_torch.modules.activation.LeakyReLU.negative_slope">negative_slope (pugh_torch.modules.activation.LeakyReLU attribute)</a>
 </li>
+      <li><a href="pugh_torch.transforms.html#pugh_torch.transforms.imagenet.Normalize">Normalize (class in pugh_torch.transforms.imagenet)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pugh_torch.transforms.html#pugh_torch.transforms.imagenet.Normalize">Normalize (class in pugh_torch.transforms.imagenet)</a>
+      <li><a href="pugh_torch.transforms.html#pugh_torch.transforms.imagenet.np_normalize">np_normalize() (in module pugh_torch.transforms.imagenet)</a>
+</li>
+      <li><a href="pugh_torch.transforms.html#pugh_torch.transforms.imagenet.np_unnormalize">np_unnormalize() (in module pugh_torch.transforms.imagenet)</a>
 </li>
       <li><a href="pugh_torch.modules.html#pugh_torch.modules.activation.PReLU.num_parameters">num_parameters (pugh_torch.modules.activation.PReLU attribute)</a>
 </li>
@@ -562,6 +583,8 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pugh_torch.callbacks.html#pugh_torch.callbacks.tensorboard_add_classification.TensorBoardAddClassification.on_train_start">on_train_start() (pugh_torch.callbacks.tensorboard_add_classification.TensorBoardAddClassification method)</a>
+</li>
+      <li><a href="pugh_torch.optimizers.html#pugh_torch.optimizers.base.Optimizer">Optimizer (class in pugh_torch.optimizers.base)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -607,14 +630,14 @@
 </li>
       <li><a href="pugh_torch.datasets.classification.html#module-pugh_torch.datasets.classification.mnist">pugh_torch.datasets.classification.mnist (module)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pugh_torch.datasets.segmentation.html#module-pugh_torch.datasets.segmentation">pugh_torch.datasets.segmentation (module)</a>
 </li>
       <li><a href="pugh_torch.datasets.segmentation.html#module-pugh_torch.datasets.segmentation.ade20k">pugh_torch.datasets.segmentation.ade20k (module)</a>
 </li>
       <li><a href="pugh_torch.datasets.html#module-pugh_torch.datasets.torchvision">pugh_torch.datasets.torchvision (module)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pugh_torch.html#module-pugh_torch.exceptions">pugh_torch.exceptions (module)</a>
 </li>
       <li><a href="pugh_torch.html#module-pugh_torch.helpers">pugh_torch.helpers (module)</a>
@@ -641,6 +664,16 @@
 </li>
       <li><a href="pugh_torch.modules.html#module-pugh_torch.modules.lightning_module">pugh_torch.modules.lightning_module (module)</a>
 </li>
+      <li><a href="pugh_torch.optimizers.html#module-pugh_torch.optimizers">pugh_torch.optimizers (module)</a>
+</li>
+      <li><a href="pugh_torch.optimizers.html#module-pugh_torch.optimizers.base">pugh_torch.optimizers.base (module)</a>
+</li>
+      <li><a href="pugh_torch.optimizers.html#module-pugh_torch.optimizers.lookahead">pugh_torch.optimizers.lookahead (module)</a>
+</li>
+      <li><a href="pugh_torch.optimizers.html#module-pugh_torch.optimizers.ralamb">pugh_torch.optimizers.ralamb (module)</a>
+</li>
+      <li><a href="pugh_torch.optimizers.html#module-pugh_torch.optimizers.rangerlars">pugh_torch.optimizers.rangerlars (module)</a>
+</li>
       <li><a href="pugh_torch.transforms.html#module-pugh_torch.transforms">pugh_torch.transforms (module)</a>
 </li>
       <li><a href="pugh_torch.transforms.html#module-pugh_torch.transforms.imagenet">pugh_torch.transforms.imagenet (module)</a>
@@ -655,12 +688,16 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pugh_torch.losses.html#pugh_torch.losses.reduction_str">reduction_str() (in module pugh_torch.losses)</a>
+      <li><a href="pugh_torch.optimizers.html#pugh_torch.optimizers.ralamb.Ralamb">Ralamb (class in pugh_torch.optimizers.ralamb)</a>
 </li>
-      <li><a href="pugh_torch.modules.html#pugh_torch.modules.activation.ReLU">ReLU (class in pugh_torch.modules.activation)</a>
+      <li><a href="pugh_torch.optimizers.html#pugh_torch.optimizers.rangerlars.RangerLars">RangerLars() (in module pugh_torch.optimizers.rangerlars)</a>
+</li>
+      <li><a href="pugh_torch.losses.html#pugh_torch.losses.reduction_str">reduction_str() (in module pugh_torch.losses)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="pugh_torch.modules.html#pugh_torch.modules.activation.ReLU">ReLU (class in pugh_torch.modules.activation)</a>
+</li>
       <li><a href="pugh_torch.modules.html#pugh_torch.modules.activation.ReLU6">ReLU6 (class in pugh_torch.modules.activation)</a>
 </li>
       <li><a href="pugh_torch.augmentations.transforms.html#pugh_torch.augmentations.transforms.resize_shortest.ResizeShortest">ResizeShortest (class in pugh_torch.augmentations.transforms.resize_shortest)</a>
@@ -681,15 +718,25 @@
 </li>
       <li><a href="pugh_torch.modules.html#pugh_torch.modules.activation.Sine">Sine (class in pugh_torch.modules.activation)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pugh_torch.modules.html#pugh_torch.modules.activation.Softplus">Softplus (class in pugh_torch.modules.activation)</a>
 </li>
       <li><a href="pugh_torch.modules.html#pugh_torch.modules.activation.Softshrink">Softshrink (class in pugh_torch.modules.activation)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pugh_torch.modules.html#pugh_torch.modules.activation.Softsign">Softsign (class in pugh_torch.modules.activation)</a>
 </li>
+      <li><a href="pugh_torch.optimizers.html#pugh_torch.optimizers.lookahead.Lookahead.state_dict">state_dict() (pugh_torch.optimizers.lookahead.Lookahead method)</a>
+</li>
+      <li><a href="pugh_torch.optimizers.html#pugh_torch.optimizers.lookahead.Lookahead.step">step() (pugh_torch.optimizers.lookahead.Lookahead method)</a>
+
+      <ul>
+        <li><a href="pugh_torch.optimizers.html#pugh_torch.optimizers.ralamb.Ralamb.step">(pugh_torch.optimizers.ralamb.Ralamb method)</a>
+</li>
+      </ul></li>
       <li><a href="pugh_torch.utils.html#pugh_torch.utils.tensorboard.SummaryWriter">SummaryWriter (class in pugh_torch.utils.tensorboard)</a>
+</li>
+      <li><a href="pugh_torch.optimizers.html#pugh_torch.optimizers.lookahead.Lookahead.sync_lookahead">sync_lookahead() (pugh_torch.optimizers.lookahead.Lookahead method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -778,6 +825,8 @@
       <li><a href="pugh_torch.datasets.html#pugh_torch.datasets.base.Dataset.unpacked">unpacked() (pugh_torch.datasets.base.Dataset property)</a>
 </li>
       <li><a href="pugh_torch.datasets.html#pugh_torch.datasets.base.Dataset.unpacked_file">unpacked_file() (pugh_torch.datasets.base.Dataset property)</a>
+</li>
+      <li><a href="pugh_torch.optimizers.html#pugh_torch.optimizers.lookahead.Lookahead.update_slow">update_slow() (pugh_torch.optimizers.lookahead.Lookahead method)</a>
 </li>
       <li><a href="pugh_torch.modules.html#pugh_torch.modules.activation.RReLU.upper">upper (pugh_torch.modules.activation.RReLU attribute)</a>
 </li>

@@ -13,6 +13,7 @@ Subpackages
    pugh_torch.mappings
    pugh_torch.metrics
    pugh_torch.modules
+   pugh_torch.optimizers
    pugh_torch.transforms
    pugh_torch.utils
 

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pugh_torch.losses &mdash; Pugh Torch 0.3.1 documentation</title>
+  <title>pugh_torch.optimizers &mdash; Pugh Torch 0.3.1 documentation</title>
   
 
   
@@ -178,7 +178,7 @@
         
           <li><a href="../pugh_torch.html">pugh_torch</a> &raquo;</li>
         
-      <li>pugh_torch.losses</li>
+      <li>pugh_torch.optimizers</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -193,37 +193,35 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for pugh_torch.losses</h1><div class="highlight"><pre>
+  <h1>Source code for pugh_torch.optimizers</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">torch</span>
 
-
-<div class="viewcode-block" id="reduction_str"><a class="viewcode-back" href="../../pugh_torch.losses.html#pugh_torch.losses.reduction_str">[docs]</a><span class="k">def</span> <span class="nf">reduction_str</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-    <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="s2">&quot;mean&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span>
-    <span class="k">elif</span> <span class="n">s</span> <span class="o">==</span> <span class="s2">&quot;sum&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span>
-    <span class="k">elif</span> <span class="n">s</span> <span class="o">==</span> <span class="s2">&quot;none&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">x</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;unknown reduction type </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
-
-
-<span class="kn">from</span> <span class="nn">.hetero_cross_entropy</span> <span class="kn">import</span> <span class="n">hetero_cross_entropy</span>
-<span class="kn">from</span> <span class="nn">.label_smoothing</span> <span class="kn">import</span> <span class="n">label_smoothing</span>
-
-<span class="n">functional_loss_lookup</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;l1_loss&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">l1_loss</span><span class="p">,</span>
-    <span class="s2">&quot;mse_loss&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">,</span>
-    <span class="s2">&quot;smooth_l1_loss&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">smooth_l1_loss</span><span class="p">,</span>
-    <span class="s2">&quot;huber_loss&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">smooth_l1_loss</span><span class="p">,</span>  <span class="c1"># aka</span>
-    <span class="s2">&quot;soft_margin_loss&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">soft_margin_loss</span><span class="p">,</span>
+<span class="n">optimizer_lookup</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;adadelta&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adadelta</span><span class="p">,</span>
+    <span class="s2">&quot;adagrad&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adagrad</span><span class="p">,</span>
+    <span class="s2">&quot;adam&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">,</span>
+    <span class="s2">&quot;adamw&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">AdamW</span><span class="p">,</span>
+    <span class="s2">&quot;sparseadam&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SparseAdam</span><span class="p">,</span>
+    <span class="s2">&quot;asgd&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">ASGD</span><span class="p">,</span>
+    <span class="s2">&quot;lbfgs&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">LBFGS</span><span class="p">,</span>
+    <span class="s2">&quot;rmsprop&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">RMSprop</span><span class="p">,</span>
+    <span class="s2">&quot;rprop&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Rprop</span><span class="p">,</span>
+    <span class="s2">&quot;sgd&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">,</span>
 <span class="p">}</span>
 
+<span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">Optimizer</span>
 
-<div class="viewcode-block" id="get_functional_loss"><a class="viewcode-back" href="../../pugh_torch.losses.html#pugh_torch.losses.get_functional_loss">[docs]</a><span class="k">def</span> <span class="nf">get_functional_loss</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+<span class="kn">from</span> <span class="nn">.lookahead</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.ralamb</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.rangerlars</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<div class="viewcode-block" id="get_optimizer"><a class="viewcode-back" href="../../pugh_torch.optimizers.html#pugh_torch.optimizers.get_optimizer">[docs]</a><span class="k">def</span> <span class="nf">get_optimizer</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">functional_loss_lookup</span><span class="p">[</span><span class="n">s</span><span class="p">]</span></div>
+    <span class="k">return</span> <span class="n">optimizer_lookup</span><span class="p">[</span><span class="n">s</span><span class="p">]</span></div>
+
+
+<span class="n">get</span> <span class="o">=</span> <span class="n">get_optimizer</span>
 </pre></div>
 
            </div>

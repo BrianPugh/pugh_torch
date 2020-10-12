@@ -1,0 +1,404 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pugh_torch.optimizers package &mdash; Pugh Torch 0.3.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pugh_torch.transforms package" href="pugh_torch.transforms.html" />
+    <link rel="prev" title="pugh_torch.modules package" href="pugh_torch.modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> Pugh Torch
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Package modules</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="pugh_torch.html">pugh_torch package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="pugh_torch.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.augmentations.html">pugh_torch.augmentations package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.callbacks.html">pugh_torch.callbacks package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.datasets.html">pugh_torch.datasets package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.losses.html">pugh_torch.losses package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.mappings.html">pugh_torch.mappings package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.metrics.html">pugh_torch.metrics package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.modules.html">pugh_torch.modules package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">pugh_torch.optimizers package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.transforms.html">pugh_torch.transforms package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.utils.html">pugh_torch.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pugh_torch.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pugh_torch.html#module-pugh_torch.exceptions">pugh_torch.exceptions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pugh_torch.html#module-pugh_torch.helpers">pugh_torch.helpers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pugh_torch.html#module-pugh_torch">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#deploying">Deploying</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#development">Development</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#the-four-commands-you-need-to-know">The Four Commands You Need To Know</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#additional-optional-setup-steps">Additional Optional Setup Steps:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#suggested-git-branch-strategy">Suggested Git Branch Strategy</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="math.html">Math notation example</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Pugh Torch</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">pugh_torch</a> &raquo;</li>
+        
+          <li><a href="pugh_torch.html">pugh_torch package</a> &raquo;</li>
+        
+      <li>pugh_torch.optimizers package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/pugh_torch.optimizers.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="pugh_torch.transforms.html" class="btn btn-neutral float-right" title="pugh_torch.transforms package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="pugh_torch.modules.html" class="btn btn-neutral float-left" title="pugh_torch.modules package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="pugh-torch-optimizers-package">
+<h1>pugh_torch.optimizers package<a class="headerlink" href="#pugh-torch-optimizers-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-pugh_torch.optimizers.base">
+<span id="pugh-torch-optimizers-base-module"></span><h2>pugh_torch.optimizers.base module<a class="headerlink" href="#module-pugh_torch.optimizers.base" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pugh_torch.optimizers.base.Optimizer">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.optimizers.base.</code><code class="sig-name descname">Optimizer</code><span class="sig-paren">(</span><em class="sig-param">params</em>, <em class="sig-param">defaults</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/optimizers/base.html#Optimizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.optimizers.base.Optimizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.optim.optimizer.Optimizer</span></code></p>
+<p>Only used to automatically register optimizers functions.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pugh_torch.optimizers.lookahead">
+<span id="pugh-torch-optimizers-lookahead-module"></span><h2>pugh_torch.optimizers.lookahead module<a class="headerlink" href="#module-pugh_torch.optimizers.lookahead" title="Permalink to this headline">¶</a></h2>
+<p>Lookahead Optimizer Wrapper.
+Implementation modified from: <a class="reference external" href="https://github.com/alphadl/lookahead.pytorch">https://github.com/alphadl/lookahead.pytorch</a>
+Paper: <cite>Lookahead Optimizer: k steps forward, 1 step back</cite> - <a class="reference external" href="https://arxiv.org/abs/1907.08610">https://arxiv.org/abs/1907.08610</a></p>
+<dl class="class">
+<dt id="pugh_torch.optimizers.lookahead.Lookahead">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.optimizers.lookahead.</code><code class="sig-name descname">Lookahead</code><span class="sig-paren">(</span><em class="sig-param">base_optimizer</em>, <em class="sig-param">alpha=0.5</em>, <em class="sig-param">k=6</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/optimizers/lookahead.html#Lookahead"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.optimizers.lookahead.Lookahead" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pugh_torch.optimizers.base.Optimizer" title="pugh_torch.optimizers.base.Optimizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.optimizers.base.Optimizer</span></code></a></p>
+<dl class="method">
+<dt id="pugh_torch.optimizers.lookahead.Lookahead.load_state_dict">
+<code class="sig-name descname">load_state_dict</code><span class="sig-paren">(</span><em class="sig-param">state_dict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/optimizers/lookahead.html#Lookahead.load_state_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.optimizers.lookahead.Lookahead.load_state_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads the optimizer state.</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><dl class="simple">
+<dt>state_dict (dict): optimizer state. Should be an object returned</dt><dd><p>from a call to <a class="reference internal" href="#pugh_torch.optimizers.lookahead.Lookahead.state_dict" title="pugh_torch.optimizers.lookahead.Lookahead.state_dict"><code class="xref py py-meth docutils literal notranslate"><span class="pre">state_dict()</span></code></a>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pugh_torch.optimizers.lookahead.Lookahead.state_dict">
+<code class="sig-name descname">state_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/optimizers/lookahead.html#Lookahead.state_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.optimizers.lookahead.Lookahead.state_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the state of the optimizer as a <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>.</p>
+<p>It contains two entries:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>state - a dict holding current optimization state. Its content</dt><dd><p>differs between optimizer classes.</p>
+</dd>
+</dl>
+</li>
+<li><p>param_groups - a dict containing all parameter groups</p></li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="pugh_torch.optimizers.lookahead.Lookahead.step">
+<code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param">closure=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/optimizers/lookahead.html#Lookahead.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.optimizers.lookahead.Lookahead.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a single optimization step (parameter update).</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><dl class="simple">
+<dt>closure (callable): A closure that reevaluates the model and</dt><dd><p>returns the loss. Optional for most optimizers.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Unless otherwise specified, this function should not modify the
+<code class="docutils literal notranslate"><span class="pre">.grad</span></code> field of the parameters.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pugh_torch.optimizers.lookahead.Lookahead.sync_lookahead">
+<code class="sig-name descname">sync_lookahead</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/optimizers/lookahead.html#Lookahead.sync_lookahead"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.optimizers.lookahead.Lookahead.sync_lookahead" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pugh_torch.optimizers.lookahead.Lookahead.update_slow">
+<code class="sig-name descname">update_slow</code><span class="sig-paren">(</span><em class="sig-param">group</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/optimizers/lookahead.html#Lookahead.update_slow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.optimizers.lookahead.Lookahead.update_slow" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pugh_torch.optimizers.lookahead.LookaheadAdam">
+<code class="sig-prename descclassname">pugh_torch.optimizers.lookahead.</code><code class="sig-name descname">LookaheadAdam</code><span class="sig-paren">(</span><em class="sig-param">params</em>, <em class="sig-param">alpha=0.5</em>, <em class="sig-param">k=6</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/optimizers/lookahead.html#LookaheadAdam"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.optimizers.lookahead.LookaheadAdam" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-pugh_torch.optimizers.ralamb">
+<span id="pugh-torch-optimizers-ralamb-module"></span><h2>pugh_torch.optimizers.ralamb module<a class="headerlink" href="#module-pugh_torch.optimizers.ralamb" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>Modified from:</dt><dd><p><a class="reference external" href="https://github.com/mgrankin/over9000">https://github.com/mgrankin/over9000</a></p>
+</dd>
+</dl>
+<dl class="class">
+<dt id="pugh_torch.optimizers.ralamb.Ralamb">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.optimizers.ralamb.</code><code class="sig-name descname">Ralamb</code><span class="sig-paren">(</span><em class="sig-param">params</em>, <em class="sig-param">lr=0.001</em>, <em class="sig-param">betas=(0.9</em>, <em class="sig-param">0.999)</em>, <em class="sig-param">eps=1e-08</em>, <em class="sig-param">weight_decay=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/optimizers/ralamb.html#Ralamb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.optimizers.ralamb.Ralamb" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pugh_torch.optimizers.base.Optimizer" title="pugh_torch.optimizers.base.Optimizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.optimizers.base.Optimizer</span></code></a></p>
+<dl class="method">
+<dt id="pugh_torch.optimizers.ralamb.Ralamb.step">
+<code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param">closure=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/optimizers/ralamb.html#Ralamb.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.optimizers.ralamb.Ralamb.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a single optimization step (parameter update).</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><dl class="simple">
+<dt>closure (callable): A closure that reevaluates the model and</dt><dd><p>returns the loss. Optional for most optimizers.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Unless otherwise specified, this function should not modify the
+<code class="docutils literal notranslate"><span class="pre">.grad</span></code> field of the parameters.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pugh_torch.optimizers.rangerlars">
+<span id="pugh-torch-optimizers-rangerlars-module"></span><h2>pugh_torch.optimizers.rangerlars module<a class="headerlink" href="#module-pugh_torch.optimizers.rangerlars" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>Modified from:</dt><dd><p><a class="reference external" href="https://github.com/mgrankin/over9000">https://github.com/mgrankin/over9000</a></p>
+</dd>
+</dl>
+<dl class="function">
+<dt id="pugh_torch.optimizers.rangerlars.RangerLars">
+<code class="sig-prename descclassname">pugh_torch.optimizers.rangerlars.</code><code class="sig-name descname">RangerLars</code><span class="sig-paren">(</span><em class="sig-param">params</em>, <em class="sig-param">alpha=0.5</em>, <em class="sig-param">k=6</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/optimizers/rangerlars.html#RangerLars"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.optimizers.rangerlars.RangerLars" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-pugh_torch.optimizers">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pugh_torch.optimizers" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pugh_torch.optimizers.get">
+<code class="sig-prename descclassname">pugh_torch.optimizers.</code><code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param">s</em><span class="sig-paren">)</span><a class="headerlink" href="#pugh_torch.optimizers.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="pugh_torch.optimizers.get_optimizer">
+<code class="sig-prename descclassname">pugh_torch.optimizers.</code><code class="sig-name descname">get_optimizer</code><span class="sig-paren">(</span><em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/optimizers.html#get_optimizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.optimizers.get_optimizer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Brian Pugh
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

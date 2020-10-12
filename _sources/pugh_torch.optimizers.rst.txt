@@ -1,0 +1,46 @@
+pugh\_torch.optimizers package
+==============================
+
+Submodules
+----------
+
+pugh\_torch.optimizers.base module
+----------------------------------
+
+.. automodule:: pugh_torch.optimizers.base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pugh\_torch.optimizers.lookahead module
+---------------------------------------
+
+.. automodule:: pugh_torch.optimizers.lookahead
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pugh\_torch.optimizers.ralamb module
+------------------------------------
+
+.. automodule:: pugh_torch.optimizers.ralamb
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pugh\_torch.optimizers.rangerlars module
+----------------------------------------
+
+.. automodule:: pugh_torch.optimizers.rangerlars
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: pugh_torch.optimizers
+   :members:
+   :undoc-members:
+   :show-inheritance:
