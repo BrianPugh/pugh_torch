@@ -113,11 +113,14 @@ class MyModel(pt.LightningModule):
         norm_layer=None,
         learning_rate=0.002,
         in_planes=64,
+        optimizer="adamw",
+        optimizer_kwargs={},
         **kwargs,
     ):
         """Defaults are ResNet50"""
 
         super().__init__()
+        self.save_hyperparameters()
 
         # NOTE: Only access this for pytorch-lightning related hooks.
         # Do not rely on cfg for network hyperparameters.
@@ -125,6 +128,8 @@ class MyModel(pt.LightningModule):
         self.cfg = cfg
 
         self.learning_rate = learning_rate  # This may be overwritten by lr finder
+        self.optimizer = optimizer
+        self.optimizer_kwargs = optimizer_kwargs
 
         self.block = block = pt.to_obj(block)
         self.norm_layer = norm_layer = (
@@ -259,11 +264,7 @@ class MyModel(pt.LightningModule):
     def _log_common(self, split, logits, target, loss):
         pred = torch.argmax(logits, dim=-1)
         self.log(f"{split}/loss", loss, prog_bar=True)
-        try:
-            self.log(f"{split}/acc", accuracy(pred, target), prog_bar=True)
-        except RuntimeError:
-            # see: https://github.com/PyTorchLightning/pytorch-lightning/issues/3006
-            pass
+        self.log(f"{split}/acc", accuracy(pred, target), prog_bar=True)
 
     def _compute_loss(self, pred, target):
         return F.cross_entropy(pred, target)
@@ -296,7 +297,14 @@ class MyModel(pt.LightningModule):
         optimizers = []
         schedulers = []
 
-        optimizers.append(torch.optim.AdamW(self.parameters(), lr=self.learning_rate))
+        optimizers.append(
+            pt.optimizers.get_optimizer(self.optimizer)(
+                self.parameters(),
+                lr=self.learning_rate,
+                **self.optimizer_kwargs,
+            )
+        )
+
         schedulers.append(
             LambdaLR(
                 optimizers[0], lambda epoch: 1
