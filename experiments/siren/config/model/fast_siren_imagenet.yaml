@@ -1,0 +1,19 @@
+# @package _group_
+name: SIREN
+
+encoder:
+    # Really L2 reg
+    loss: "mse_loss"
+    loss_weight: 0.1
+
+hyper:
+    # Really L2 reg
+    loss: "mse_loss"
+    loss_weight: 100
+
+siren:
+    layers: [256, 256, 256, 256, 256]
+    activation: "sine"
+    loss: "mse_loss"
+
+optimizer: "adamw"
