@@ -61,6 +61,7 @@ class SIREN(pt.LightningModule):
         learning_rate=0.002,
         loss="mse_loss",
         optimizer="adamw",
+        optimizer_kwargs={},
     ):
         super().__init__()
         self.save_hyperparameters()
@@ -69,6 +70,7 @@ class SIREN(pt.LightningModule):
 
         self.learning_rate = learning_rate
         self.optimizer = optimizer
+        self.optimizer_kwargs = optimizer_kwargs
 
         model = []
         model.append(nn.Linear(2, layers[0]))
@@ -190,8 +192,10 @@ class SIREN(pt.LightningModule):
         schedulers = []
 
         optimizers.append(
-            pt.optimizers.get_optimizer(self.cfg.model.optimizer)(
-                self.parameters(), lr=self.learning_rate
+            pt.optimizers.get_optimizer(self.optimizer)(
+                self.parameters(),
+                lr=self.learning_rate,
+                **self.optimizer_kwargs,
             )
         )
         schedulers.append(
