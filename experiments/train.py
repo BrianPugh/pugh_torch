@@ -127,8 +127,9 @@ with working_dir(experiment_path):
 
         # Currently auto_lr_rate doesn't work when fast_dev_run=True
         # TODO: Remove this if this gets fixed upstream
-        # if cfg.trainer.fast_dev_run:
-        #    cfg.trainer.auto_lr_find = False
+        if cfg.trainer.fast_dev_run:
+            log.warning("Disabling auto_lr_finder when running fast_dev_run.")
+            cfg.trainer.auto_lr_find = False
 
         model_kwargs = {
             "cfg": cfg,
