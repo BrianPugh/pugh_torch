@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   for add_ss and add_rgb for segmentation and classification tasks, respectively.
 * Initial form of a project template to get ideas going quickly.
 * ADE20K dataset
+* various optimizers and getters
+* various activation functions and getters
+* LoadStateDictMixin that adds verbosity to model loading and has more laxed
+  `strict` shape requirements.
+* pretrained resnet models (from torchvision) that utilize LoadStateDictMixin
+* Label smoothing losses
 
 ## [0.3.1] - 2020-09-21
 ### Added
