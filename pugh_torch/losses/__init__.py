@@ -12,13 +12,15 @@ def reduction_str(s):
     else:
         raise ValueError(f"unknown reduction type {s}")
 
+
 from .hetero_cross_entropy import hetero_cross_entropy
 from .label_smoothing import label_smoothing
 
+
 def __noop_loss_fn(*args, **kwargs):
-    """ For easier configuration
-    """
+    """For easier configuration"""
     return 0
+
 
 functional_loss_lookup = {
     "l1_loss": torch.nn.functional.l1_loss,

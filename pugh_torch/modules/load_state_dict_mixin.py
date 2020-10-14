@@ -1,6 +1,8 @@
 import torch
 import logging
+
 log = logging.getLogger(__name__)
+
 
 class LoadStateDictMixin:
     def load_state_dict(self, state_dict, strict=True):

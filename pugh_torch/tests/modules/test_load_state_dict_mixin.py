@@ -3,6 +3,7 @@ import torch
 from torch import nn
 import pugh_torch as pt
 
+
 @pytest.fixture
 def mock_log(mocker):
     mock = mocker.patch("pugh_torch.modules.load_state_dict_mixin.log")
