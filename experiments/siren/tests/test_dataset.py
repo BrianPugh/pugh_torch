@@ -144,6 +144,7 @@ def test_single_image_dataset_val(random_img):
 
     assert (np.isclose(random_img, actual_img)).all()
 
+
 @pytest.fixture
 def imagenet_transform():
     transform = A.Compose(
@@ -159,18 +160,22 @@ def imagenet_transform():
     )
     return transform
 
+
 def test_imagenet_sample_train(imagenet_transform):
-    dataset = ImageNetSample(split="train", num_samples=4096, transform=imagenet_transform)
+    dataset = ImageNetSample(
+        split="train", num_samples=4096, transform=imagenet_transform
+    )
     dataloader = DataLoader(dataset)
 
     for coords, rgb_vals, imgs in dataloader:
-        # TODO
-        pass
+        break  # TODO: maybe assert over entire dataset
+
 
 def test_imagenet_sample_val(imagenet_transform):
-    dataset = ImageNetSample(split="val", num_samples=4096, transform=imagenet_transform)
+    dataset = ImageNetSample(
+        split="val", num_samples=4096, transform=imagenet_transform
+    )
     dataloader = DataLoader(dataset)
 
     for coords, rgb_vals, imgs in dataloader:
-        # TODO
-        pass
+        break  # TODO: maybe assert over entire dataset

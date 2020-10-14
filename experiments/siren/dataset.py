@@ -3,10 +3,10 @@ import torch
 import torch.nn.functional as F
 import numpy as np
 import pugh_torch as pt
-from math import sqrt, floor
+from math import sqrt, ceil, floor
+
 
 class ImageNetSample(torch.utils.data.Dataset):
-
     def __init__(self, *args, num_sample=4096, **kwargs):
         self.imagenet = pt.datasets.classification.ImageNet(*args, **kwargs)
         self.num_sample = num_sample
@@ -20,16 +20,15 @@ class ImageNetSample(torch.utils.data.Dataset):
             return self._val_src_pts
 
         # May result in a little smaller bathc size
-        n_grid = int(floor(sqrt(self.num_sample))) 
+        n_grid = int(floor(sqrt(self.num_sample)))
 
         grid_x, grid_y = torch.meshgrid(
-                torch.arange(0, n_grid, 1),
-                torch.arange(0, n_grid, 1)
-                )
+            torch.arange(0, n_grid, 1), torch.arange(0, n_grid, 1)
+        )
         src_pts = torch.stack(
-                (grid_x.reshape(-1), grid_y.reshape(-1)),
-                dim=-1,
-                )
+            (grid_x.reshape(-1), grid_y.reshape(-1)),
+            dim=-1,
+        )
 
         self._val_src_pts = src_pts / float(n_grid - 1)
 
@@ -43,11 +42,14 @@ class ImageNetSample(torch.utils.data.Dataset):
         if self.imagenet.split == "train":
             coord_normalized, rgb_values = _sample_img(img[None], self.num_sample)
         elif self.imagenet.split == "val":
-            coord_normalized, rgb_values = _sample_img(img[None], self.num_sample, entropy=self.val_src_pts)
+            coord_normalized, rgb_values = _sample_img(
+                img[None], self.num_sample, entropy=self.val_src_pts
+            )
         else:
             raise NotImplementedError
 
         return coord_normalized, rgb_values, img
+
 
 def _sample_img(img, num_sample, entropy=None):
     if entropy is None:

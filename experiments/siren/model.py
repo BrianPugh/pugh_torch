@@ -11,7 +11,9 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader
 from torch.optim.lr_scheduler import LambdaLR
 
+
 import pugh_torch as pt
+from pugh_torch.models import resnet50
 from pugh_torch.modules import conv3x3, conv1x1
 
 import pytorch_lightning as pl
@@ -25,7 +27,7 @@ from scipy.interpolate import griddata
 import numpy as np
 from pathlib import Path
 
-from dataset import SingleImageDataset
+from dataset import ImageNetSample, SingleImageDataset
 
 log = logging.getLogger(__name__)
 
@@ -52,8 +54,7 @@ def unnormalize_pos(x, shape):
 
 
 class SIREN(pt.LightningModule):
-    """ Model that can learn an RGB image
-    """
+    """Model that can learn an RGB image"""
 
     def __init__(
         self,
@@ -262,8 +263,8 @@ class SIREN(pt.LightningModule):
 
         return loader
 
-class ParameterizedFC(nn.Module):
 
+class ParameterizedFC(nn.Module):
     def forward(self, x, weight, bias):
         """
         Parameters
@@ -280,11 +281,12 @@ class ParameterizedFC(nn.Module):
         x = x.matmul(weight) + bias.unsqueeze(-2)
         return x
 
+
 class ParameterizedFCs(nn.Module):
     def __init__(
-            self,
-            activation="sine",
-            ):
+        self,
+        activation="sine",
+    ):
         super().__init__()
         self.activation = pt.modules.Activation(activation)
 
@@ -315,15 +317,15 @@ class ParameterizedFCs(nn.Module):
 
         return x
 
+
 class FC(nn.Module):
-    """ Simple Sequential FC
-    """
+    """Simple Sequential FC"""
 
     def __init__(
-            self,
-            layers=[128, 128],
-            activation="relu",
-            ):
+        self,
+        layers=[128, 128],
+        activation="relu",
+    ):
 
         super().__init__()
 
@@ -344,10 +346,11 @@ class FC(nn.Module):
 
 
 class FastSIREN(pt.LightningModule):
-    """ Experimental model where SIREN weights are initialized via a 
+    """Experimental model where SIREN weights are initialized via a
     learned CNN from observing the image, hopefully to decrease training
     time.
     """
+
     def __init__(
         self,
         *,
@@ -355,11 +358,7 @@ class FastSIREN(pt.LightningModule):
         encoder={},
         hyper={},
         siren={},
-
-
-
         learning_rate=0.002,
-        loss="mse_loss",
         optimizer="adamw",
         optimizer_kwargs={},
     ):
@@ -375,10 +374,10 @@ class FastSIREN(pt.LightningModule):
         self.optimizer = optimizer
         self.optimizer_kwargs = optimizer_kwargs
 
-        embedding_size = encoder.get('size', 256)
+        embedding_size = encoder.get("size", 256)
         self.encoder_net = resnet50(pretrained=True, num_classes=embedding_size)
 
-        siren_nodes = [2, *siren.get('layers', [128] * 5), 3]
+        siren_nodes = [2, *siren.get("layers", [128] * 5), 3]
 
         # Compute how to partition up the hyper-network output
         n_params = 0
@@ -392,30 +391,44 @@ class FastSIREN(pt.LightningModule):
             n_params += f_in * f_out
 
         # This doesn't actually have any internal parameters
-        self.siren_net = ParameterizedFCs(activation=siren.get('activation', 'sine'))
+        self.siren_net = ParameterizedFCs(activation=siren.get("activation", "sine"))
 
-        hyper_hidden_layers = hyper.get('layers', [256,])
-        hyper_layers = [embedding_size, *hyper_hidden_layers, siren_parameters]
-        self.hyper_net = FC(layers=hyper_layers, activation=hyper.get('activation', 'relu'))
+        hyper_hidden_layers = hyper.get(
+            "layers",
+            [
+                256,
+            ],
+        )
+        hyper_layers = [embedding_size, *hyper_hidden_layers, n_params]
+        self.hyper_net = FC(
+            layers=hyper_layers, activation=hyper.get("activation", "relu")
+        )
         # TODO: use thier special kaming initialization modification on the self.hyper_net
 
-        self.encoder_loss_fn = pt.losses.get_functional_loss(encoder.get("loss", "mse_loss"))
-        self.siren_loss_fn = pt.losses.get_functional_loss(siren.get("loss", "mse_loss"))
-        self.hyper_loss_fn = pt.losses.get_functional_loss(hyper.get("loss", "mse_loss"))
-
+        self.encoder_loss_fn = pt.losses.get_functional_loss(
+            encoder.get("loss", "mse_loss")
+        )
+        self.siren_loss_fn = pt.losses.get_functional_loss(
+            siren.get("loss", "mse_loss")
+        )
+        self.hyper_loss_fn = pt.losses.get_functional_loss(
+            hyper.get("loss", "mse_loss")
+        )
 
     def _reshape_siren_parameters(self, param):
         weights = [
-                param[idx_pair[0]:idx_pair[1]].reshape(shape) 
-                for idx_pair, shape in 
-                zip(self.siren_weight_indices, self.siren_weight_shapes)
-                ]
-        biases = [param[idx_pair[0]:idx_pair[1]]for idx_pair in self.siren_bias_indices]
+            param[idx_pair[0] : idx_pair[1]].reshape(shape)
+            for idx_pair, shape in zip(
+                self.siren_weight_indices, self.siren_weight_shapes
+            )
+        ]
+        biases = [
+            param[idx_pair[0] : idx_pair[1]] for idx_pair in self.siren_bias_indices
+        ]
 
         return weights, biases
 
     def forward(self, coords, imgs):
-        coords, imgs = x
         embedding = self.encoder_net(imgs)
         siren_parameters = self.hyper_net(embedding)
         weights, biases = self._reshape_siren_parameters(siren_parameters)
@@ -441,11 +454,15 @@ class FastSIREN(pt.LightningModule):
         loss = self.siren_loss_fn(pred, rgb_vals)
 
         # Regularization encourages a gaussian prior on embedding from context encoder
-        loss = loss + self.context_cfg.get("loss_weight", 1e-1) * self.encoder_loss_fn(embedding, 0)
+        loss = loss + self.context_cfg["loss_weight"] * self.encoder_loss_fn(
+            embedding, 0
+        )
 
         # Regularization encourages a lower frequency representation of the iamge
         # Not sure i believe that, but its what the paper says.
-        loss = loss + self.hyper_cfg.get("loss_weight", 1e2) * self.hyper_loss_fn(siren_parameters, 0)
+        loss = loss + self.hyper_cfg["loss_weight"] * self.hyper_loss_fn(
+            siren_parameters, 0
+        )
 
         self._log_common("train", pred, rgb_vals, loss)
 
@@ -462,7 +479,7 @@ class FastSIREN(pt.LightningModule):
         transform = A.Compose(
             [
                 A.Resize(256, 256),
-                A.RandomCrop(224, 224),
+                A.RandomCrop(*self.cfg.dataset["shape"]),
                 A.HorizontalFlip(),
                 A.Normalize(
                     mean=[0.485, 0.456, 0.406],  # this is RGB order.
@@ -472,8 +489,13 @@ class FastSIREN(pt.LightningModule):
             ]
         )
 
+        dataset = ImageNetSample(
+            split="train", transform=transform, num_sample=self.cfg.dataset.num_sample
+        )
         dataset = pt.datasets.get("classification", self.cfg.dataset.name)(
-            split="train", transform=transform, num_sample=self.cfg.dataset.num_sample,
+            split="train",
+            transform=transform,
+            num_sample=self.cfg.dataset.num_sample,
         )
         loader = DataLoader(
             dataset,
@@ -488,7 +510,7 @@ class FastSIREN(pt.LightningModule):
         transform = A.Compose(
             [
                 A.Resize(256, 256),
-                A.CenterCrop(224, 224),
+                A.RandomCrop(*self.cfg.dataset["shape"]),
                 A.Normalize(
                     mean=[0.485, 0.456, 0.406],  # this is RGB order.
                     std=[0.229, 0.224, 0.225],
@@ -497,9 +519,15 @@ class FastSIREN(pt.LightningModule):
             ]
         )
 
-        dataset = pt.datasets.get("classification", self.cfg.dataset.name)(
-            split="val", transform=transform, 
+        dataset = ImageNetSample(
+            split="val", transform=transform, num_sample=self.cfg.dataset.num_sample
         )
+
+        n_exemplar = len(dataset)
+        step = n_exemplar // self.cfg.dataset.num_val_subset
+        indices = list(range(0, n_exemplar))[0 : n_exemplar * step : step]
+        dataset = torch.utils.data.Subset(dataset, indices)
+
         loader = DataLoader(
             dataset,
             shuffle=False,

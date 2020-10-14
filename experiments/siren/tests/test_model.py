@@ -43,19 +43,26 @@ def test_variables_change(rand_inputs, rand_targets):
         device="cuda:0",
     )
 
+
 def test_parameterized_fc_2d():
-    x = torch.tensor(np.array([
-        [1, 2, 3],
-        [4, 5, 6],
-        ]))  # shape (2, 3)
-    weight = torch.tensor(np.array([
-        [7],
-        [8],
-        [9],
-        ]))  # shape (3, 1)
-    bias = torch.tensor(np.array([
-        0.2
-        ]))
+    x = torch.tensor(
+        np.array(
+            [
+                [1, 2, 3],
+                [4, 5, 6],
+            ]
+        )
+    )  # shape (2, 3)
+    weight = torch.tensor(
+        np.array(
+            [
+                [7],
+                [8],
+                [9],
+            ]
+        )
+    )  # shape (3, 1)
+    bias = torch.tensor(np.array([0.2]))
 
     layer = model.ParameterizedFC()
     actual = layer(x, weight, bias).numpy()
@@ -64,8 +71,9 @@ def test_parameterized_fc_2d():
     expected = np.array([[50.2], [122.2]])
     assert np.isclose(expected, actual).all()
 
+
 def test_parameterized_fc_3d():
-    x = torch.tensor(np.arange(24).reshape(2,3,4))
+    x = torch.tensor(np.arange(24).reshape(2, 3, 4))
     weight = torch.tensor(np.arange(24, 24 + 40).reshape(2, 4, 5))
     bias = torch.tensor(np.array([[0.2] * 5, [0.3] * 5]))
 
@@ -73,14 +81,19 @@ def test_parameterized_fc_3d():
     actual = layer(x, weight, bias).numpy()
     assert actual.shape == (2, 3, 5)
 
-    expected = np.array([
-       [[ 214.2,  220.2,  226.2,  232.2,  238.2],
-        [ 718.2,  740.2,  762.2,  784.2,  806.2],
-        [1222.2, 1260.2, 1298.2, 1336.2, 1374.2]],
-
-       [[2806.3, 2860.3, 2914.3, 2968.3, 3022.3],
-        [3630.3, 3700.3, 3770.3, 3840.3, 3910.3],
-        [4454.3, 4540.3, 4626.3, 4712.3, 4798.3]]
-    ])
+    expected = np.array(
+        [
+            [
+                [214.2, 220.2, 226.2, 232.2, 238.2],
+                [718.2, 740.2, 762.2, 784.2, 806.2],
+                [1222.2, 1260.2, 1298.2, 1336.2, 1374.2],
+            ],
+            [
+                [2806.3, 2860.3, 2914.3, 2968.3, 3022.3],
+                [3630.3, 3700.3, 3770.3, 3840.3, 3910.3],
+                [4454.3, 4540.3, 4626.3, 4712.3, 4798.3],
+            ],
+        ]
+    )
 
     assert np.isclose(expected, actual).all()

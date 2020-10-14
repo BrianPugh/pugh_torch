@@ -1,5 +1,5 @@
 # @package _group_
-name: SIREN
+name: FastSIREN
 
 encoder:
     # Really L2 reg
