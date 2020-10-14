@@ -25,6 +25,7 @@ from pugh_torch.helpers import to_obj
 
 import pugh_torch.losses
 import pugh_torch.mappings
+import pugh_torch.models
 import pugh_torch.modules
 import pugh_torch.optimizers
 import pugh_torch.transforms
