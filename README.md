@@ -3,6 +3,7 @@
 [![Build Status](https://github.com/BrianPugh/pugh_torch/workflows/Build%20Master/badge.svg)](https://github.com/BrianPugh/pugh_torch/actions)
 [![Documentation](https://github.com/BrianPugh/pugh_torch/workflows/Documentation/badge.svg)](https://BrianPugh.github.io/pugh_torch)
 [![Code Coverage](https://codecov.io/gh/BrianPugh/pugh_torch/branch/master/graph/badge.svg)](https://codecov.io/gh/BrianPugh/pugh_torch)
+[![Code Coverage](https://img.shields.io/pypi/v/pugh_torch.svg)](https://pypi.org/project/pugh-torch/)
 
 Functions, losses, module blocks to share between experiments.
 
