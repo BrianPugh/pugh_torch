@@ -103,6 +103,7 @@
 <li class="toctree-l4"><a class="reference internal" href="pugh_torch.losses.html">pugh_torch.losses package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pugh_torch.mappings.html">pugh_torch.mappings package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pugh_torch.metrics.html">pugh_torch.metrics package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.models.html">pugh_torch.models package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pugh_torch.modules.html">pugh_torch.modules package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pugh_torch.optimizers.html">pugh_torch.optimizers package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pugh_torch.transforms.html">pugh_torch.transforms package</a></li>
@@ -500,14 +501,16 @@
 </li>
       <li><a href="pugh_torch.modules.html#pugh_torch.modules.lightning_module.LightningModule">LightningModule (class in pugh_torch.modules.lightning_module)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pugh_torch.modules.html#pugh_torch.modules.lightning_module.LightningModule.load_state_dict">load_state_dict() (pugh_torch.modules.lightning_module.LightningModule method)</a>
+      <li><a href="pugh_torch.modules.html#pugh_torch.modules.load_state_dict_mixin.LoadStateDictMixin.load_state_dict">load_state_dict() (pugh_torch.modules.load_state_dict_mixin.LoadStateDictMixin method)</a>
 
       <ul>
         <li><a href="pugh_torch.optimizers.html#pugh_torch.optimizers.lookahead.Lookahead.load_state_dict">(pugh_torch.optimizers.lookahead.Lookahead method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="pugh_torch.modules.html#pugh_torch.modules.load_state_dict_mixin.LoadStateDictMixin">LoadStateDictMixin (class in pugh_torch.modules.load_state_dict_mixin)</a>
+</li>
       <li><a href="pugh_torch.modules.html#pugh_torch.modules.activation.LogSigmoid">LogSigmoid (class in pugh_torch.modules.activation)</a>
 </li>
       <li><a href="pugh_torch.optimizers.html#pugh_torch.optimizers.lookahead.Lookahead">Lookahead (class in pugh_torch.optimizers.lookahead)</a>
@@ -636,10 +639,10 @@
 </li>
       <li><a href="pugh_torch.datasets.html#module-pugh_torch.datasets.torchvision">pugh_torch.datasets.torchvision (module)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pugh_torch.html#module-pugh_torch.exceptions">pugh_torch.exceptions (module)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pugh_torch.html#module-pugh_torch.helpers">pugh_torch.helpers (module)</a>
 </li>
       <li><a href="pugh_torch.losses.html#module-pugh_torch.losses">pugh_torch.losses (module)</a>
@@ -654,6 +657,10 @@
 </li>
       <li><a href="pugh_torch.metrics.html#module-pugh_torch.metrics">pugh_torch.metrics (module)</a>
 </li>
+      <li><a href="pugh_torch.models.html#module-pugh_torch.models">pugh_torch.models (module)</a>
+</li>
+      <li><a href="pugh_torch.models.html#module-pugh_torch.models.resnet">pugh_torch.models.resnet (module)</a>
+</li>
       <li><a href="pugh_torch.modules.html#module-pugh_torch.modules">pugh_torch.modules (module)</a>
 </li>
       <li><a href="pugh_torch.modules.html#module-pugh_torch.modules.activation">pugh_torch.modules.activation (module)</a>
@@ -663,6 +670,8 @@
       <li><a href="pugh_torch.modules.html#module-pugh_torch.modules.init">pugh_torch.modules.init (module)</a>
 </li>
       <li><a href="pugh_torch.modules.html#module-pugh_torch.modules.lightning_module">pugh_torch.modules.lightning_module (module)</a>
+</li>
+      <li><a href="pugh_torch.modules.html#module-pugh_torch.modules.load_state_dict_mixin">pugh_torch.modules.load_state_dict_mixin (module)</a>
 </li>
       <li><a href="pugh_torch.optimizers.html#module-pugh_torch.optimizers">pugh_torch.optimizers (module)</a>
 </li>
@@ -694,13 +703,29 @@
 </li>
       <li><a href="pugh_torch.losses.html#pugh_torch.losses.reduction_str">reduction_str() (in module pugh_torch.losses)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pugh_torch.modules.html#pugh_torch.modules.activation.ReLU">ReLU (class in pugh_torch.modules.activation)</a>
 </li>
       <li><a href="pugh_torch.modules.html#pugh_torch.modules.activation.ReLU6">ReLU6 (class in pugh_torch.modules.activation)</a>
 </li>
       <li><a href="pugh_torch.augmentations.transforms.html#pugh_torch.augmentations.transforms.resize_shortest.ResizeShortest">ResizeShortest (class in pugh_torch.augmentations.transforms.resize_shortest)</a>
+</li>
+      <li><a href="pugh_torch.models.html#pugh_torch.models.resnet.ResNet">ResNet (class in pugh_torch.models.resnet)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="pugh_torch.models.html#pugh_torch.models.resnet.resnet101">resnet101() (in module pugh_torch.models.resnet)</a>
+</li>
+      <li><a href="pugh_torch.models.html#pugh_torch.models.resnet.resnet152">resnet152() (in module pugh_torch.models.resnet)</a>
+</li>
+      <li><a href="pugh_torch.models.html#pugh_torch.models.resnet.resnet18">resnet18() (in module pugh_torch.models.resnet)</a>
+</li>
+      <li><a href="pugh_torch.models.html#pugh_torch.models.resnet.resnet34">resnet34() (in module pugh_torch.models.resnet)</a>
+</li>
+      <li><a href="pugh_torch.models.html#pugh_torch.models.resnet.resnet50">resnet50() (in module pugh_torch.models.resnet)</a>
+</li>
+      <li><a href="pugh_torch.models.html#pugh_torch.models.resnet.resnext101_32x8d">resnext101_32x8d() (in module pugh_torch.models.resnet)</a>
+</li>
+      <li><a href="pugh_torch.models.html#pugh_torch.models.resnet.resnext50_32x4d">resnext50_32x4d() (in module pugh_torch.models.resnet)</a>
 </li>
       <li><a href="pugh_torch.modules.html#pugh_torch.modules.activation.RReLU">RReLU (class in pugh_torch.modules.activation)</a>
 </li>
@@ -780,9 +805,11 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pugh_torch.datasets.html#pugh_torch.datasets.torchvision.TorchVisionDataset">TorchVisionDataset (class in pugh_torch.datasets.torchvision)</a>
 </li>
-      <li><a href="pugh_torch.modules.html#pugh_torch.modules.activation.ActivationModule.training">training (pugh_torch.modules.activation.ActivationModule attribute)</a>
+      <li><a href="pugh_torch.models.html#pugh_torch.models.resnet.ResNet.training">training (pugh_torch.models.resnet.ResNet attribute)</a>
 
       <ul>
+        <li><a href="pugh_torch.modules.html#pugh_torch.modules.activation.ActivationModule.training">(pugh_torch.modules.activation.ActivationModule attribute)</a>
+</li>
         <li><a href="pugh_torch.modules.html#pugh_torch.modules.activation.GELU.training">(pugh_torch.modules.activation.GELU attribute)</a>
 </li>
         <li><a href="pugh_torch.modules.html#pugh_torch.modules.activation.Hardsigmoid.training">(pugh_torch.modules.activation.Hardsigmoid attribute)</a>
@@ -844,6 +871,12 @@
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="pugh_torch.models.html#pugh_torch.models.resnet.wide_resnet101_2">wide_resnet101_2() (in module pugh_torch.models.resnet)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="pugh_torch.models.html#pugh_torch.models.resnet.wide_resnet50_2">wide_resnet50_2() (in module pugh_torch.models.resnet)</a>
+</li>
       <li><a href="pugh_torch.html#pugh_torch.helpers.working_dir">working_dir() (in module pugh_torch.helpers)</a>
 </li>
   </ul></td>

@@ -12,6 +12,7 @@ Subpackages
    pugh_torch.losses
    pugh_torch.mappings
    pugh_torch.metrics
+   pugh_torch.models
    pugh_torch.modules
    pugh_torch.optimizers
    pugh_torch.transforms

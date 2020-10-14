@@ -102,6 +102,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../pugh_torch.losses.html">pugh_torch.losses package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../pugh_torch.mappings.html">pugh_torch.mappings package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../pugh_torch.metrics.html">pugh_torch.metrics package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../pugh_torch.models.html">pugh_torch.models package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../pugh_torch.modules.html">pugh_torch.modules package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../pugh_torch.optimizers.html">pugh_torch.optimizers package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../pugh_torch.transforms.html">pugh_torch.transforms package</a></li>
@@ -198,7 +199,7 @@
 <span class="sd">pugh_torch.datasets.__init__</span>
 
 <span class="sd">The root dataset path can be set via the environmental variable</span>
-<span class="sd">``PUGH_TORCH_DATASET_PATH``.</span>
+<span class="sd">``PUGH_TORCH_DATASETS_PATH``.</span>
 
 <span class="sd">I don&#39;t expose this in code because I think it just clutters the code.</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -207,7 +208,7 @@
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
 <span class="n">ROOT_DATASET_PATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PUGH_TORCH_DATASET_PATH&quot;</span><span class="p">,</span> <span class="s2">&quot;~/.pugh_torch/datasets&quot;</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PUGH_TORCH_DATASETS_PATH&quot;</span><span class="p">,</span> <span class="s2">&quot;~/.pugh_torch/datasets&quot;</span><span class="p">)</span>
 <span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span>
 
 <span class="c1"># Populated automatically via pugh_torch.datasets.Dataset.__init_subclass__</span>

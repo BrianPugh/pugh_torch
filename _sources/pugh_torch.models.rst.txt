@@ -1,0 +1,22 @@
+pugh\_torch.models package
+==========================
+
+Submodules
+----------
+
+pugh\_torch.models.resnet module
+--------------------------------
+
+.. automodule:: pugh_torch.models.resnet
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: pugh_torch.models
+   :members:
+   :undoc-members:
+   :show-inheritance:

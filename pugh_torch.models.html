@@ -1,0 +1,406 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pugh_torch.models package &mdash; Pugh Torch 0.3.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pugh_torch.modules package" href="pugh_torch.modules.html" />
+    <link rel="prev" title="pugh_torch.metrics package" href="pugh_torch.metrics.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> Pugh Torch
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Package modules</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="pugh_torch.html">pugh_torch package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="pugh_torch.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.augmentations.html">pugh_torch.augmentations package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.callbacks.html">pugh_torch.callbacks package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.datasets.html">pugh_torch.datasets package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.losses.html">pugh_torch.losses package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.mappings.html">pugh_torch.mappings package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.metrics.html">pugh_torch.metrics package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">pugh_torch.models package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.modules.html">pugh_torch.modules package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.optimizers.html">pugh_torch.optimizers package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.transforms.html">pugh_torch.transforms package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.utils.html">pugh_torch.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pugh_torch.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pugh_torch.html#module-pugh_torch.exceptions">pugh_torch.exceptions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pugh_torch.html#module-pugh_torch.helpers">pugh_torch.helpers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pugh_torch.html#module-pugh_torch">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#deploying">Deploying</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#development">Development</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#the-four-commands-you-need-to-know">The Four Commands You Need To Know</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#additional-optional-setup-steps">Additional Optional Setup Steps:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#suggested-git-branch-strategy">Suggested Git Branch Strategy</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="math.html">Math notation example</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Pugh Torch</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">pugh_torch</a> &raquo;</li>
+        
+          <li><a href="pugh_torch.html">pugh_torch package</a> &raquo;</li>
+        
+      <li>pugh_torch.models package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/pugh_torch.models.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="pugh_torch.modules.html" class="btn btn-neutral float-right" title="pugh_torch.modules package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="pugh_torch.metrics.html" class="btn btn-neutral float-left" title="pugh_torch.metrics package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="pugh-torch-models-package">
+<h1>pugh_torch.models package<a class="headerlink" href="#pugh-torch-models-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-pugh_torch.models.resnet">
+<span id="pugh-torch-models-resnet-module"></span><h2>pugh_torch.models.resnet module<a class="headerlink" href="#module-pugh_torch.models.resnet" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pugh_torch.models.resnet.ResNet">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.models.resnet.</code><code class="sig-name descname">ResNet</code><span class="sig-paren">(</span><em class="sig-param">block</em>, <em class="sig-param">layers</em>, <em class="sig-param">num_classes=1000</em>, <em class="sig-param">zero_init_residual=False</em>, <em class="sig-param">groups=1</em>, <em class="sig-param">width_per_group=64</em>, <em class="sig-param">replace_stride_with_dilation=None</em>, <em class="sig-param">norm_layer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/models/resnet.html#ResNet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.models.resnet.ResNet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pugh_torch.modules.html#pugh_torch.modules.load_state_dict_mixin.LoadStateDictMixin" title="pugh_torch.modules.load_state_dict_mixin.LoadStateDictMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.modules.load_state_dict_mixin.LoadStateDictMixin</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">torchvision.models.resnet.ResNet</span></code></p>
+<p>Just mixes in our <code class="docutils literal notranslate"><span class="pre">load_state_dict</span></code> method that allows
+easier fine-tuning/transfer learning.</p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+<dl class="attribute">
+<dt id="pugh_torch.models.resnet.ResNet.training">
+<code class="sig-name descname">training</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.models.resnet.ResNet.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pugh_torch.models.resnet.resnet101">
+<code class="sig-prename descclassname">pugh_torch.models.resnet.</code><code class="sig-name descname">resnet101</code><span class="sig-paren">(</span><em class="sig-param">pretrained=False</em>, <em class="sig-param">progress=True</em>, <em class="sig-param">strict=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/models/resnet.html#resnet101"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.models.resnet.resnet101" title="Permalink to this definition">¶</a></dt>
+<dd><p>ResNet-101 model from
+<a class="reference external" href="https://arxiv.org/pdf/1512.03385.pdf">“Deep Residual Learning for Image Recognition”</a>
+Args:</p>
+<blockquote>
+<div><p>pretrained (bool): If True, returns a model pre-trained on ImageNet
+progress (bool): If True, displays a progress bar of the download to stderr</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="pugh_torch.models.resnet.resnet152">
+<code class="sig-prename descclassname">pugh_torch.models.resnet.</code><code class="sig-name descname">resnet152</code><span class="sig-paren">(</span><em class="sig-param">pretrained=False</em>, <em class="sig-param">progress=True</em>, <em class="sig-param">strict=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/models/resnet.html#resnet152"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.models.resnet.resnet152" title="Permalink to this definition">¶</a></dt>
+<dd><p>ResNet-152 model from
+<a class="reference external" href="https://arxiv.org/pdf/1512.03385.pdf">“Deep Residual Learning for Image Recognition”</a>
+Args:</p>
+<blockquote>
+<div><p>pretrained (bool): If True, returns a model pre-trained on ImageNet
+progress (bool): If True, displays a progress bar of the download to stderr</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="pugh_torch.models.resnet.resnet18">
+<code class="sig-prename descclassname">pugh_torch.models.resnet.</code><code class="sig-name descname">resnet18</code><span class="sig-paren">(</span><em class="sig-param">pretrained=False</em>, <em class="sig-param">progress=True</em>, <em class="sig-param">strict=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/models/resnet.html#resnet18"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.models.resnet.resnet18" title="Permalink to this definition">¶</a></dt>
+<dd><p>ResNet-18 model from
+<a class="reference external" href="https://arxiv.org/pdf/1512.03385.pdf">“Deep Residual Learning for Image Recognition”</a>
+Args:</p>
+<blockquote>
+<div><p>pretrained (bool): If True, returns a model pre-trained on ImageNet
+progress (bool): If True, displays a progress bar of the download to stderr</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="pugh_torch.models.resnet.resnet34">
+<code class="sig-prename descclassname">pugh_torch.models.resnet.</code><code class="sig-name descname">resnet34</code><span class="sig-paren">(</span><em class="sig-param">pretrained=False</em>, <em class="sig-param">progress=True</em>, <em class="sig-param">strict=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/models/resnet.html#resnet34"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.models.resnet.resnet34" title="Permalink to this definition">¶</a></dt>
+<dd><p>ResNet-34 model from
+<a class="reference external" href="https://arxiv.org/pdf/1512.03385.pdf">“Deep Residual Learning for Image Recognition”</a>
+Args:</p>
+<blockquote>
+<div><p>pretrained (bool): If True, returns a model pre-trained on ImageNet
+progress (bool): If True, displays a progress bar of the download to stderr</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="pugh_torch.models.resnet.resnet50">
+<code class="sig-prename descclassname">pugh_torch.models.resnet.</code><code class="sig-name descname">resnet50</code><span class="sig-paren">(</span><em class="sig-param">pretrained=False</em>, <em class="sig-param">progress=True</em>, <em class="sig-param">strict=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/models/resnet.html#resnet50"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.models.resnet.resnet50" title="Permalink to this definition">¶</a></dt>
+<dd><p>ResNet-50 model from
+<a class="reference external" href="https://arxiv.org/pdf/1512.03385.pdf">“Deep Residual Learning for Image Recognition”</a>
+Args:</p>
+<blockquote>
+<div><p>pretrained (bool): If True, returns a model pre-trained on ImageNet
+progress (bool): If True, displays a progress bar of the download to stderr</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="pugh_torch.models.resnet.resnext101_32x8d">
+<code class="sig-prename descclassname">pugh_torch.models.resnet.</code><code class="sig-name descname">resnext101_32x8d</code><span class="sig-paren">(</span><em class="sig-param">pretrained=False</em>, <em class="sig-param">progress=True</em>, <em class="sig-param">strict=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/models/resnet.html#resnext101_32x8d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.models.resnet.resnext101_32x8d" title="Permalink to this definition">¶</a></dt>
+<dd><p>ResNeXt-101 32x8d model from
+<a class="reference external" href="https://arxiv.org/pdf/1611.05431.pdf">“Aggregated Residual Transformation for Deep Neural Networks”</a>
+Args:</p>
+<blockquote>
+<div><p>pretrained (bool): If True, returns a model pre-trained on ImageNet
+progress (bool): If True, displays a progress bar of the download to stderr</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="pugh_torch.models.resnet.resnext50_32x4d">
+<code class="sig-prename descclassname">pugh_torch.models.resnet.</code><code class="sig-name descname">resnext50_32x4d</code><span class="sig-paren">(</span><em class="sig-param">pretrained=False</em>, <em class="sig-param">progress=True</em>, <em class="sig-param">strict=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/models/resnet.html#resnext50_32x4d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.models.resnet.resnext50_32x4d" title="Permalink to this definition">¶</a></dt>
+<dd><p>ResNeXt-50 32x4d model from
+<a class="reference external" href="https://arxiv.org/pdf/1611.05431.pdf">“Aggregated Residual Transformation for Deep Neural Networks”</a>
+Args:</p>
+<blockquote>
+<div><p>pretrained (bool): If True, returns a model pre-trained on ImageNet
+progress (bool): If True, displays a progress bar of the download to stderr</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="pugh_torch.models.resnet.wide_resnet101_2">
+<code class="sig-prename descclassname">pugh_torch.models.resnet.</code><code class="sig-name descname">wide_resnet101_2</code><span class="sig-paren">(</span><em class="sig-param">pretrained=False</em>, <em class="sig-param">progress=True</em>, <em class="sig-param">strict=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/models/resnet.html#wide_resnet101_2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.models.resnet.wide_resnet101_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wide ResNet-101-2 model from
+<a class="reference external" href="https://arxiv.org/pdf/1605.07146.pdf">“Wide Residual Networks”</a>
+The model is the same as ResNet except for the bottleneck number of channels
+which is twice larger in every block. The number of channels in outer 1x1
+convolutions is the same, e.g. last block in ResNet-50 has 2048-512-2048
+channels, and in Wide ResNet-50-2 has 2048-1024-2048.
+Args:</p>
+<blockquote>
+<div><p>pretrained (bool): If True, returns a model pre-trained on ImageNet
+progress (bool): If True, displays a progress bar of the download to stderr</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="pugh_torch.models.resnet.wide_resnet50_2">
+<code class="sig-prename descclassname">pugh_torch.models.resnet.</code><code class="sig-name descname">wide_resnet50_2</code><span class="sig-paren">(</span><em class="sig-param">pretrained=False</em>, <em class="sig-param">progress=True</em>, <em class="sig-param">strict=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/models/resnet.html#wide_resnet50_2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.models.resnet.wide_resnet50_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wide ResNet-50-2 model from
+<a class="reference external" href="https://arxiv.org/pdf/1605.07146.pdf">“Wide Residual Networks”</a>
+The model is the same as ResNet except for the bottleneck number of channels
+which is twice larger in every block. The number of channels in outer 1x1
+convolutions is the same, e.g. last block in ResNet-50 has 2048-512-2048
+channels, and in Wide ResNet-50-2 has 2048-1024-2048.
+Args:</p>
+<blockquote>
+<div><p>pretrained (bool): If True, returns a model pre-trained on ImageNet
+progress (bool): If True, displays a progress bar of the download to stderr</p>
+</div></blockquote>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pugh_torch.models">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pugh_torch.models" title="Permalink to this headline">¶</a></h2>
+<p>pugh_torch.models.__init__</p>
+<p>The root dataset path can be set via the environmental variable
+<code class="docutils literal notranslate"><span class="pre">PUGH_TORCH_MODELS_PATH</span></code>.</p>
+<p>I don’t expose this in code because I think it just clutters the code.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Brian Pugh
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

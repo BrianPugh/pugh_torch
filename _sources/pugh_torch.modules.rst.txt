@@ -36,6 +36,14 @@ pugh\_torch.modules.lightning\_module module
    :undoc-members:
    :show-inheritance:
 
+pugh\_torch.modules.load\_state\_dict\_mixin module
+---------------------------------------------------
+
+.. automodule:: pugh_torch.modules.load_state_dict_mixin
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 
 Module contents
 ---------------

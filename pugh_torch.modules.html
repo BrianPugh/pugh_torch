@@ -38,7 +38,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="pugh_torch.optimizers package" href="pugh_torch.optimizers.html" />
-    <link rel="prev" title="pugh_torch.metrics package" href="pugh_torch.metrics.html" /> 
+    <link rel="prev" title="pugh_torch.models package" href="pugh_torch.models.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -104,6 +104,7 @@
 <li class="toctree-l4"><a class="reference internal" href="pugh_torch.losses.html">pugh_torch.losses package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pugh_torch.mappings.html">pugh_torch.mappings package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pugh_torch.metrics.html">pugh_torch.metrics package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pugh_torch.models.html">pugh_torch.models package</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">pugh_torch.modules package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pugh_torch.optimizers.html">pugh_torch.optimizers package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pugh_torch.transforms.html">pugh_torch.transforms package</a></li>
@@ -199,7 +200,7 @@
         <a href="pugh_torch.optimizers.html" class="btn btn-neutral float-right" title="pugh_torch.optimizers package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="pugh_torch.metrics.html" class="btn btn-neutral float-left" title="pugh_torch.metrics package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="pugh_torch.models.html" class="btn btn-neutral float-left" title="pugh_torch.models package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
   </div>
   
@@ -796,16 +797,30 @@ quality of life improvements.</p>
 <dl class="class">
 <dt id="pugh_torch.modules.lightning_module.LightningModule">
 <em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.lightning_module.</code><code class="sig-name descname">LightningModule</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/lightning_module.html#LightningModule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.lightning_module.LightningModule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pytorch_lightning.core.lightning.LightningModule</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="#pugh_torch.modules.load_state_dict_mixin.LoadStateDictMixin" title="pugh_torch.modules.load_state_dict_mixin.LoadStateDictMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.modules.load_state_dict_mixin.LoadStateDictMixin</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">pytorch_lightning.core.lightning.LightningModule</span></code></p>
 <dl class="method">
 <dt id="pugh_torch.modules.lightning_module.LightningModule.configure_optimizers">
 <code class="sig-name descname">configure_optimizers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/lightning_module.html#LightningModule.configure_optimizers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.lightning_module.LightningModule.configure_optimizers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pretty good defaults, can be easily overrided</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="pugh_torch.modules.lightning_module.LightningModule.training">
+<code class="sig-name descname">training</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.lightning_module.LightningModule.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pugh_torch.modules.load_state_dict_mixin">
+<span id="pugh-torch-modules-load-state-dict-mixin-module"></span><h2>pugh_torch.modules.load_state_dict_mixin module<a class="headerlink" href="#module-pugh_torch.modules.load_state_dict_mixin" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pugh_torch.modules.load_state_dict_mixin.LoadStateDictMixin">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.load_state_dict_mixin.</code><code class="sig-name descname">LoadStateDictMixin</code><a class="reference internal" href="_modules/pugh_torch/modules/load_state_dict_mixin.html#LoadStateDictMixin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.load_state_dict_mixin.LoadStateDictMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="method">
-<dt id="pugh_torch.modules.lightning_module.LightningModule.load_state_dict">
-<code class="sig-name descname">load_state_dict</code><span class="sig-paren">(</span><em class="sig-param">state_dict</em>, <em class="sig-param">strict=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/lightning_module.html#LightningModule.load_state_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.lightning_module.LightningModule.load_state_dict" title="Permalink to this definition">¶</a></dt>
+<dt id="pugh_torch.modules.load_state_dict_mixin.LoadStateDictMixin.load_state_dict">
+<code class="sig-name descname">load_state_dict</code><span class="sig-paren">(</span><em class="sig-param">state_dict</em>, <em class="sig-param">strict=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/load_state_dict_mixin.html#LoadStateDictMixin.load_state_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.load_state_dict_mixin.LoadStateDictMixin.load_state_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Confirms and logs the weights that you expect are loaded when
 <code class="docutils literal notranslate"><span class="pre">strict=False</span></code>.</p>
 <dl class="field-list simple">
@@ -821,11 +836,6 @@ This is strictly a subset of <code class="docutils literal notranslate"><span cl
 </dd>
 </dl>
 </dd></dl>
-
-<dl class="attribute">
-<dt id="pugh_torch.modules.lightning_module.LightningModule.training">
-<code class="sig-name descname">training</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.lightning_module.LightningModule.training" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
