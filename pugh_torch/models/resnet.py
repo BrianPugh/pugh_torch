@@ -1,7 +1,7 @@
 import torch
 import torchvision
 
-from . import ROOT_MODELS_PATH
+from . import ROOT_MODELS_PATH, load_state_dict_from_url
 from ..modules import LoadStateDictMixin
 
 from torchvision.models.resnet import Bottleneck

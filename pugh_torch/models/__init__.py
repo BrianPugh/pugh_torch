@@ -15,6 +15,7 @@ ROOT_MODELS_PATH = Path(
 ).expanduser()
 
 import torch
+from torch.hub import load_state_dict_from_url
 
 torch.hub.set_dir(str(ROOT_MODELS_PATH))
 
