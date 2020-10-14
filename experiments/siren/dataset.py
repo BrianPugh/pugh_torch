@@ -3,13 +3,72 @@ import torch
 import torch.nn.functional as F
 import numpy as np
 import pugh_torch as pt
-from math import ceil
+from math import sqrt, ceil, floor
+
+
+class ImageNetSample(torch.utils.data.Dataset):
+    def __init__(self, *args, num_sample=4096, **kwargs):
+        self.imagenet = pt.datasets.classification.ImageNet(*args, **kwargs)
+        self.num_sample = num_sample
+
+    def __len__(self):
+        return len(self.imagenet)
+
+    @property
+    def val_src_pts(self):
+        if hasattr(self, "_val_src_pts"):
+            return self._val_src_pts
+
+        # May result in a little smaller bathc size
+        n_grid = int(floor(sqrt(self.num_sample)))
+
+        grid_x, grid_y = torch.meshgrid(
+            torch.arange(0, n_grid, 1), torch.arange(0, n_grid, 1)
+        )
+        src_pts = torch.stack(
+            (grid_x.reshape(-1), grid_y.reshape(-1)),
+            dim=-1,
+        )
+
+        self._val_src_pts = src_pts / float(n_grid - 1)
+
+        return self._val_src_pts
+
+    def __getitem__(self, index):
+        # This img has already be transformed, just need to sample
+        # img has shape (3, H, W)
+        img, _ = self.imagenet[index]
+
+        if self.imagenet.split == "train":
+            coord_normalized, rgb_values = _sample_img(img[None], self.num_sample)
+        elif self.imagenet.split == "val":
+            coord_normalized, rgb_values = _sample_img(
+                img[None], self.num_sample, entropy=self.val_src_pts
+            )
+        else:
+            raise NotImplementedError
+
+        return coord_normalized, rgb_values, img
+
+
+def _sample_img(img, num_sample, entropy=None):
+    if entropy is None:
+        # Select random coordinates in range [-1, 1]
+        entropy = torch.rand(num_sample, 2)
+    coord_normalized = 2 * entropy - 1
+
+    # interpolate at those points
+    rgb_values = F.grid_sample(
+        img, coord_normalized[None, :, None, :], align_corners=True
+    )
+    rgb_values = rgb_values[0, ..., 0].transpose(0, 1)
+    return coord_normalized, rgb_values
 
 
 class SingleImageDataset(torch.utils.data.IterableDataset):
     """Generates sampled:
-        * x: (x,y) normalized coordinates in range [-1,1]
-        * y: (N,3) color
+        * x: Shape (N, 2) where each row is (x,y) normalized coordinates in range [-1,1]
+        * y: Shape (N,3) where each row is RGB color at that sampled point
 
     We are defining that pixels are determined by their topleft corner.
     """
@@ -73,15 +132,7 @@ class SingleImageDataset(torch.utils.data.IterableDataset):
             raise StopIteration
 
         if self.mode == "train":
-            # Select random coordinates in range [-1, 1]
-            entropy = torch.rand(self.batch_size, 2)  # TODO maybe device
-            coord_normalized = 2 * entropy - 1
-
-            # interpolate at those points
-            rgb_values = F.grid_sample(
-                self.img, coord_normalized[None, :, None, :], align_corners=True
-            )
-            rgb_values = rgb_values[0, ..., 0].transpose(0, 1)
+            coord_normalized, rgb_values = _sample_img(self.img, self.batch_size)
             self.pos += self.batch_size
         elif self.mode == "val":
             # Deterministcally return every pixel value in order

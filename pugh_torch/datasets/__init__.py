@@ -2,7 +2,7 @@
 pugh_torch.datasets.__init__
 
 The root dataset path can be set via the environmental variable
-``PUGH_TORCH_DATASET_PATH``.
+``PUGH_TORCH_DATASETS_PATH``.
 
 I don't expose this in code because I think it just clutters the code.
 """
@@ -11,7 +11,7 @@ import os
 from pathlib import Path
 
 ROOT_DATASET_PATH = Path(
-    os.environ.get("PUGH_TORCH_DATASET_PATH", "~/.pugh_torch/datasets")
+    os.environ.get("PUGH_TORCH_DATASETS_PATH", "~/.pugh_torch/datasets")
 ).expanduser()
 
 # Populated automatically via pugh_torch.datasets.Dataset.__init_subclass__

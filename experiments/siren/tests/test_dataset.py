@@ -1,8 +1,10 @@
 import pytest
 import torch
 import numpy as np
-from dataset import SingleImageDataset
+from dataset import SingleImageDataset, ImageNetSample
 from torch.utils.data import DataLoader
+import albumentations as A
+from albumentations.pytorch import ToTensorV2
 
 
 @pytest.fixture
@@ -141,3 +143,39 @@ def test_single_image_dataset_val(random_img):
         actual_img[x[:, 1], x[:, 0]] = y
 
     assert (np.isclose(random_img, actual_img)).all()
+
+
+@pytest.fixture
+def imagenet_transform():
+    transform = A.Compose(
+        [
+            A.Resize(256, 256),
+            A.CenterCrop(224, 224),
+            A.Normalize(
+                mean=[0.485, 0.456, 0.406],  # this is RGB order.
+                std=[0.229, 0.224, 0.225],
+            ),
+            ToTensorV2(),
+        ]
+    )
+    return transform
+
+
+def test_imagenet_sample_train(imagenet_transform):
+    dataset = ImageNetSample(
+        split="train", num_samples=4096, transform=imagenet_transform
+    )
+    dataloader = DataLoader(dataset)
+
+    for coords, rgb_vals, imgs in dataloader:
+        break  # TODO: maybe assert over entire dataset
+
+
+def test_imagenet_sample_val(imagenet_transform):
+    dataset = ImageNetSample(
+        split="val", num_samples=4096, transform=imagenet_transform
+    )
+    dataloader = DataLoader(dataset)
+
+    for coords, rgb_vals, imgs in dataloader:
+        break  # TODO: maybe assert over entire dataset
