@@ -1,6 +1,7 @@
 from .conv import conv3x3, conv1x1
 from .activation import Activation, ActivationModule
 import pugh_torch.modules.init
+from .load_state_dict_mixin import LoadStateDictMixin
 
 try:
     import pytorch_lightning
