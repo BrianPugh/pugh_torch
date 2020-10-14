@@ -15,6 +15,7 @@ ROOT_MODELS_PATH = Path(
 ).expanduser()
 
 import torch
+
 torch.hub.set_dir(str(ROOT_MODELS_PATH))
 
 from .resnet import *
