@@ -1,4 +1,4 @@
-.PHONY: clean clean-test clean-pyc clean-build docs help
+.PHONY: clean clean-test clean-pyc clean-build docs help release release-patch release-minor release-major
 .DEFAULT_GOAL := help
 
 define BROWSER_PYSCRIPT
@@ -27,6 +27,13 @@ export PRINT_HELP_PYSCRIPT
 PYTHON := python3
 
 BROWSER := $(PYTHON) -c "$$BROWSER_PYSCRIPT"
+
+RELEASE_PUSH := git push \
+	&& git push --tags \
+	&& git branch -D stable \
+	&& git checkout -b stable \
+	&& git push --set-upstream origin stable -f \
+	&& git checkout master
 
 help:
 	@python3 -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
@@ -70,3 +77,20 @@ test:
 
 test-pdb:
 	$(PYTHON) -m pytest pugh_torch/tests -s --pdb
+
+release:
+	# To be called after bumping version
+	$(RELEASE_PUSH)
+
+release-patch:
+	bumpversion patch
+	$(RELEASE_PUSH)
+
+release-minor:
+	bumpversion minor
+	$(RELEASE_PUSH)
+
+release-major:
+	bumpversion major
+	$(RELEASE_PUSH)
+
