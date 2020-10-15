@@ -84,6 +84,11 @@ def Activation(name, init_layers=None, *, first=False, **kwargs):
     return activation_obj
 
 
+class Noop(ActivationModule):
+    def forward(self, input):
+        return input
+
+
 class Sine(ActivationModule):
     """
     Implicit Neural Representations with Periodic Activation Functions

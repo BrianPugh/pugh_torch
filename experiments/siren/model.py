@@ -278,8 +278,7 @@ class ParameterizedFC(nn.Module):
             Where each element is of shape (B, feat_out)
         """
 
-        x = x.matmul(weight) + bias.unsqueeze(-2)
-        return x
+        return x.matmul(weight) + bias.unsqueeze(-2)
 
 
 class ParameterizedFCs(nn.Module):
@@ -297,7 +296,7 @@ class ParameterizedFCs(nn.Module):
         x : torch.Tensor
             (B, *, feat_in)
         weights : list
-            Where each element is of shape (B, *, feat_in, feat_out).
+            Where each element is of shape (B, *, feat_out, feat_in).
             Where feat_in is the size of the previous feat_out
         biases : list
             Where each element is of shape (B, feat_out)
@@ -307,13 +306,12 @@ class ParameterizedFCs(nn.Module):
 
         assert n_layers == len(biases)
 
-        activations = [torch.activation] * n_layers
-        activations[-1] = None
+        activations = [self.activation] * n_layers
+        activations[-1] = pt.modules.Activation("noop")
 
         for weight, bias, activation in zip(weights, biases, activations):
-            x = x.matmul(weight) + bias.unsqueeze(-2)
-            if activation is not None:
-                x = activation(x)
+            x = x.matmul(weight.transpose(-1, -2)) + bias.unsqueeze(-2)
+            x = activation(x)
 
         return x
 
@@ -331,18 +329,18 @@ class FC(nn.Module):
 
         assert len(layers) >= 2
 
-        model = []
+        self.model = nn.ModuleList()
         for cur_layer, next_layer in zip(layers, layers[1:-1]):
-            model.append(nn.Linear(cur_layer, next_layer))
-            model.append(pt.modules.Activation(activation, model[-1]))
+            self.model.append(nn.Linear(cur_layer, next_layer))
+            self.model.append(pt.modules.Activation(activation, self.model[-1]))
 
-        model.append(nn.Linear(layers[-2], layers[-1]))
+        self.model.append(nn.Linear(layers[-2], layers[-1]))
         # no final activation function
 
-        self.model = nn.Sequential(*model)
-
     def forward(self, x):
-        return self.model(x)
+        for layer in self.model:
+            x = layer(x)
+        return x
 
 
 class FastSIREN(pt.LightningModule):
@@ -389,6 +387,10 @@ class FastSIREN(pt.LightningModule):
             n_params += f_out
             self.siren_weight_indices.append((n_params, n_params + f_in * f_out))
             n_params += f_in * f_out
+            # torch.linear stuff uses f_out on the first dim
+            self.siren_weight_shapes.append((f_out, f_in))
+
+        assert len(self.siren_weight_indices) == len(self.siren_weight_shapes) == len(self.siren_bias_indices)
 
         # This doesn't actually have any internal parameters
         self.siren_net = ParameterizedFCs(activation=siren.get("activation", "sine"))
@@ -403,7 +405,15 @@ class FastSIREN(pt.LightningModule):
         self.hyper_net = FC(
             layers=hyper_layers, activation=hyper.get("activation", "relu")
         )
-        # TODO: use thier special kaming initialization modification on the self.hyper_net
+        with torch.no_grad():
+            # Special initialization of hyper network described in section 9.1
+            last_layer = self.hyper_net.model[-1]
+            last_layer.weight.mul_(0.01)
+            biases = [last_layer.bias[idx_pair[0] : idx_pair[1]] for idx_pair in self.siren_bias_indices]
+
+            for bias, dims in zip(biases, self.siren_weight_shapes):
+                fan_in = dims[1]
+                bias.uniform_(-1/fan_in, 1/fan_in)
 
         self.encoder_loss_fn = pt.losses.get_functional_loss(
             encoder.get("loss", "mse_loss")
@@ -416,21 +426,22 @@ class FastSIREN(pt.LightningModule):
         )
 
     def _reshape_siren_parameters(self, param):
+        batch_size = param.shape[0]
         weights = [
-            param[idx_pair[0] : idx_pair[1]].reshape(shape)
+                param[:, idx_pair[0] : idx_pair[1]].reshape(batch_size, *shape)
             for idx_pair, shape in zip(
                 self.siren_weight_indices, self.siren_weight_shapes
             )
         ]
         biases = [
-            param[idx_pair[0] : idx_pair[1]] for idx_pair in self.siren_bias_indices
+                param[:, idx_pair[0] : idx_pair[1]] for idx_pair in self.siren_bias_indices
         ]
 
         return weights, biases
 
     def forward(self, coords, imgs):
-        embedding = self.encoder_net(imgs)
-        siren_parameters = self.hyper_net(embedding)
+        embedding = self.encoder_net(imgs)  # (B, embedded_feat)
+        siren_parameters = self.hyper_net(embedding)  # (B, long_flattened_params)
         weights, biases = self._reshape_siren_parameters(siren_parameters)
         pred = self.siren_net(coords, weights, biases)
         return embedding, siren_parameters, pred
@@ -454,14 +465,14 @@ class FastSIREN(pt.LightningModule):
         loss = self.siren_loss_fn(pred, rgb_vals)
 
         # Regularization encourages a gaussian prior on embedding from context encoder
-        loss = loss + self.context_cfg["loss_weight"] * self.encoder_loss_fn(
-            embedding, 0
+        loss = loss + self.encoder_cfg["loss_weight"] * self.encoder_loss_fn(
+            embedding, torch.zeros(1, device=embedding.device)
         )
 
         # Regularization encourages a lower frequency representation of the iamge
         # Not sure i believe that, but its what the paper says.
         loss = loss + self.hyper_cfg["loss_weight"] * self.hyper_loss_fn(
-            siren_parameters, 0
+            siren_parameters, torch.zeros(1, device=siren_parameters.device)
         )
 
         self._log_common("train", pred, rgb_vals, loss)
@@ -492,11 +503,7 @@ class FastSIREN(pt.LightningModule):
         dataset = ImageNetSample(
             split="train", transform=transform, num_sample=self.cfg.dataset.num_sample
         )
-        dataset = pt.datasets.get("classification", self.cfg.dataset.name)(
-            split="train",
-            transform=transform,
-            num_sample=self.cfg.dataset.num_sample,
-        )
+
         loader = DataLoader(
             dataset,
             shuffle=True,

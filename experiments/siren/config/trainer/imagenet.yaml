@@ -56,12 +56,12 @@ num_sanity_val_steps: 2
 # Logging and Printing #
 ########################
 flush_logs_every_n_steps: 100  # Write-to-disk every this many iterations
-log_every_n_steps: 50  # Record to log (in memory) every this many iterations
+log_every_n_steps: 20  # Record to log (in memory) every this many iterations
 
 # Prints a summary of the weights when training begins. Options: ‘full’, ‘top’, None.
 weights_summary: 'top'
 
-progress_bar_refresh_rate: 50
+progress_bar_refresh_rate: 20
 
 ##########################
 # Multi-GPU and Batching #
