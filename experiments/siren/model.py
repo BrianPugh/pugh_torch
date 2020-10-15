@@ -264,83 +264,141 @@ class SIREN(pt.LightningModule):
         return loader
 
 
-class ParameterizedFC(nn.Module):
-    def forward(self, x, weight, bias):
-        """
-        Parameters
-        ----------
-        x : torch.Tensor
-            (B, *, feat_in)
-        weights : list
-            Where each element is of shape (B, *, feat_in, feat_out).
-            Where feat_in is the size of the previous feat_out
-        biases : list
-            Where each element is of shape (B, feat_out)
-        """
+class BatchLinear(nn.Linear):
+    """ Technically a little wasteful because we might be allocating
+    some parameters that aren't used, but its usually a very small amount of
+    memory.
+    """
 
-        return x.matmul(weight) + bias.unsqueeze(-2)
+    def forward(self, x, weight=None, bias=None):
+        if weight is None or bias is None:
+            return super().forward(x)
 
+        return x.matmul(weight.transpose(-1, -2)) + bias.unsqueeze(-2)
 
-class ParameterizedFCs(nn.Module):
-    def __init__(
-        self,
-        activation="sine",
-    ):
-        super().__init__()
-        self.activation = pt.modules.Activation(activation)
-
-    def forward(self, x, weights, biases):
-        """
-        Parameters
-        ----------
-        x : torch.Tensor
-            (B, *, feat_in)
-        weights : list
-            Where each element is of shape (B, *, feat_out, feat_in).
-            Where feat_in is the size of the previous feat_out
-        biases : list
-            Where each element is of shape (B, feat_out)
-        """
-
-        n_layers = len(weights)
-
-        assert n_layers == len(biases)
-
-        activations = [self.activation] * n_layers
-        activations[-1] = pt.modules.Activation("noop")
-
-        for weight, bias, activation in zip(weights, biases, activations):
-            x = x.matmul(weight.transpose(-1, -2)) + bias.unsqueeze(-2)
-            x = activation(x)
-
-        return x
-
-
-class FC(nn.Module):
-    """Simple Sequential FC"""
-
-    def __init__(
-        self,
-        layers=[128, 128],
-        activation="relu",
-    ):
-
+class HyperHead(nn.Module):
+    """ For the multi-heads in a HyperNetwork
+    """
+    def __init__(self, f_in, hypo_in, hypo_out):
         super().__init__()
 
-        assert len(layers) >= 2
+        self.hypo_in = hypo_in
+        self.hypo_out = hypo_out
 
-        self.model = nn.ModuleList()
-        for cur_layer, next_layer in zip(layers, layers[1:-1]):
-            self.model.append(nn.Linear(cur_layer, next_layer))
-            self.model.append(pt.modules.Activation(activation, self.model[-1]))
+        self.weight_linear = nn.Linear(f_in, hypo_in*hypo_out)
+        self.bias_linear = nn.Linear(f_in, hypo_out)
 
-        self.model.append(nn.Linear(layers[-2], layers[-1]))
-        # no final activation function
+        self._hyper_weight_init(self.weight_linear)
+        self._hyper_bias_init(self.bias_linear)
+
+
+    def _hyper_weight_init(self, m):
+        nn.init.kaiming_normal_(m.weight, a=0.0, nonlinearity='relu', mode='fan_in')
+        m.weight.data = m.weight.data / 1.e2
+
+        with torch.no_grad():
+            m.bias.uniform_(-1/self.hypo_in, 1/self.hypo_in)
+
+
+    def _hyper_bias_init(self, m):
+        nn.init.kaiming_normal_(m.weight, a=0.0, nonlinearity='relu', mode='fan_in')
+        m.weight.data = m.weight.data / 1.e2
+
+        fan_in, _ = nn.init._calculate_fan_in_and_fan_out(m.weight)
+        with torch.no_grad():
+            m.bias.uniform_(-1/fan_in, 1/fan_in)
 
     def forward(self, x):
-        for layer in self.model:
-            x = layer(x)
-        return x
+        batch = x.shape[0]
+
+        weight = self.weight_linear(x)
+        weight = weight.reshape(batch, self.hypo_out, self.hypo_in)
+
+        bias = self.bias_linear(x)
+        
+        return weight, bias
+
+class HyperNetwork(nn.Module):
+    def __init__(
+        self,
+        input,
+        hidden,
+        hypo_network,
+        activation="relu",
+    ):
+        """
+        input : int
+            number feature in from embedding
+        hidden : list
+            List of ints, hidden layer nodes for hyper network
+        hypo_network : nn.Sequential
+            Sequential hypo_network
+        """
+
+        super().__init__()
+
+        self.activation = pt.modules.Activation(activation)
+
+        self.layers = nn.ModuleList()
+        if hidden:
+            self.layers.append(nn.Linear(input, hidden[0]))
+            self.layers.append(self.activation)
+            for h_in, h_out in zip(hidden, hidden[1:]):
+                self.layers.append(nn.Linear(h_in, h_out))
+                self.layers.append(self.activation)
+            num_encoding = hidden[-1]
+        else:
+            num_encoding = input
+
+        # Create all the heads to predict the hyponetwork parameters
+        self.heads = nn.ModuleList()
+        for module in hypo_network:
+            if not isinstance(module, nn.Linear):
+                continue
+            f_out, f_in = module.weight.shape
+            self.heads.append(HyperHead(num_encoding, f_in, f_out))
+
+    def forward(self, x):
+        # Run it through the hidden layers
+        for layer in self.layers:
+            x = layer(x) 
+
+        # Run it through the heads
+        outputs = []
+        for head in self.heads:
+            outputs.append(head(x))
+
+        # unpack the outputs
+        weights = [x[0] for x in outputs]
+        biases = [x[1] for x in outputs]
+
+        return weights, biases
+
+class BatchSequential(nn.Sequential):
+    def forward(self, input, weights, biases):
+        bl_count = 0
+        for module in self:
+            if isinstance(module, BatchLinear):
+                input = module(input, weights[bl_count], biases[bl_count])
+                bl_count += 1
+            else:
+                input = module(input)
+        return input
+
+def create_siren(layers):
+    modules = []
+
+    modules.append(BatchLinear(layers[0], layers[1]))
+    modules.append(pt.modules.Activation("sine", modules[-1], first=True))
+
+    # hidden layers
+    for f_in, f_out in zip(layers[1:-2], layers[2:-1]):
+        modules.append(BatchLinear(f_in, f_out))
+        modules.append(pt.modules.Activation("sine", modules[-1]))
+
+    modules.append(BatchLinear(layers[-2], layers[-1]))
+
+    return BatchSequential(*modules)
 
 
 class FastSIREN(pt.LightningModule):
@@ -374,77 +432,23 @@ class FastSIREN(pt.LightningModule):
 
         embedding_size = encoder.get("size", 256)
         self.encoder_net = resnet50(pretrained=True, num_classes=embedding_size)
+        self.encoder_activation = pt.modules.Activation(hyper.get("activation", "relu"))
 
         siren_nodes = [2, *siren.get("layers", [128] * 5), 3]
+        self.siren_net = create_siren(siren_nodes)
 
-        # Compute how to partition up the hyper-network output
-        n_params = 0
-        self.siren_weight_indices = []
-        self.siren_weight_shapes = []
-        self.siren_bias_indices = []
-        for f_in, f_out in zip(siren_nodes[:-1], siren_nodes[1:]):
-            self.siren_bias_indices.append((n_params, n_params + f_out))
-            n_params += f_out
-            self.siren_weight_indices.append((n_params, n_params + f_in * f_out))
-            n_params += f_in * f_out
-            # torch.linear stuff uses f_out on the first dim
-            self.siren_weight_shapes.append((f_out, f_in))
+        hyper_hidden = hyper.get("layers", [256])
+        self.hyper_net = HyperNetwork(embedding_size, hyper_hidden, self.siren_net)
 
-        assert len(self.siren_weight_indices) == len(self.siren_weight_shapes) == len(self.siren_bias_indices)
-
-        # This doesn't actually have any internal parameters
-        self.siren_net = ParameterizedFCs(activation=siren.get("activation", "sine"))
-
-        hyper_hidden_layers = hyper.get(
-            "layers",
-            [
-                256,
-            ],
-        )
-        hyper_layers = [embedding_size, *hyper_hidden_layers, n_params]
-        self.hyper_net = FC(
-            layers=hyper_layers, activation=hyper.get("activation", "relu")
-        )
-        with torch.no_grad():
-            # Special initialization of hyper network described in section 9.1
-            last_layer = self.hyper_net.model[-1]
-            last_layer.weight.mul_(0.01)
-            biases = [last_layer.bias[idx_pair[0] : idx_pair[1]] for idx_pair in self.siren_bias_indices]
-
-            for bias, dims in zip(biases, self.siren_weight_shapes):
-                fan_in = dims[1]
-                bias.uniform_(-1/fan_in, 1/fan_in)
-
-        self.encoder_loss_fn = pt.losses.get_functional_loss(
-            encoder.get("loss", "mse_loss")
-        )
         self.siren_loss_fn = pt.losses.get_functional_loss(
             siren.get("loss", "mse_loss")
         )
-        self.hyper_loss_fn = pt.losses.get_functional_loss(
-            hyper.get("loss", "mse_loss")
-        )
-
-    def _reshape_siren_parameters(self, param):
-        batch_size = param.shape[0]
-        weights = [
-                param[:, idx_pair[0] : idx_pair[1]].reshape(batch_size, *shape)
-            for idx_pair, shape in zip(
-                self.siren_weight_indices, self.siren_weight_shapes
-            )
-        ]
-        biases = [
-                param[:, idx_pair[0] : idx_pair[1]] for idx_pair in self.siren_bias_indices
-        ]
-
-        return weights, biases
 
     def forward(self, coords, imgs):
         embedding = self.encoder_net(imgs)  # (B, embedded_feat)
-        siren_parameters = self.hyper_net(embedding)  # (B, long_flattened_params)
-        weights, biases = self._reshape_siren_parameters(siren_parameters)
-        pred = self.siren_net(coords, weights, biases)
-        return embedding, siren_parameters, pred
+        siren_weights, siren_biases = self.hyper_net(self.encoder_activation(embedding))  # (B, long_flattened_params)
+        pred = self.siren_net(coords, siren_weights, siren_biases)
+        return embedding, siren_weights, siren_biases, pred
 
     def _log_common(self, split, logits, target, loss):
         self.log(f"{split}_loss", loss, prog_bar=True)
@@ -458,22 +462,23 @@ class FastSIREN(pt.LightningModule):
 
     def training_step(self, batch, batch_nb):
         coords, rgb_vals, imgs = batch
+        batch_size = coords.shape[0]
 
-        embedding, siren_parameters, pred = self(coords, imgs)
+        embedding, siren_weights, siren_biases, pred = self(coords, imgs)
         self._log_loss("train", pred, rgb_vals)
 
-        loss = self.siren_loss_fn(pred, rgb_vals)
+        siren_loss = self.siren_loss_fn(pred, rgb_vals)
 
         # Regularization encourages a gaussian prior on embedding from context encoder
-        loss = loss + self.encoder_cfg["loss_weight"] * self.encoder_loss_fn(
-            embedding, torch.zeros(1, device=embedding.device)
-        )
+        embedding_reg = self.encoder_cfg["loss_weight"] * (embedding * embedding).mean()
 
-        # Regularization encourages a lower frequency representation of the iamge
+        # Regularization encourages a lower frequency representation of the image
         # Not sure i believe that, but its what the paper says.
-        loss = loss + self.hyper_cfg["loss_weight"] * self.hyper_loss_fn(
-            siren_parameters, torch.zeros(1, device=siren_parameters.device)
-        )
+        n_params = sum([w.shape[-1] * w.shape[-2] for w in siren_weights])
+        cum_mag = sum([torch.sum(w * w, dim=(-1, -2)) for w in siren_weights])
+        hyper_reg = self.hyper_cfg["loss_weight"] * (cum_mag / n_params).mean()
+
+        loss = siren_loss + embedding_reg + hyper_reg
 
         self._log_common("train", pred, rgb_vals, loss)
 
@@ -482,8 +487,9 @@ class FastSIREN(pt.LightningModule):
     def validation_step(self, batch, batch_nb):
         coords, rgb_vals, imgs = batch
 
-        embedding, siren_parameters, pred = self(coords, imgs)
+        embedding, siren_weights, siren_biases, pred = self(coords, imgs)
         loss = self._log_loss("val", pred, rgb_vals)
+        self.log("val_loss", loss)
         return loss
 
     def train_dataloader(self):

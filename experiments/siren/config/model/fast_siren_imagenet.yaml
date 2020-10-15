@@ -2,14 +2,11 @@
 name: FastSIREN
 
 encoder:
-    # Really L2 reg
-    loss: "mse_loss"
     loss_weight: 0.1
 
 hyper:
-    # Really L2 reg
-    loss: "mse_loss"
     layers: [256, 256]
+    activation: "relu"
     loss_weight: 100
 
 siren:
@@ -18,3 +15,5 @@ siren:
     loss: "mse_loss"
 
 optimizer: "adamw"
+optimizer_kwargs:
+    eps: 0.1
