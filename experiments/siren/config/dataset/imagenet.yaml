@@ -1,6 +1,6 @@
 # @package _group_
 path: data/cat.jpg
-batch_size: 4
+batch_size: 40
 shape: [224, 224]  # (H, W)
 num_sample: 4096
 pin_memory: True
