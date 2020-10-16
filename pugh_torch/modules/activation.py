@@ -16,7 +16,10 @@ One this is done, your activation function will me available as:
 
 import torch
 from torch import nn
+from packaging import version
 from . import init as wi
+
+_torch_version = version.parse(torch.__version__)
 
 _activation_lookup = {}
 
@@ -140,10 +143,12 @@ class Hardshrink(nn.Hardshrink, ActivationModule):
         wi.xavier(m)
 
 
-class Hardsigmoid(nn.Hardsigmoid, ActivationModule):
-    @torch.no_grad()
-    def init_layer(self, m):
-        wi.xavier(m)
+if _torch_version >= version.parse("1.5.0"):
+
+    class Hardsigmoid(nn.Hardsigmoid, ActivationModule):
+        @torch.no_grad()
+        def init_layer(self, m):
+            wi.xavier(m)
 
 
 class Hardtanh(nn.Hardtanh, ActivationModule):
@@ -152,10 +157,12 @@ class Hardtanh(nn.Hardtanh, ActivationModule):
         wi.xavier(m)
 
 
-class Hardswish(nn.Hardswish, ActivationModule):
-    @torch.no_grad()
-    def init_layer(self, m):
-        wi.he(m, nonlinearity="relu")
+if _torch_version >= version.parse("1.6.0"):
+
+    class Hardswish(nn.Hardswish, ActivationModule):
+        @torch.no_grad()
+        def init_layer(self, m):
+            wi.he(m, nonlinearity="relu")
 
 
 class LeakyReLU(nn.LeakyReLU, ActivationModule):
