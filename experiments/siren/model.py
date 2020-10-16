@@ -242,11 +242,15 @@ class HyperSIRENPTL(pt.LightningModule):
             siren.get("loss", "mse_loss")
         )
 
-    def forward(self, coords, imgs):
+    def forward(self, imgs, coords=None):
         embedding = self.encoder_net(imgs)  # (B, embedded_feat)
         siren_weights, siren_biases = self.hyper_net(
             self.encoder_activation(embedding)
         )  # (B, long_flattened_params)
+
+        if coords is None:
+            return embedding, siren_weights, siren_biases
+
         pred = self.siren_net(coords, siren_weights, siren_biases)
         return embedding, siren_weights, siren_biases, pred
 
@@ -264,7 +268,7 @@ class HyperSIRENPTL(pt.LightningModule):
         coords, rgb_vals, imgs = batch
         batch_size = coords.shape[0]
 
-        embedding, siren_weights, siren_biases, pred = self(coords, imgs)
+        embedding, siren_weights, siren_biases, pred = self(imgs, coords)
         self._log_loss("train", pred, rgb_vals)
 
         siren_loss = self.siren_loss_fn(pred, rgb_vals)
@@ -287,7 +291,7 @@ class HyperSIRENPTL(pt.LightningModule):
     def validation_step(self, batch, batch_nb):
         coords, rgb_vals, imgs = batch
 
-        embedding, siren_weights, siren_biases, pred = self(coords, imgs)
+        embedding, siren_weights, siren_biases, pred = self(imgs, coords)
         loss = self._log_loss("val", pred, rgb_vals)
         self.log("val_loss", loss)
         return loss
@@ -381,7 +385,7 @@ class SIRENCoordToImg(pt.LightningModule):
 
         if hyper_ckpt:
             # TODO initialize network using hypernetwork here if available
-            hyper = HyperSIRENPTL.load_from_checkpoint(hyper_ckpt)
+            hyper = HyperSIRENPTL.load_from_checkpoint(str(this_file_dir / hyper_ckpt))
 
             transform = A.Compose(
                 [
@@ -393,17 +397,19 @@ class SIRENCoordToImg(pt.LightningModule):
                 ]
             )
 
-            img = self.transform(image=self.img)["image"]
+            img = transform(image=self.img)["image"]
 
             with torch.no_grad():
-                _, siren_weights, siren_biases, _ = hyper(img)
-                import ipdb as pdb
-
-                pdb.set_trace()
-                for w, b in zip(siren_weights, siren_biases):
-                    pass
-
-            raise NotImplementedError
+                _, siren_weights, siren_biases = hyper(img[None])
+                bl_count = 0
+                for module in self.model:
+                    if isinstance(module, BatchLinear):
+                        w = siren_weights[bl_count][0]
+                        b = siren_biases[bl_count][0]
+                        bl_count += 1
+                        module.weight.copy_(w)
+                        module.bias.copy_(b)
+                assert bl_count == len(siren_weights)
 
     def forward(self, x):
         """
