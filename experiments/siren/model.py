@@ -176,8 +176,13 @@ class SIREN(nn.Sequential):
 
         super().__init__(*modules)
 
-    def forward(self, input, weights, biases):
+    def forward(self, input, weights=None, biases=None):
         bl_count = 0
+
+        if weights is None or biases is None:
+            assert weights is None and biases is None
+            return super().forward(input)
+
         for module in self:
             if isinstance(module, BatchLinear):
                 input = module(input, weights[bl_count], biases[bl_count])
@@ -376,7 +381,28 @@ class SIRENCoordToImg(pt.LightningModule):
 
         if hyper_ckpt:
             # TODO initialize network using hypernetwork here if available
-            hyper = HyperSIRENPTL  # from checkpoint
+            hyper = HyperSIRENPTL.load_from_checkpoint(hyper_ckpt)
+
+            transform = A.Compose(
+                [
+                    A.Normalize(
+                        mean=[0.485, 0.456, 0.406],  # this is RGB order.
+                        std=[0.229, 0.224, 0.225],
+                    ),
+                    ToTensorV2(),
+                ]
+            )
+
+            img = self.transform(image=self.img)["image"]
+
+            with torch.no_grad():
+                _, siren_weights, siren_biases, _ = hyper(img)
+                import ipdb as pdb
+
+                pdb.set_trace()
+                for w, b in zip(siren_weights, siren_biases):
+                    pass
+
             raise NotImplementedError
 
     def forward(self, x):
@@ -398,19 +424,29 @@ class SIRENCoordToImg(pt.LightningModule):
     # PyTorch Lightning Stuff #
     ###########################
 
+    @property
+    def img(self):
+        try:
+            return self._img
+        except AttributeError:
+            # log the ground truth image to tensorboard for comparison
+            img_path = this_file_dir / self.cfg.dataset.path
+            self._img = cv2.imread(str(img_path))[..., ::-1]
+            if self.cfg.dataset.shape:
+                shape = self.cfg.dataset.shape
+                self._img = cv2.resize(
+                    self._img, (shape[1], shape[0]), interpolation=cv2.INTER_AREA
+                )
+
+        return self._img
+
     def on_train_start(
         self,
     ):
         # log the ground truth image to tensorboard for comparison
-        img_path = this_file_dir / self.cfg.dataset.path
-        img = cv2.imread(str(img_path))[..., ::-1]
-        if self.cfg.dataset.shape:
-            shape = self.cfg.dataset.shape
-            img = cv2.resize(img, (shape[1], shape[0]), interpolation=cv2.INTER_AREA)
-
         self.logger.experiment.add_image(
             f"ground_truth",
-            img,
+            self.img,
             dataformats="HWC",
         )
 
