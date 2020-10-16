@@ -1,8 +1,27 @@
 import torch
 import torch.nn.functional as F
 from pugh_torch.losses import hetero_cross_entropy
+from pugh_torch.losses.hetero_cross_entropy import _format_weight
 import pytest
 import numpy as np
+
+
+def test_format_weight_numpy():
+    weight = np.ones((3, 3))
+    actual = _format_weight(weight, None, "cpu")
+
+
+def test_format_weight_tensor():
+    pass
+
+
+def test_format_weight_scalar():
+    pass
+
+
+def test_format_weight_error():
+    with pytest.raises(ValueError):
+        _format_weight("foo", (1, 2), "cpu")
 
 
 @pytest.fixture
@@ -269,3 +288,7 @@ def test_hetero_cross_entropy_smoothing_complete_alpha_near_zero(pred):
     # for the pixel that's marked as unlabeled.
     assert updated_pred_softmax[0, 0, 0, 0] < pred_softmax[0, 0, 0, 0]
     assert updated_pred_softmax[0, 1, 0, 0] < pred_softmax[0, 1, 0, 0]
+
+
+def test_hetero_cross_entropy_weight_tensor(pred):
+    pass
