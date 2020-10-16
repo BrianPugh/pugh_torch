@@ -5,6 +5,7 @@ import torch.nn.functional as F
 
 import pugh_torch as pt
 
+
 def test_batch_linear():
     # TODO
     feat_in = 2

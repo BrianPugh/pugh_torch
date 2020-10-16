@@ -68,4 +68,3 @@ def test_variables_change_fast_siren(rand_inputs, rand_targets):
         batch=batch,
         device="cuda:0",
     )
-

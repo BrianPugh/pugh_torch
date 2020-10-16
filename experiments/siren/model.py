@@ -55,36 +55,34 @@ def unnormalize_pos(x, shape):
 
 
 class HyperHead(nn.Module):
-    """ For the multi-heads in a HyperNetwork
-    """
+    """For the multi-heads in a HyperNetwork"""
+
     def __init__(self, f_in, hypo_in, hypo_out):
         super().__init__()
 
         self.hypo_in = hypo_in
         self.hypo_out = hypo_out
 
-        self.weight_linear = nn.Linear(f_in, hypo_in*hypo_out)
+        self.weight_linear = nn.Linear(f_in, hypo_in * hypo_out)
         self.bias_linear = nn.Linear(f_in, hypo_out)
 
         self._hyper_weight_init(self.weight_linear)
         self._hyper_bias_init(self.bias_linear)
 
-
     def _hyper_weight_init(self, m):
-        nn.init.kaiming_normal_(m.weight, a=0.0, nonlinearity='relu', mode='fan_in')
-        m.weight.data = m.weight.data / 1.e2
+        nn.init.kaiming_normal_(m.weight, a=0.0, nonlinearity="relu", mode="fan_in")
+        m.weight.data = m.weight.data / 1.0e2
 
         with torch.no_grad():
-            m.bias.uniform_(-1/self.hypo_in, 1/self.hypo_in)
-
+            m.bias.uniform_(-1 / self.hypo_in, 1 / self.hypo_in)
 
     def _hyper_bias_init(self, m):
-        nn.init.kaiming_normal_(m.weight, a=0.0, nonlinearity='relu', mode='fan_in')
-        m.weight.data = m.weight.data / 1.e2
+        nn.init.kaiming_normal_(m.weight, a=0.0, nonlinearity="relu", mode="fan_in")
+        m.weight.data = m.weight.data / 1.0e2
 
         fan_in, _ = nn.init._calculate_fan_in_and_fan_out(m.weight)
         with torch.no_grad():
-            m.bias.uniform_(-1/fan_in, 1/fan_in)
+            m.bias.uniform_(-1 / fan_in, 1 / fan_in)
 
     def forward(self, x):
         batch = x.shape[0]
@@ -93,8 +91,9 @@ class HyperHead(nn.Module):
         weight = weight.reshape(batch, self.hypo_out, self.hypo_in)
 
         bias = self.bias_linear(x)
-        
+
         return weight, bias
+
 
 class HyperNetwork(nn.Module):
     def __init__(
@@ -139,7 +138,7 @@ class HyperNetwork(nn.Module):
     def forward(self, x):
         # Run it through the hidden layers
         for layer in self.layers:
-            x = layer(x) 
+            x = layer(x)
 
         # Run it through the heads
         outputs = []
@@ -152,6 +151,7 @@ class HyperNetwork(nn.Module):
 
         return weights, biases
 
+
 class SIREN(nn.Sequential):
     def __init__(self, layers):
         """
@@ -159,7 +159,7 @@ class SIREN(nn.Sequential):
         ----------
         layers : list
            List of integers describing the numbers of node per layer where
-           layers[0] is the number of input features and 
+           layers[0] is the number of input features and
         """
 
         modules = []
@@ -188,7 +188,7 @@ class SIREN(nn.Sequential):
 
 
 class HyperSIRENPTL(pt.LightningModule):
-    """ Trainable network that contains 3 main components:
+    """Trainable network that contains 3 main components:
         1. Encoder - any CNN for feature extraction. Here it's ResNet50 and
            it produces a 256 element feature vector
         2. HyperNetwork - A FC network that predicts weights and biases
@@ -196,7 +196,7 @@ class HyperSIRENPTL(pt.LightningModule):
         3. SIREN - Technically in this usecase, this has no learnable parameters
            because it uses the output of the HyperNetwork.
 
-    End goal is to produce better SIREN initializations for learning 
+    End goal is to produce better SIREN initializations for learning
     coordinate->image mappings faster.
     """
 
@@ -239,7 +239,9 @@ class HyperSIRENPTL(pt.LightningModule):
 
     def forward(self, coords, imgs):
         embedding = self.encoder_net(imgs)  # (B, embedded_feat)
-        siren_weights, siren_biases = self.hyper_net(self.encoder_activation(embedding))  # (B, long_flattened_params)
+        siren_weights, siren_biases = self.hyper_net(
+            self.encoder_activation(embedding)
+        )  # (B, long_flattened_params)
         pred = self.siren_net(coords, siren_weights, siren_biases)
         return embedding, siren_weights, siren_biases, pred
 
@@ -342,6 +344,7 @@ class HyperSIRENPTL(pt.LightningModule):
             batch_size=self.cfg.dataset.batch_size,
         )
         return loader
+
 
 class SIRENCoordToImg(pt.LightningModule):
     """Model that learns coordinate->RGB image mapping"""
@@ -547,5 +550,3 @@ class SIRENCoordToImg(pt.LightningModule):
         )
 
         return loader
-
-
