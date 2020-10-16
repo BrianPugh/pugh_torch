@@ -7,7 +7,7 @@ from torchtest import assert_vars_change
 import numpy as np
 
 import model
-from model import SIREN, FastSIREN
+from model import SIREN, HyperSIRENPTL
 
 
 @pytest.fixture
@@ -55,7 +55,7 @@ def test_variables_change_fast_siren(rand_inputs, rand_targets):
 
     batch = (coords, imgs), rgb_vals
 
-    model = FastSIREN()
+    model = HyperSIRENPTL()
 
     # print("Our list of parameters", [np[0] for np in model.named_parameters()])
 

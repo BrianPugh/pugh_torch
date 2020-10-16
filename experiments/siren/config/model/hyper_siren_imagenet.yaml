@@ -1,5 +1,5 @@
 # @package _group_
-name: HyperSIREN
+name: HyperSIRENPTL
 
 encoder:
     loss_weight: 0.1

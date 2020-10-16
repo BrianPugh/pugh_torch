@@ -152,17 +152,6 @@ class HyperNetwork(nn.Module):
 
         return weights, biases
 
-class BatchSequential(nn.Sequential):
-    def forward(self, input, weights, biases):
-        bl_count = 0
-        for module in self:
-            if isinstance(module, BatchLinear):
-                input = module(input, weights[bl_count], biases[bl_count])
-                bl_count += 1
-            else:
-                input = module(input)
-        return input
-
 class SIREN(nn.Sequential):
     def __init__(self, layers):
         """
@@ -186,6 +175,17 @@ class SIREN(nn.Sequential):
         modules.append(BatchLinear(layers[-2], layers[-1]))
 
         super().__init__(*modules)
+
+    def forward(self, input, weights, biases):
+        bl_count = 0
+        for module in self:
+            if isinstance(module, BatchLinear):
+                input = module(input, weights[bl_count], biases[bl_count])
+                bl_count += 1
+            else:
+                input = module(input)
+        return input
+
 
 class HyperSIRENPTL(pt.LightningModule):
     """ Trainable network that contains 3 main components:
@@ -355,6 +355,7 @@ class SIRENCoordToImg(pt.LightningModule):
         loss="mse_loss",
         optimizer="adamw",
         optimizer_kwargs={},
+        hyper_ckpt=None,
     ):
         super().__init__()
         self.save_hyperparameters()
@@ -370,7 +371,10 @@ class SIRENCoordToImg(pt.LightningModule):
 
         self.loss_fn = pt.losses.get_functional_loss(loss)
 
-        # TODO initialize network using hypernetwork here if available
+        if hyper_ckpt:
+            # TODO initialize network using hypernetwork here if available
+            hyper = HyperSIRENPTL  # from checkpoint
+            raise NotImplementedError
 
     def forward(self, x):
         """
