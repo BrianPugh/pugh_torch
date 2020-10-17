@@ -9,7 +9,7 @@ def _format_weight(weight, shape, device):
     elif isinstance(weight, torch.Tensor):
         return weight.to(device)
     elif isinstance(weight, (int, float)):
-        return torch.full(shape, weight, device=device)
+        return torch.full(shape, weight, device=device, dtype=torch.float)
     else:
         raise ValueError(f"unknown weight type {type(weight)}")
 
