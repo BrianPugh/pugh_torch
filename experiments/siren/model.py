@@ -296,6 +296,32 @@ class HyperSIRENPTL(pt.LightningModule):
         self.log("val_loss", loss)
         return loss
 
+    def configure_optimizers(self):
+        optimizers = []
+        schedulers = []
+        optimizers.append(
+            pt.optimizers.get_optimizer(getattr(self, "optimizer", "adamw"))(
+                self.parameters(),
+                lr=self.learning_rate,
+                **getattr(self, "optimizer_kwargs", {}),
+            ),
+        )
+
+        schedulers.append(
+            {
+                "scheduler": torch.optim.lr_scheduler.ReduceLROnPlateau(
+                    optimizers[0], patience=2
+                ),
+                "monitor": "val_loss",
+            }
+        )
+
+        log.info(
+            f"Using default pugh_torch optimizers {optimizers} and schedulers {schedulers}"
+        )
+
+        return optimizers, schedulers
+
     def train_dataloader(self):
         transform = A.Compose(
             [

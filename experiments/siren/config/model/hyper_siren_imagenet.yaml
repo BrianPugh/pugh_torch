@@ -16,4 +16,4 @@ siren:
 
 optimizer: "adamw"
 optimizer_kwargs:
-    eps: 0.1
+    eps: 1e-8
