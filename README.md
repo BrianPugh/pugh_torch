@@ -6,7 +6,8 @@
 [![PyPi](https://img.shields.io/pypi/v/pugh_torch.svg)](https://pypi.org/project/pugh-torch/)
 [![Docker](https://img.shields.io/docker/pulls/brianpugh/pugh-torch.svg)](https://hub.docker.com/repository/docker/brianpugh/pugh-torch)
 
-Functions, losses, module blocks to share between experiments.
+Functions, losses, module blocks, and other pytorch code to facilitate
+quicker, easier, and more reproduceable deep learning experiments.
 
 ---
 
@@ -15,6 +16,17 @@ Functions, losses, module blocks to share between experiments.
 * hetero_cross_entropy for cross_entropy loss across heterogeneous datasets
 * Convenient dataset downloading/unpacking to `~/.pugh_torch/datasets/`.
     * You can override this via the ENV variable `ROOT_DATASET_PATH`.
+* Functions to convert string CLI/Hydra/yaml parameters into their respective
+  classes.
+      * Activation functions
+      * Optimizers
+      * Learning rate schedulers
+      * Models
+* Commonly used building blocks for convolutional neural networks.
+    * Activation-specific weight initializers
+* Helper MixIns like ``LoadStateDictMixin`` to provide more user/experiment-friendly
+  functions that upstream pytorch wont implement due to maintaining 
+  backwards compatability.
 
 ## Installation
 **Stable Release:** `pip install pugh_torch`<br>

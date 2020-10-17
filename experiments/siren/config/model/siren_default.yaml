@@ -1,6 +1,7 @@
 # @package _group_
-name: SIREN
-layers: [256, 256, 256, 256, 128]
-activation: "sine"
+name: SIRENCoordToImg
+layers: [256, 256, 256, 256, 256]
 loss: "mse_loss"
 optimizer: "adamw"
+optimizer_kwargs:
+    eps: 1e-8
