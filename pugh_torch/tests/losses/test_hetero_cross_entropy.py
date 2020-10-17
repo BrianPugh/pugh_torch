@@ -290,5 +290,59 @@ def test_hetero_cross_entropy_smoothing_complete_alpha_near_zero(pred):
     assert updated_pred_softmax[0, 1, 0, 0] < pred_softmax[0, 1, 0, 0]
 
 
-def test_hetero_cross_entropy_weight_tensor(pred):
-    pass
+def test_hetero_cross_entropy_weight_int(pred):
+    """Test both parts (ce_loss + super_loss) combined plus weight"""
+
+    target = torch.LongTensor(
+        [
+            [
+                [-1, 1, -2],
+                [-2, -2, 1],
+            ]
+        ]
+    )
+    available = torch.BoolTensor(
+        [
+            [True, True, False, False],
+        ]
+    )
+
+    actual_loss = hetero_cross_entropy(
+        pred, target, available, ignore_index=-2, super_index=-1, weight=2
+    )
+    actual_loss.backward()  # This should always work
+
+    actual_loss = actual_loss.detach().numpy()
+    assert np.isclose(actual_loss, 2 * 3.4782794)
+
+
+def test_hetero_cross_entropy_weight_tensor_no_class(pred):
+    """Test both parts (ce_loss + super_loss) combined plus weight"""
+
+    target = torch.LongTensor(
+        [
+            [
+                [-1, 1, -2],
+                [-2, -2, 1],
+            ]
+        ]
+    )
+    available = torch.BoolTensor(
+        [
+            [True, True, False, False],
+        ]
+    )
+    weight = torch.Tensor(
+        [
+            [1, 2, 3],
+            [4, 5, 6],
+        ]
+    ).reshape(1, 1, 2, 3)
+
+    actual_loss = hetero_cross_entropy(
+        pred, target, available, ignore_index=-2, super_index=-1, weight=weight
+    )
+    actual_loss.backward()  # This should always work
+
+    actual_loss = actual_loss.detach().numpy()
+    assert np.isclose(actual_loss, 14.342173)
