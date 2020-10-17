@@ -1,12 +1,13 @@
 import gdown
 from pathlib import Path
 
+
 class GDriveDownloadError(IOError):
-    """ Failed to download file from google drive
-    """
+    """Failed to download file from google drive"""
+
 
 def gdrive_download(url, path):
-    """ Download a file from google drive.
+    """Download a file from google drive.
 
     Parameters
     ----------
@@ -14,7 +15,7 @@ def gdrive_download(url, path):
         Public google drive link.
     path : str-like
         Path to where the file should be downloaded.
-        If a directory (determined if extensionless), it will be created if 
+        If a directory (determined if extensionless), it will be created if
         necessary and use the name from google drive.
 
     Returns
@@ -32,21 +33,22 @@ def gdrive_download(url, path):
         # Handles new google drive link format. Can be removed after:
         #    https://github.com/wkentaro/gdown/pull/76
         # is merged.
-        url = "https://drive.google.com/uc?id=" + url.split(
-            "https://drive.google.com/file/d/"
-        )[-1]
+        url = (
+            "https://drive.google.com/uc?id="
+            + url.split("https://drive.google.com/file/d/")[-1]
+        )
 
     # Remove the "view?usp=sharing" part if it exists
     suffix = "/view?usp=sharing"
     if url.endswith(suffix):
-        url = url[:-len(suffix)]
+        url = url[: -len(suffix)]
 
     # Handle local path parsing
     is_dir = not path.suffix
     gdown_path = str(path)
     if is_dir:
         path.mkdir(parents=True, exist_ok=True)
-        gdown_path += '/'
+        gdown_path += "/"
 
     # TODO maybe use cached_download
     local_path = gdown.download(url, gdown_path)
@@ -55,4 +57,3 @@ def gdrive_download(url, path):
         raise GDriveDownloadError
 
     return Path(local_path)
-
