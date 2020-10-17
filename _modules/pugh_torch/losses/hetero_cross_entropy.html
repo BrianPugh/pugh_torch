@@ -199,6 +199,18 @@
   <h1>Source code for pugh_torch.losses.hetero_cross_entropy</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<span class="k">def</span> <span class="nf">_format_weight</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">device</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">weight</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">weight</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;unknown weight type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="hetero_cross_entropy"><a class="viewcode-back" href="../../../pugh_torch.losses.html#pugh_torch.losses.hetero_cross_entropy.hetero_cross_entropy">[docs]</a><span class="k">def</span> <span class="nf">hetero_cross_entropy</span><span class="p">(</span>
@@ -209,6 +221,7 @@
     <span class="n">super_index</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
     <span class="n">ignore_index</span><span class="o">=-</span><span class="mi">100</span><span class="p">,</span>
     <span class="n">alpha</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">weight</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Cross Entropy Loss for Heterogenous Datasets.</span>
 
@@ -263,6 +276,10 @@
 <span class="sd">        If nonzero, enables label smoothing. This will divide up</span>
 <span class="sd">        the smoothing weight amongst the superclass labels such that the total</span>
 <span class="sd">        weight is equivalent to a single class not in the superclass.</span>
+<span class="sd">    weight : float or numpy.ndarray or torch.Tensor</span>
+<span class="sd">        (N, C, ...)</span>
+<span class="sd">        If C==1, will broadcast across all classes. Applied AFTER the ``log``</span>
+<span class="sd">        operation, but before the reduction.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -272,6 +289,9 @@
 
     <span class="c1"># Make sure all the batch sizes are the same</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">preds</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">targets</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">availables</span><span class="p">)</span>
+
+    <span class="n">weights</span> <span class="o">=</span> <span class="n">_format_weight</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span> <span class="n">preds</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">preds</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">del</span> <span class="n">weight</span>
 
     <span class="n">super_hots</span> <span class="o">=</span> <span class="p">(</span>
         <span class="o">~</span><span class="n">availables</span><span class="o">.</span><span class="n">bool</span><span class="p">()</span>
@@ -283,13 +303,18 @@
     <span class="n">super_loss</span> <span class="o">=</span> <span class="n">preds</span><span class="o">.</span><span class="n">new</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
 
     <span class="c1"># Iterate over the batch dimension because the shapes are going to get jagged.</span>
-    <span class="k">for</span> <span class="n">pred</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">super_hot</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">super_hots</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">super_hot</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">super_hots</span><span class="p">)):</span>
         <span class="c1"># pred - (C, H, W) float</span>
         <span class="c1"># target - (H, W) long</span>
         <span class="c1"># super_hot - (C,) bool</span>
         <span class="n">inbound_mask</span> <span class="o">=</span> <span class="n">target</span> <span class="o">!=</span> <span class="n">ignore_index</span>  <span class="c1"># (H, W)</span>
         <span class="n">super_mask</span> <span class="o">=</span> <span class="n">target</span> <span class="o">==</span> <span class="n">super_index</span>  <span class="c1"># (H, W)</span>
         <span class="n">ce_mask</span> <span class="o">=</span> <span class="n">inbound_mask</span> <span class="o">*</span> <span class="o">~</span><span class="n">super_mask</span>  <span class="c1"># (H, W)</span>
+
+        <span class="k">if</span> <span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">weight</span> <span class="o">=</span> <span class="n">weights</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">weight</span> <span class="o">=</span> <span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
 
         <span class="n">num_super_classes</span> <span class="o">=</span> <span class="n">super_hot</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
         <span class="n">num_non_super_classes</span> <span class="o">=</span> <span class="p">(</span><span class="o">~</span><span class="n">super_hot</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
@@ -298,6 +323,7 @@
         <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">super_mask</span><span class="p">)</span> <span class="ow">and</span> <span class="n">num_super_classes</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
 
             <span class="k">def</span> <span class="nf">compute_super_loss</span><span class="p">():</span>
+                <span class="n">super_weight</span> <span class="o">=</span> <span class="n">weight</span><span class="p">[:,</span> <span class="n">super_mask</span><span class="p">]</span>  <span class="c1"># (1 or C, n_pix)</span>
                 <span class="n">super_pred</span> <span class="o">=</span> <span class="n">pred</span><span class="p">[:,</span> <span class="n">super_mask</span><span class="p">]</span>  <span class="c1"># (C, n_pix)</span>
 
                 <span class="n">super_pred_exp</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">super_pred</span><span class="p">)</span>
@@ -305,21 +331,23 @@
                 <span class="n">super_numerator</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">super_pred_exp</span><span class="p">[</span><span class="n">super_hot</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
                 <span class="n">denominator</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">super_pred_exp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
 
-                <span class="n">super_nll</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">super_numerator</span> <span class="o">-</span> <span class="n">denominator</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+                <span class="n">super_nll</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">super_weight</span> <span class="o">*</span> <span class="p">(</span><span class="n">super_numerator</span> <span class="o">-</span> <span class="n">denominator</span><span class="p">))</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 
                 <span class="k">if</span> <span class="n">alpha</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="n">exemplar_super_loss</span> <span class="o">=</span> <span class="n">super_nll</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="c1"># Handles the case where a superclass label should really</span>
                     <span class="c1"># be not in the superclass</span>
-                    <span class="n">super_weight</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">alpha</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+                    <span class="n">super_smooth_weight</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">alpha</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
 
                     <span class="n">non_super_numerator</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span>
                         <span class="n">super_pred_exp</span><span class="p">[</span><span class="o">~</span><span class="n">super_hot</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
                     <span class="p">)</span>
-                    <span class="n">non_super_nll</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">non_super_numerator</span> <span class="o">-</span> <span class="n">denominator</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+                    <span class="n">non_super_nll</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span>
+                        <span class="n">super_weight</span> <span class="o">*</span> <span class="p">(</span><span class="n">non_super_numerator</span> <span class="o">-</span> <span class="n">denominator</span><span class="p">)</span>
+                    <span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 
-                    <span class="n">exemplar_super_loss</span> <span class="o">=</span> <span class="p">(</span><span class="n">super_weight</span> <span class="o">*</span> <span class="n">super_nll</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span>
+                    <span class="n">exemplar_super_loss</span> <span class="o">=</span> <span class="p">(</span><span class="n">super_smooth_weight</span> <span class="o">*</span> <span class="n">super_nll</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span>
                         <span class="p">(</span><span class="n">alpha</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">non_super_nll</span>
                     <span class="p">)</span>
                 <span class="k">return</span> <span class="n">exemplar_super_loss</span>
@@ -330,17 +358,22 @@
         <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">ce_mask</span><span class="p">):</span>
 
             <span class="k">def</span> <span class="nf">compute_ce_loss</span><span class="p">():</span>
+                <span class="n">ce_weight</span> <span class="o">=</span> <span class="n">weight</span><span class="p">[:,</span> <span class="n">ce_mask</span><span class="p">]</span>  <span class="c1"># (1 or C, n_pix)</span>
                 <span class="n">ce_pred</span> <span class="o">=</span> <span class="n">pred</span><span class="p">[:,</span> <span class="n">ce_mask</span><span class="p">]</span>  <span class="c1"># (C, n_valid)</span>
                 <span class="n">ce_target</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="n">ce_mask</span><span class="p">]</span>  <span class="c1"># (n_valid)</span>
+
                 <span class="k">if</span> <span class="n">alpha</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">num_super_classes</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="n">ce_pred</span> <span class="o">=</span> <span class="n">ce_pred</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># (n_valid, C)</span>
-                    <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">(</span><span class="n">ce_pred</span><span class="p">,</span> <span class="n">ce_target</span><span class="p">)</span>
+                    <span class="n">ce_log_softmax</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">ce_pred</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                    <span class="n">ce_nll_loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">nll_loss</span><span class="p">(</span>
+                        <span class="n">ce_log_softmax</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">ce_target</span><span class="p">,</span> <span class="n">reduction</span><span class="o">=</span><span class="s2">&quot;none&quot;</span>
+                    <span class="p">)</span>
+                    <span class="k">return</span> <span class="p">(</span><span class="n">ce_weight</span> <span class="o">*</span> <span class="n">ce_nll_loss</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
                 <span class="k">else</span><span class="p">:</span>
+                    <span class="n">ce_pred_exp</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">ce_pred</span><span class="p">)</span>  <span class="c1"># (C, n_valid)</span>
 
                     <span class="c1"># Handles the case where a nonsuperclass label should really</span>
                     <span class="c1"># be in the superclass</span>
                     <span class="n">uniform_weight</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">/</span> <span class="p">(</span><span class="n">num_non_super_classes</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-                    <span class="n">ce_pred_exp</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">ce_pred</span><span class="p">)</span>  <span class="c1"># (C, n_valid)</span>
 
                     <span class="c1"># This is going to be a lil numerically unstable</span>
                     <span class="n">super_numerator</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span>
@@ -348,8 +381,15 @@
                     <span class="p">)</span>  <span class="c1"># (n_valid)</span>
                     <span class="n">denominator</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">ce_pred_exp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>  <span class="c1"># (n_valid,)</span>
 
+                    <span class="k">if</span> <span class="n">ce_weight</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">ce_weight_super</span> <span class="o">=</span> <span class="n">ce_weight</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">ce_weight_super</span> <span class="o">=</span> <span class="n">ce_weight</span><span class="p">[</span><span class="n">super_hot</span><span class="p">]</span>
+
                     <span class="n">super_nll</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span>
-                        <span class="n">uniform_weight</span> <span class="o">*</span> <span class="p">(</span><span class="n">super_numerator</span> <span class="o">-</span> <span class="n">denominator</span><span class="p">)</span>
+                        <span class="n">uniform_weight</span>
+                        <span class="o">*</span> <span class="n">ce_weight_super</span>
+                        <span class="o">*</span> <span class="p">(</span><span class="n">super_numerator</span> <span class="o">-</span> <span class="n">denominator</span><span class="p">)</span>
                     <span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 
                     <span class="c1"># Construct the smoothed target label</span>
@@ -369,9 +409,17 @@
                     <span class="n">non_super_log_probs</span> <span class="o">=</span> <span class="p">(</span>
                         <span class="n">ce_pred</span><span class="p">[</span><span class="o">~</span><span class="n">super_hot</span><span class="p">]</span> <span class="o">-</span> <span class="n">denominator</span>
                     <span class="p">)</span>  <span class="c1"># (C_nonsuper, n_valid)</span>
+
+                    <span class="k">if</span> <span class="n">ce_weight</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">ce_weight_non_super</span> <span class="o">=</span> <span class="n">ce_weight</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">ce_weight_non_super</span> <span class="o">=</span> <span class="n">ce_weight</span><span class="p">[</span><span class="o">~</span><span class="n">super_hot</span><span class="p">]</span>
+
                     <span class="c1"># non_super_log_probs = F.log_softmax(ce_pred[~super_hot], dim=0)  # (C_nonsuper, n_valid)</span>
                     <span class="n">non_super_nll</span> <span class="o">=</span> <span class="p">(</span>
-                        <span class="o">-</span><span class="p">(</span><span class="n">smooth_target</span> <span class="o">*</span> <span class="n">non_super_log_probs</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+                        <span class="o">-</span><span class="p">(</span><span class="n">ce_weight_non_super</span> <span class="o">*</span> <span class="n">smooth_target</span> <span class="o">*</span> <span class="n">non_super_log_probs</span><span class="p">)</span>
+                        <span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                        <span class="o">.</span><span class="n">mean</span><span class="p">()</span>
                     <span class="p">)</span>  <span class="c1"># Average over all pixels</span>
                     <span class="k">return</span> <span class="n">non_super_nll</span> <span class="o">+</span> <span class="n">super_nll</span>
 

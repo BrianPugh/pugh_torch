@@ -218,7 +218,7 @@
 <span id="pugh-torch-losses-hetero-cross-entropy-module"></span><h2>pugh_torch.losses.hetero_cross_entropy module<a class="headerlink" href="#module-pugh_torch.losses.hetero_cross_entropy" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="pugh_torch.losses.hetero_cross_entropy.hetero_cross_entropy">
-<code class="sig-prename descclassname">pugh_torch.losses.hetero_cross_entropy.</code><code class="sig-name descname">hetero_cross_entropy</code><span class="sig-paren">(</span><em class="sig-param">preds</em>, <em class="sig-param">targets</em>, <em class="sig-param">availables</em>, <em class="sig-param">*</em>, <em class="sig-param">super_index=0</em>, <em class="sig-param">ignore_index=-100</em>, <em class="sig-param">alpha=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/losses/hetero_cross_entropy.html#hetero_cross_entropy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.losses.hetero_cross_entropy.hetero_cross_entropy" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pugh_torch.losses.hetero_cross_entropy.</code><code class="sig-name descname">hetero_cross_entropy</code><span class="sig-paren">(</span><em class="sig-param">preds</em>, <em class="sig-param">targets</em>, <em class="sig-param">availables</em>, <em class="sig-param">*</em>, <em class="sig-param">super_index=0</em>, <em class="sig-param">ignore_index=-100</em>, <em class="sig-param">alpha=0</em>, <em class="sig-param">weight=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/losses/hetero_cross_entropy.html#hetero_cross_entropy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.losses.hetero_cross_entropy.hetero_cross_entropy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cross Entropy Loss for Heterogenous Datasets.</p>
 <p>Basically a cross-entropy-loss for when you are training on multiple
 datasets where some of the datasets may have some of the classes labeled
@@ -268,6 +268,9 @@ May be negative.</p></li>
 <li><p><strong>alpha</strong> (<em>float</em>) – If nonzero, enables label smoothing. This will divide up
 the smoothing weight amongst the superclass labels such that the total
 weight is equivalent to a single class not in the superclass.</p></li>
+<li><p><strong>weight</strong> (<em>float or numpy.ndarray or torch.Tensor</em>) – (N, C, …)
+If C==1, will broadcast across all classes. Applied AFTER the <code class="docutils literal notranslate"><span class="pre">log</span></code>
+operation, but before the reduction.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
