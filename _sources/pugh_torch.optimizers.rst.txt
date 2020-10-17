@@ -1,6 +1,13 @@
 pugh\_torch.optimizers package
 ==============================
 
+Subpackages
+-----------
+
+.. toctree::
+
+   pugh_torch.optimizers.schedulers
+
 Submodules
 ----------
 

@@ -44,6 +44,14 @@ pugh\_torch.modules.load\_state\_dict\_mixin module
    :undoc-members:
    :show-inheritance:
 
+pugh\_torch.modules.meta module
+-------------------------------
+
+.. automodule:: pugh_torch.modules.meta
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 
 Module contents
 ---------------

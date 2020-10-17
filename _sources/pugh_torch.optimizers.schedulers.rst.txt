@@ -1,0 +1,10 @@
+pugh\_torch.optimizers.schedulers package
+=========================================
+
+Module contents
+---------------
+
+.. automodule:: pugh_torch.optimizers.schedulers
+   :members:
+   :undoc-members:
+   :show-inheritance:

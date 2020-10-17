@@ -857,6 +857,49 @@ This is strictly a subset of <code class="docutils literal notranslate"><span cl
 </dd></dl>
 
 </div>
+<div class="section" id="module-pugh_torch.modules.meta">
+<span id="pugh-torch-modules-meta-module"></span><h2>pugh_torch.modules.meta module<a class="headerlink" href="#module-pugh_torch.modules.meta" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pugh_torch.modules.meta.BatchLinear">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.meta.</code><code class="sig-name descname">BatchLinear</code><span class="sig-paren">(</span><em class="sig-param">in_features: int</em>, <em class="sig-param">out_features: int</em>, <em class="sig-param">bias: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/meta.html#BatchLinear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.meta.BatchLinear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.linear.Linear</span></code></p>
+<p>Linear layer that can take batched weights and bias at runtime.</p>
+<p>Technically a little wasteful because we might be allocating
+some parameters that aren’t used, but its usually a very small amount of
+memory.</p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+<dl class="method">
+<dt id="pugh_torch.modules.meta.BatchLinear.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">weight=None</em>, <em class="sig-param">bias=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/meta.html#BatchLinear.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.meta.BatchLinear.forward" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>torch.Tensor</em>) – (B, <a href="#id3"><span class="problematic" id="id4">*</span></a>, feat_in) Some input tensor</p></li>
+<li><p><strong>weight</strong> (<em>torch.Tensor</em>) – (B feat_out, feat_in)  If provided, doesn’t use internal weights</p></li>
+<li><p><strong>bias</strong> – (B, feat_out) If provided, doesn’t use internal bias</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.meta.BatchLinear.in_features">
+<code class="sig-name descname">in_features</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.meta.BatchLinear.in_features" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.meta.BatchLinear.out_features">
+<code class="sig-name descname">out_features</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.meta.BatchLinear.out_features" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.meta.BatchLinear.weight">
+<code class="sig-name descname">weight</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.meta.BatchLinear.weight" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-pugh_torch.modules">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pugh_torch.modules" title="Permalink to this headline">¶</a></h2>
 </div>

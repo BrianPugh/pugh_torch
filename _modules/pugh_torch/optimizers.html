@@ -196,18 +196,22 @@
             
   <h1>Source code for pugh_torch.optimizers</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">adabelief_pytorch</span> <span class="kn">import</span> <span class="n">AdaBelief</span>
+<span class="kn">from</span> <span class="nn">ranger_adabelief</span> <span class="kn">import</span> <span class="n">RangerAdaBelief</span>
 
 <span class="n">optimizer_lookup</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;adabelief&quot;</span><span class="p">:</span> <span class="n">AdaBelief</span><span class="p">,</span>
     <span class="s2">&quot;adadelta&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adadelta</span><span class="p">,</span>
     <span class="s2">&quot;adagrad&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adagrad</span><span class="p">,</span>
     <span class="s2">&quot;adam&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">,</span>
     <span class="s2">&quot;adamw&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">AdamW</span><span class="p">,</span>
-    <span class="s2">&quot;sparseadam&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SparseAdam</span><span class="p">,</span>
     <span class="s2">&quot;asgd&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">ASGD</span><span class="p">,</span>
     <span class="s2">&quot;lbfgs&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">LBFGS</span><span class="p">,</span>
+    <span class="s2">&quot;rangeradabelief&quot;</span><span class="p">:</span> <span class="n">RangerAdaBelief</span><span class="p">,</span>
     <span class="s2">&quot;rmsprop&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">RMSprop</span><span class="p">,</span>
     <span class="s2">&quot;rprop&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Rprop</span><span class="p">,</span>
     <span class="s2">&quot;sgd&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">,</span>
+    <span class="s2">&quot;sparseadam&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SparseAdam</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">Optimizer</span>
@@ -223,6 +227,8 @@
 
 
 <span class="n">get</span> <span class="o">=</span> <span class="n">get_optimizer</span>
+
+<span class="kn">from</span> <span class="nn">.schedulers</span> <span class="kn">import</span> <span class="n">get_scheduler</span>
 </pre></div>
 
            </div>

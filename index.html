@@ -214,18 +214,39 @@
 <a class="reference external image-reference" href="https://codecov.io/gh/BrianPugh/pugh_torch"><img alt="Code Coverage" src="https://codecov.io/gh/BrianPugh/pugh_torch/branch/master/graph/badge.svg" /></a>
 <a class="reference external image-reference" href="https://pypi.org/project/pugh-torch/"><img alt="PyPi" src="https://img.shields.io/pypi/v/pugh_torch.svg" /></a>
 <a class="reference external image-reference" href="https://hub.docker.com/repository/docker/brianpugh/pugh-torch"><img alt="Docker" src="https://img.shields.io/docker/pulls/brianpugh/pugh-torch.svg" /></a>
-<p>Functions, losses, module blocks to share between experiments.</p>
+<p>Functions, losses, module blocks, and other pytorch code to facilitate
+quicker, easier, and more reproduceable deep learning experiments.</p>
 <hr class="docutils" />
 <div class="section" id="package-features">
 <h2>Package Features<a class="headerlink" href="#package-features" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
+<ul>
 <li><p>Additional methods to TensorBoard summary writer for adding normalized images and semantic segmentation images.</p></li>
 <li><p>hetero_cross_entropy for cross_entropy loss across heterogeneous datasets</p></li>
 <li><p>Convenient dataset downloading/unpacking to <code class="docutils literal notranslate"><span class="pre">~/.pugh_torch/datasets/</span></code>.</p>
-<ul>
+<ul class="simple">
 <li><p>You can override this via the ENV variable <code class="docutils literal notranslate"><span class="pre">ROOT_DATASET_PATH</span></code>.</p></li>
 </ul>
 </li>
+<li><p>Functions to convert string CLI/Hydra/yaml parameters into their respective
+classes.
+.. code-block:: guess</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Activation functions</p></li>
+<li><p>Optimizers</p></li>
+<li><p>Learning rate schedulers</p></li>
+<li><p>Models</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Commonly used building blocks for convolutional neural networks.</p>
+<ul class="simple">
+<li><p>Activation-specific weight initializers</p></li>
+</ul>
+</li>
+<li><p>Helper MixIns like <code class="docutils literal notranslate"><span class="pre">LoadStateDictMixin</span></code> to provide more user/experiment-friendly
+functions that upstream pytorch wont implement due to maintaining
+backwards compatability.</p></li>
 </ul>
 </div>
 <div class="section" id="installation">
