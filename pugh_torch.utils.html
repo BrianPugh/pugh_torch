@@ -214,6 +214,38 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="module-pugh_torch.utils.io">
+<span id="pugh-torch-utils-io-module"></span><h2>pugh_torch.utils.io module<a class="headerlink" href="#module-pugh_torch.utils.io" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="pugh_torch.utils.io.GDriveDownloadError">
+<em class="property">exception </em><code class="sig-prename descclassname">pugh_torch.utils.io.</code><code class="sig-name descname">GDriveDownloadError</code><a class="reference internal" href="_modules/pugh_torch/utils/io.html#GDriveDownloadError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.utils.io.GDriveDownloadError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">OSError</span></code></p>
+<p>Failed to download file from google drive</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pugh_torch.utils.io.gdrive_download">
+<code class="sig-prename descclassname">pugh_torch.utils.io.</code><code class="sig-name descname">gdrive_download</code><span class="sig-paren">(</span><em class="sig-param">url</em>, <em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/utils/io.html#gdrive_download"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.utils.io.gdrive_download" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download a file from google drive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> (<em>str-like</em>) – Public google drive link.</p></li>
+<li><p><strong>path</strong> (<em>str-like</em>) – Path to where the file should be downloaded.
+If a directory (determined if extensionless), it will be created if
+necessary and use the name from google drive.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Path to the downloaded file.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pathlib.Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
 <div class="section" id="module-pugh_torch.utils.tensorboard">
 <span id="pugh-torch-utils-tensorboard-module"></span><h2>pugh_torch.utils.tensorboard module<a class="headerlink" href="#module-pugh_torch.utils.tensorboard" title="Permalink to this headline">¶</a></h2>
 <dl class="class">

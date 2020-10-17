@@ -4,6 +4,14 @@ pugh\_torch.utils package
 Submodules
 ----------
 
+pugh\_torch.utils.io module
+---------------------------
+
+.. automodule:: pugh_torch.utils.io
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pugh\_torch.utils.tensorboard module
 ------------------------------------
 
