@@ -77,6 +77,10 @@ def hetero_cross_entropy(
         If nonzero, enables label smoothing. This will divide up
         the smoothing weight amongst the superclass labels such that the total
         weight is equivalent to a single class not in the superclass.
+    weight : float or numpy.ndarray or torch.Tensor
+        (N, C, ...)
+        If C==1, will broadcast across all classes. Applied AFTER the ``log``
+        operation, but before the reduction.
 
     Returns
     -------
