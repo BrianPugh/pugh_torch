@@ -203,7 +203,7 @@
     <span class="sd">&quot;&quot;&quot;Failed to download file from google drive&quot;&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="gdrive_download"><a class="viewcode-back" href="../../../pugh_torch.utils.html#pugh_torch.utils.io.gdrive_download">[docs]</a><span class="k">def</span> <span class="nf">gdrive_download</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<div class="viewcode-block" id="gdrive_download"><a class="viewcode-back" href="../../../pugh_torch.utils.html#pugh_torch.utils.io.gdrive_download">[docs]</a><span class="k">def</span> <span class="nf">gdrive_download</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Download a file from google drive.</span>
 
 <span class="sd">    Parameters</span>
@@ -214,6 +214,8 @@
 <span class="sd">        Path to where the file should be downloaded.</span>
 <span class="sd">        If a directory (determined if extensionless), it will be created if</span>
 <span class="sd">        necessary and use the name from google drive.</span>
+<span class="sd">    progress : bool</span>
+<span class="sd">        Display download progress</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -247,8 +249,7 @@
         <span class="n">path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">gdown_path</span> <span class="o">+=</span> <span class="s2">&quot;/&quot;</span>
 
-    <span class="c1"># TODO maybe use cached_download</span>
-    <span class="n">local_path</span> <span class="o">=</span> <span class="n">gdown</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">gdown_path</span><span class="p">)</span>
+    <span class="n">local_path</span> <span class="o">=</span> <span class="n">gdown</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">gdown_path</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="ow">not</span> <span class="n">progress</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">local_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">GDriveDownloadError</span>

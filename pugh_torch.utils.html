@@ -225,7 +225,7 @@
 
 <dl class="function">
 <dt id="pugh_torch.utils.io.gdrive_download">
-<code class="sig-prename descclassname">pugh_torch.utils.io.</code><code class="sig-name descname">gdrive_download</code><span class="sig-paren">(</span><em class="sig-param">url</em>, <em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/utils/io.html#gdrive_download"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.utils.io.gdrive_download" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pugh_torch.utils.io.</code><code class="sig-name descname">gdrive_download</code><span class="sig-paren">(</span><em class="sig-param">url</em>, <em class="sig-param">path</em>, <em class="sig-param">progress=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/utils/io.html#gdrive_download"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.utils.io.gdrive_download" title="Permalink to this definition">¶</a></dt>
 <dd><p>Download a file from google drive.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -234,6 +234,7 @@
 <li><p><strong>path</strong> (<em>str-like</em>) – Path to where the file should be downloaded.
 If a directory (determined if extensionless), it will be created if
 necessary and use the name from google drive.</p></li>
+<li><p><strong>progress</strong> (<em>bool</em>) – Display download progress</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>

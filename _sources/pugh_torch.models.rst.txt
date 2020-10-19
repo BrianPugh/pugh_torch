@@ -4,6 +4,14 @@ pugh\_torch.models package
 Submodules
 ----------
 
+pugh\_torch.models.io module
+----------------------------
+
+.. automodule:: pugh_torch.models.io
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pugh\_torch.models.resnet module
 --------------------------------
 

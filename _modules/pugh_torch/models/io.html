@@ -1,0 +1,321 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pugh_torch.models.io &mdash; Pugh Torch 0.4.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> Pugh Torch
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.4.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Package modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../pugh_torch.html">pugh_torch package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../pugh_torch.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../pugh_torch.augmentations.html">pugh_torch.augmentations package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pugh_torch.callbacks.html">pugh_torch.callbacks package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pugh_torch.datasets.html">pugh_torch.datasets package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pugh_torch.losses.html">pugh_torch.losses package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pugh_torch.mappings.html">pugh_torch.mappings package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pugh_torch.metrics.html">pugh_torch.metrics package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pugh_torch.models.html">pugh_torch.models package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pugh_torch.modules.html">pugh_torch.modules package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pugh_torch.optimizers.html">pugh_torch.optimizers package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pugh_torch.transforms.html">pugh_torch.transforms package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pugh_torch.utils.html">pugh_torch.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../pugh_torch.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../pugh_torch.html#module-pugh_torch.exceptions">pugh_torch.exceptions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../pugh_torch.html#module-pugh_torch.helpers">pugh_torch.helpers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../pugh_torch.html#module-pugh_torch">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#deploying">Deploying</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#development">Development</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#the-four-commands-you-need-to-know">The Four Commands You Need To Know</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#additional-optional-setup-steps">Additional Optional Setup Steps:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#suggested-git-branch-strategy">Suggested Git Branch Strategy</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../math.html">Math notation example</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Pugh Torch</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../pugh_torch.html">pugh_torch</a> &raquo;</li>
+        
+      <li>pugh_torch.models.io</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pugh_torch.models.io</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">ROOT_MODELS_PATH</span>
+<span class="kn">from</span> <span class="nn">..utils.io</span> <span class="kn">import</span> <span class="n">gdrive_download</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="load_state_dict_from_url"><a class="viewcode-back" href="../../../pugh_torch.models.html#pugh_torch.models.io.load_state_dict_from_url">[docs]</a><span class="k">def</span> <span class="nf">load_state_dict_from_url</span><span class="p">(</span>
+    <span class="n">url</span><span class="p">,</span> <span class="n">local</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    url : str</span>
+<span class="sd">    local : str-like</span>
+<span class="sd">        Local path of where to save or check for cached file.</span>
+<span class="sd">        If relative, is relative to the torch.hub directory.</span>
+<span class="sd">    force : bool</span>
+<span class="sd">        Force the redownload, even if the local file exists.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">url</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">local</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">local</span><span class="p">)</span>
+
+    <span class="n">gdrive_prefix</span> <span class="o">=</span> <span class="s2">&quot;https://drive.google.com&quot;</span>
+    <span class="k">if</span> <span class="n">url</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">gdrive_prefix</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">local</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Must specify path for gdrive files.&quot;</span>
+
+        <span class="n">local</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">hub</span><span class="o">.</span><span class="n">get_dir</span><span class="p">())</span> <span class="o">/</span> <span class="n">local</span>
+        <span class="c1"># Custom solution</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">local</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">or</span> <span class="n">force</span><span class="p">:</span>
+            <span class="n">downloaded_path</span> <span class="o">=</span> <span class="n">gdrive_download</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">local</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="n">downloaded_path</span> <span class="o">==</span> <span class="n">local</span>
+        <span class="n">state_dict</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="n">map_location</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;drive.google.com&quot;</span> <span class="ow">in</span> <span class="n">url</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;URL </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s1"> contaings &quot;drive.google.com&quot;, suggesting a google drive link. Google drive links MUST start with &quot;</span><span class="si">{</span><span class="n">gdrive_prefix</span><span class="si">}</span><span class="s1">&quot;&#39;</span>
+            <span class="p">)</span>
+        <span class="c1"># Let torch.hub handle everything</span>
+        <span class="k">if</span> <span class="n">local</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">model_dir</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">file_name</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">local</span><span class="o">.</span><span class="n">suffix</span><span class="p">:</span>  <span class="c1"># Has extension</span>
+                <span class="n">model_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">hub</span><span class="o">.</span><span class="n">get_dir</span><span class="p">())</span> <span class="o">/</span> <span class="n">local</span><span class="o">.</span><span class="n">parent</span>
+                <span class="n">file_name</span> <span class="o">=</span> <span class="n">local</span><span class="o">.</span><span class="n">name</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Assume it was meant to be a directory</span>
+                <span class="n">model_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">hub</span><span class="o">.</span><span class="n">get_dir</span><span class="p">())</span> <span class="o">/</span> <span class="n">local</span>
+                <span class="n">model_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">file_name</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># use whatever name torch.hub gives us</span>
+
+        <span class="k">if</span> <span class="n">force</span> <span class="ow">and</span> <span class="n">file_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Delete the local file if it exists to force redownload.</span>
+            <span class="n">local_file</span> <span class="o">=</span> <span class="n">model_dir</span> <span class="o">/</span> <span class="n">file_name</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">local_file</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+        <span class="c1"># TODO: force only works if an explicit local file path is provided.</span>
+        <span class="n">state_dict</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">hub</span><span class="o">.</span><span class="n">load_state_dict_from_url</span><span class="p">(</span>
+            <span class="n">url</span><span class="p">,</span>
+            <span class="n">model_dir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">model_dir</span><span class="p">),</span>
+            <span class="n">map_location</span><span class="o">=</span><span class="n">map_location</span><span class="p">,</span>
+            <span class="n">progress</span><span class="o">=</span><span class="n">progress</span><span class="p">,</span>
+            <span class="n">check_hash</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">file_name</span><span class="o">=</span><span class="n">file_name</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">state_dict</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Brian Pugh
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
