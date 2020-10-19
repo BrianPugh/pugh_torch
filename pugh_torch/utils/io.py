@@ -6,7 +6,7 @@ class GDriveDownloadError(IOError):
     """Failed to download file from google drive"""
 
 
-def gdrive_download(url, path):
+def gdrive_download(url, path, progress=True):
     """Download a file from google drive.
 
     Parameters
@@ -17,6 +17,8 @@ def gdrive_download(url, path):
         Path to where the file should be downloaded.
         If a directory (determined if extensionless), it will be created if
         necessary and use the name from google drive.
+    progress : bool
+        Display download progress
 
     Returns
     -------
@@ -50,8 +52,7 @@ def gdrive_download(url, path):
         path.mkdir(parents=True, exist_ok=True)
         gdown_path += "/"
 
-    # TODO maybe use cached_download
-    local_path = gdown.download(url, gdown_path)
+    local_path = gdown.download(url, gdown_path, quiet=not progress)
 
     if local_path is None:
         raise GDriveDownloadError
