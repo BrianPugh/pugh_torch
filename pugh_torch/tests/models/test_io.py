@@ -100,3 +100,19 @@ def test_load_state_dict_from_gdrive_url_cached_force(
     )
 
     assert_state_dict_equal(expected_state_dict, actual_state_dict)
+
+
+def test_hub_url(mocker, tmp_path):
+    mock = mocker.patch("pugh_torch.models.io.torch.hub.load_state_dict_from_url")
+    mock.return_value = "foobar"
+    state_dict = pt.models.io.load_state_dict_from_url("www.foobar.com", tmp_path)
+
+    assert state_dict == "foobar"
+    mock.asser_called_once_with(
+        "www.foobar.com",
+        check_hash=False,
+        file_name=None,
+        map_location=None,
+        model_dir=None,
+        progress=True,
+    )
