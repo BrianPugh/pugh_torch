@@ -73,7 +73,30 @@ def test_load_state_dict_from_gdrive_url_cached(
     expected_state_dict = model.state_dict()
 
     actual_state_dict = pt.models.io.load_state_dict_from_url(url, model_path)
-    actual_state_dict = pt.models.io.load_state_dict_from_url(url, model_path)
-
     mock_gdrive_download.assert_called_once_with(url, model_path)
+    actual_state_dict = pt.models.io.load_state_dict_from_url(url, model_path)
+    mock_gdrive_download.assert_called_once_with(url, model_path)
+
+    assert_state_dict_equal(expected_state_dict, actual_state_dict)
+
+
+def test_load_state_dict_from_gdrive_url_cached_force(
+    mocker, model, model_path, mock_gdrive_download
+):
+    """Multiple calls should only result in one download."""
+
+    url = "https://drive.google.com/fake_url"
+    expected_state_dict = model.state_dict()
+
+    actual_state_dict = pt.models.io.load_state_dict_from_url(url, model_path)
+    actual_state_dict = pt.models.io.load_state_dict_from_url(
+        url, model_path, force=True
+    )
+    mock_gdrive_download.assert_has_calls(
+        [
+            mocker.call(url, model_path),
+            mocker.call(url, model_path),
+        ]
+    )
+
     assert_state_dict_equal(expected_state_dict, actual_state_dict)
