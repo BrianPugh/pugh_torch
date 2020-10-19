@@ -22,6 +22,7 @@ requirements = [
     "gdown>=3.10.1",
     "numpy>=1.17.1",
     "opencv-python>=4.2.0",
+    "packaging>=20.2.4",
     "ranger-adabelief>=0.0.9",
     "scikit-image==0.17.2",
     "tensorboard>=2.2.1",
