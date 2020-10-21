@@ -410,8 +410,10 @@ class SIRENCoordToImg(pt.LightningModule):
         self.loss_fn = pt.losses.get_functional_loss(loss)
 
         if hyper_ckpt:
+            ckpt_path = str(this_file_dir / hyper_ckpt)
+            log.info(f"Loading {ckpt_path}")
             # TODO initialize network using hypernetwork here if available
-            hyper = HyperSIRENPTL.load_from_checkpoint(str(this_file_dir / hyper_ckpt))
+            hyper = HyperSIRENPTL.load_from_checkpoint(ckpt_path)
 
             transform = A.Compose(
                 [
