@@ -23,7 +23,6 @@ def load_state_dict_from_url(
     """
 
     url = str(url)
-    local = Path(local)
 
     gdrive_prefix = "https://drive.google.com"
     if url.startswith(gdrive_prefix):
@@ -45,6 +44,7 @@ def load_state_dict_from_url(
             model_dir = None
             file_name = None
         else:
+            local = Path(local)
             if local.suffix:  # Has extension
                 model_dir = Path(torch.hub.get_dir()) / local.parent
                 file_name = local.name
@@ -65,7 +65,7 @@ def load_state_dict_from_url(
         # TODO: force only works if an explicit local file path is provided.
         state_dict = torch.hub.load_state_dict_from_url(
             url,
-            model_dir=str(model_dir),
+            model_dir=None if model_dir is None else str(model_dir),
             map_location=map_location,
             progress=progress,
             check_hash=False,
