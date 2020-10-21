@@ -6,6 +6,74 @@ import pugh_torch as pt
 from math import sqrt, ceil, floor
 
 
+def unnormalize_coords(x, shape):
+    """
+    Parameters
+    ----------
+    x : numpy.ndarray
+        (N, 2) Array representing (x,y) coordinates in range [-1, 1]
+    shape : tuple of length 2
+        (H, W) of the image
+    """
+    if isinstance(x, np.ndarray):
+        x = x.copy()
+        x += 1
+        x /= 2
+        x[..., 0] *= shape[1] - 1
+        x[..., 1] *= shape[0] - 1
+        x = np.round(x).astype(np.int)
+    else:
+        x = x.detach().clone()
+        x += 1
+        x /= 2
+        x[..., 0] *= shape[1] - 1
+        x[..., 1] *= shape[0] - 1
+        x = torch.round(x).long()
+    return x
+
+def rasterize_image(coords, rgb_vals, shape, normalized=True):
+    """
+    Parameters
+    ----------
+    coords : torch.Tensor
+        (B, num_sample, 2)
+    rgb_vals : torch.Tensor
+        (B, num_sample, 2) If normalized==True, then imagenet-normalized
+        black pixels will be used as the fill.
+    shape : tuple
+        Tuple of length 2, the (h,w) of the output canvas
+    normalized : bool
+        If rgb_vals is imagenet normalized, set this to ``True`` so that the
+        fill value is normalized-black instead of (0,0,0).
+
+    Returns
+    -------
+    torch.Tensor
+         (B, 3, H, W)
+    """
+    bsize, num_sample = coords.shape[:2]
+    device = rgb_vals.device
+
+    fill_value = 0
+    canvas = torch.zeros(bsize, 3, shape[0], shape[1], device=device)
+    if normalized:
+        fill_value = torch.Tensor(np.array([-2.11790393, -2.03571429, -1.80444444]).reshape(1,3,1,1)).to(device)
+        canvas += fill_value
+
+    bselect = torch.arange(canvas.size(0), dtype=torch.long, device=device)
+    coords_unnormalized = unnormalize_coords(coords, shape)
+    canvas[bselect[..., None], :, coords_unnormalized[..., 1], coords_unnormalized[..., 0]] = rgb_vals
+
+    return canvas
+
+def rasterize_montage(coords, gt_rgb_vals, pred_rgb_vals, gt_imgs, normalized=True):
+    h, w = gt_imgs.shape[2:]
+    gt_rasterize = rasterize_image(coords, gt_rgb_vals, (h,w), normalized=normalized)
+    pred_rasterize = rasterize_image(coords, pred_rgb_vals, (h,w), normalized=normalized)
+    montage = torch.cat((gt_imgs.cpu(), gt_rasterize.cpu(), pred_rasterize.cpu()), -1)
+    return montage
+
+
 class ImageNetSample(torch.utils.data.Dataset):
     def __init__(self, *args, num_sample=4096, **kwargs):
         self.imagenet = pt.datasets.classification.ImageNet(*args, **kwargs)
@@ -51,7 +119,25 @@ class ImageNetSample(torch.utils.data.Dataset):
         return coord_normalized, rgb_values, img
 
 
-def _sample_img(img, num_sample, entropy=None):
+def _sample_img(img, num_sample=None, entropy=None):
+    """
+    Parameters
+    ----------
+    img : torch.Tensor
+        (B, C, H, W) image to sample from
+    num_sample : int
+        Number of locations to sample. Ignored if ``entropy`` is provided.
+    entropy : torch.Tensor
+        (num_sample, 2) If provided, in range [0,1]. Sampling coordinates are derived from here.
+
+    Returns
+    -------
+    coord_normalized : torch.Tensor
+        (num_sample, 2) where each row is (x, y)
+    rgb_values : torch.Tensor
+        (num_sample, 3) where each row is (r, g, b)
+    """
+
     if entropy is None:
         # Select random coordinates in range [-1, 1]
         entropy = torch.rand(num_sample, 2)
@@ -105,9 +191,9 @@ class SingleImageDataset(torch.utils.data.IterableDataset):
 
         self.flat_img = self.img.reshape((-1, 3))
         self.img = self.img[None]
-        self.img = self.img.permute(0, 3, 1, 2)  # (B, H, W, C)
+        self.img = self.img.permute(0, 3, 1, 2)  # (B, C, H, W)
 
-        nx, ny = self.img.shape[2], self.img.shape[3]
+        nx, ny = self.img.shape[3], self.img.shape[2]
         # (X, Y)
         meshgrid = np.meshgrid(np.arange(0, nx, 1), np.arange(0, ny, 1))
         self.src_pts = torch.Tensor((meshgrid[0].reshape(-1), meshgrid[1].reshape(-1)))

@@ -29,29 +29,13 @@ import numpy as np
 from pathlib import Path
 
 from dataset import ImageNetSample, SingleImageDataset
+from callbacks import RasterMontageCallback
 
 log = logging.getLogger(__name__)
 
 this_file_path = Path(__file__).resolve()
 this_file_dir = this_file_path.parent
 
-
-def unnormalize_pos(x, shape):
-    """
-    Parameters
-    ----------
-    x : numpy.ndarray
-        (N, 2) Array representing (x,y) coordinates in range [-1, 1]
-    shape : tuple of length 2
-        (H, W) of the image
-    """
-
-    x += 1
-    x /= 2
-    x[:, 0] *= shape[1] - 1
-    x[:, 1] *= shape[0] - 1
-    x = np.round(x).astype(np.int)
-    return x
 
 
 class HyperHead(nn.Module):
@@ -271,22 +255,24 @@ class HyperSIRENPTL(pt.LightningModule):
         embedding, siren_weights, siren_biases, pred = self(imgs, coords)
         self._log_loss("train", pred, rgb_vals)
 
+        self.last_logits = pred
+
         siren_loss = self.siren_loss_fn(pred, rgb_vals)
 
         # Regularization encourages a gaussian prior on embedding from context encoder
-        embedding_reg = self.encoder_cfg["loss_weight"] * (embedding * embedding).mean()
+        #embedding_reg = self.encoder_cfg["loss_weight"] * (embedding * embedding).mean()
 
-        # Regularization encourages a lower frequency representation of the image
-        # Not sure i believe that, but its what the paper says.
-        n_params = sum([w.shape[-1] * w.shape[-2] for w in siren_weights])
-        cum_mag = sum([torch.sum(w * w, dim=(-1, -2)) for w in siren_weights])
-        hyper_reg = self.hyper_cfg["loss_weight"] * (cum_mag / n_params).mean()
+        ## Regularization encourages a lower frequency representation of the image
+        ## Not sure i believe that, but its what the paper says.
+        #n_params = sum([w.shape[-1] * w.shape[-2] for w in siren_weights])
+        #cum_mag = sum([torch.sum(w * w, dim=(-1, -2)) for w in siren_weights])
+        #hyper_reg = self.hyper_cfg["loss_weight"] * (cum_mag / n_params).mean()
 
-        loss = siren_loss + embedding_reg + hyper_reg
+        #loss = siren_loss + embedding_reg + hyper_reg
 
-        self._log_common("train", pred, rgb_vals, loss)
+        self._log_common("train", pred, rgb_vals, siren_loss)
 
-        return loss
+        return siren_loss
 
     def validation_step(self, batch, batch_nb):
         coords, rgb_vals, imgs = batch
@@ -321,6 +307,23 @@ class HyperSIRENPTL(pt.LightningModule):
         )
 
         return optimizers, schedulers
+
+    def configure_callbacks(self):
+        """Moves trainer callback declaration into the model so the same
+        training script can be shared across experiments.
+
+        This is not standard pytorch-lightning
+
+        Returns
+        -------
+        callbacks : list
+            List of callback objects to initialize the Trainer object with.
+        """
+
+        callbacks = [
+                RasterMontageCallback(rgb_transform="imagenet", logging_batch_interval=100)
+                ]
+        return callbacks
 
     def train_dataloader(self):
         transform = A.Compose(
@@ -526,7 +529,7 @@ class SIRENCoordToImg(pt.LightningModule):
         x_np = x.cpu().numpy()
         logits_np = logits.cpu().numpy()
 
-        x_np = unnormalize_pos(x_np, self.cfg.dataset.shape)
+        x_np = unnormalize_coords(x_np, self.cfg.dataset.shape)
 
         self.val_img[x_np[:, 1], x_np[:, 0]] = logits_np
 
