@@ -42,7 +42,7 @@ auto_lr_find: True
 fast_dev_run: False
 
 # Sanity check runs n validation batches before starting the training routine.
-num_sanity_val_steps: 2
+num_sanity_val_steps: 7
 
 # Uses this much data of the training set. Useful for quickly debugging or trying to overfit on purpose.
 #overfit_batches: 0.01
