@@ -31,6 +31,7 @@ def unnormalize_coords(x, shape):
         x = torch.round(x).long()
     return x
 
+
 def rasterize_image(coords, rgb_vals, shape, normalized=True):
     """
     Parameters
@@ -57,19 +58,26 @@ def rasterize_image(coords, rgb_vals, shape, normalized=True):
     fill_value = 0
     canvas = torch.zeros(bsize, 3, shape[0], shape[1], device=device)
     if normalized:
-        fill_value = torch.Tensor(np.array([-2.11790393, -2.03571429, -1.80444444]).reshape(1,3,1,1)).to(device)
+        fill_value = torch.Tensor(
+            np.array([-2.11790393, -2.03571429, -1.80444444]).reshape(1, 3, 1, 1)
+        ).to(device)
         canvas += fill_value
 
     bselect = torch.arange(canvas.size(0), dtype=torch.long, device=device)
     coords_unnormalized = unnormalize_coords(coords, shape)
-    canvas[bselect[..., None], :, coords_unnormalized[..., 1], coords_unnormalized[..., 0]] = rgb_vals
+    canvas[
+        bselect[..., None], :, coords_unnormalized[..., 1], coords_unnormalized[..., 0]
+    ] = rgb_vals
 
     return canvas
 
+
 def rasterize_montage(coords, gt_rgb_vals, pred_rgb_vals, gt_imgs, normalized=True):
     h, w = gt_imgs.shape[2:]
-    gt_rasterize = rasterize_image(coords, gt_rgb_vals, (h,w), normalized=normalized)
-    pred_rasterize = rasterize_image(coords, pred_rgb_vals, (h,w), normalized=normalized)
+    gt_rasterize = rasterize_image(coords, gt_rgb_vals, (h, w), normalized=normalized)
+    pred_rasterize = rasterize_image(
+        coords, pred_rgb_vals, (h, w), normalized=normalized
+    )
     montage = torch.cat((gt_imgs.cpu(), gt_rasterize.cpu(), pred_rasterize.cpu()), -1)
     return montage
 

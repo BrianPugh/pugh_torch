@@ -37,7 +37,6 @@ this_file_path = Path(__file__).resolve()
 this_file_dir = this_file_path.parent
 
 
-
 class HyperHead(nn.Module):
     """For the multi-heads in a HyperNetwork"""
 
@@ -321,8 +320,8 @@ class HyperSIRENPTL(pt.LightningModule):
         """
 
         callbacks = [
-                RasterMontageCallback(rgb_transform="imagenet", logging_batch_interval=200)
-                ]
+            RasterMontageCallback(rgb_transform="imagenet", logging_batch_interval=200)
+        ]
         return callbacks
 
     def train_dataloader(self):
@@ -383,8 +382,9 @@ class HyperSIRENPTL(pt.LightningModule):
         )
         return loader
 
+
 def rasterize(model, weights=None, biases=None, shape=(224, 224)):
-    """ Rasterize an entire image from a trained siren network
+    """Rasterize an entire image from a trained siren network
 
     Parameters
     ----------
@@ -417,11 +417,12 @@ def rasterize(model, weights=None, biases=None, shape=(224, 224)):
         pred = model(src_pts_normalized)
 
     pred_np = pred.detach().cpu().numpy()
-    pred_img = pt.transforms.imagenet.np_unnormalize(pred_np.reshape(224,224,3))
+    pred_img = pt.transforms.imagenet.np_unnormalize(pred_np.reshape(224, 224, 3))
     return pred_img
 
+
 def load_siren_params(model, weights, biases):
-    """ Copies weights and biases into the internal parameters of model.
+    """Copies weights and biases into the internal parameters of model.
 
     Parameters
     ----------
@@ -499,7 +500,6 @@ class SIRENCoordToImg(pt.LightningModule):
     def forward(self, x):
         res = self.model(x[None])
         return res
-
 
     ###########################
     # PyTorch Lightning Stuff #

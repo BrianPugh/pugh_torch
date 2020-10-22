@@ -3,9 +3,9 @@ import pugh_torch as pt
 from pugh_torch.callbacks.tensorboard_base import TensorBoardCallback
 from dataset import rasterize_montage
 
+
 class RasterMontageCallback(TensorBoardCallback):
-    """
-    """
+    """"""
 
     def on_train_batch_end(
         self, trainer, pl_module, outputs, batch, batch_idx, dataloader_idx

@@ -16,8 +16,12 @@ def test_batch_linear():
     weight = linear.weight.clone()
     bias = linear.bias.clone()
 
-    batch_weight = weight[None,]
-    batch_bias = bias[None,]
+    batch_weight = weight[
+        None,
+    ]
+    batch_bias = bias[
+        None,
+    ]
 
     vanilla_output = linear(data)
     batch_output = linear(data, weight=batch_weight, bias=batch_bias)
@@ -26,4 +30,3 @@ def test_batch_linear():
     assert vanilla_output.shape == batch_output.shape[1:]
 
     assert (vanilla_output == batch_output[0]).all()
-
