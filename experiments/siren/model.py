@@ -256,18 +256,23 @@ class HyperSIRENPTL(pt.LightningModule):
 
         self.last_logits = pred
 
+        loss = 0
+
         siren_loss = self.siren_loss_fn(pred, rgb_vals)
+        loss += siren_loss
 
         # Regularization encourages a gaussian prior on embedding from context encoder
-        embedding_reg = self.encoder_cfg["loss_weight"] * (embedding * embedding).mean()
+        if self.encoder_cfg.get("loss_weight"):
+            embedding_reg = self.encoder_cfg["loss_weight"] * (embedding * embedding).mean()
+            loss += embedding_reg
 
         # Regularization encourages a lower frequency representation of the image
         # Not sure i believe that, but its what the paper says.
-        n_params = sum([w.shape[-1] * w.shape[-2] for w in siren_weights])
-        cum_mag = sum([torch.sum(w * w, dim=(-1, -2)) for w in siren_weights])
-        hyper_reg = self.hyper_cfg["loss_weight"] * (cum_mag / n_params).mean()
-
-        loss = siren_loss + embedding_reg + hyper_reg
+        if self.hyper_cfg.get("loss_weight"):
+            n_params = sum([w.shape[-1] * w.shape[-2] for w in siren_weights])
+            cum_mag = sum([torch.sum(w * w, dim=(-1, -2)) for w in siren_weights])
+            hyper_reg = self.hyper_cfg["loss_weight"] * (cum_mag / n_params).mean()
+            loss += hyper_reg
 
         self._log_common("train", pred, rgb_vals, loss)
 
