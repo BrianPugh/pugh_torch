@@ -27,6 +27,7 @@ import cv2
 from scipy.interpolate import griddata
 import numpy as np
 from pathlib import Path
+from math import sqrt
 
 from dataset import ImageNetSample, SingleImageDataset, unnormalize_coords
 from callbacks import RasterMontageCallback
@@ -268,10 +269,43 @@ class HyperSIRENPTL(pt.LightningModule):
 
         # Regularization encourages a lower frequency representation of the image
         # Not sure i believe that, but its what the paper says.
+        #if self.hyper_cfg.get("loss_weight"):
+        #    n_params = sum([w.shape[-1] * w.shape[-2] for w in siren_weights])
+        #    cum_mag = sum([torch.sum(w * w, dim=(-1, -2)) for w in siren_weights])
+        #    hyper_reg = self.hyper_cfg["loss_weight"] * (cum_mag / n_params).mean()
+        #    loss += hyper_reg
+
+        # The variance of each predicted layers should be approximately equal to
+        # initialization for well behaved training and to avoid vanishing
+        # gradients.
+        # First Layer:    np.sqrt(6 / num_input) / self.frequency,
+        #     This would be similar to:
+        #              = sqrt(2/3) / (self.frequency * sqrt(num_input))
+        # Rest:           m.weight.uniform_(-1 / num_input, 1 / num_input)
+
         if self.hyper_cfg.get("loss_weight"):
-            n_params = sum([w.shape[-1] * w.shape[-2] for w in siren_weights])
-            cum_mag = sum([torch.sum(w * w, dim=(-1, -2)) for w in siren_weights])
-            hyper_reg = self.hyper_cfg["loss_weight"] * (cum_mag / n_params).mean()
+            hyper_reg = 0
+            w = siren_weights[0]
+            fan_in = w.shape[-1]
+            # Empirically, the trained network had just under twice this std
+            expected_std_first = torch.tensor(1 / (3*fan_in)).to(w.device)
+            actual_std_first = torch.std(w)
+            actual_mean_first = torch.mean(w)
+
+            hyper_reg += F.mse_loss(expected_std_first, actual_std_first)
+            hyper_reg += actual_mean_first * actual_mean_first  # Maybe these should be weighted.
+
+            for w in siren_weights[1:]:
+                fan_in = w.shape[-1]
+                # Assumes the 30 w0 frequency
+                # This 2 is just here because impirically i saw that trained weights ha
+                # TODO: maybe multiply this std by 2. Empirically, trained networks had twice the std
+                expected_std = torch.tensor(sqrt(6) / 3 / (30 * sqrt(fan_in))).to(w.device)
+                actual_std = torch.std(w)
+                actual_mean = torch.mean(w)
+
+                hyper_reg += F.mse_loss(expected_std, actual_std)
+                hyper_reg += actual_mean * actual_mean  # Maybe these should be weighted.
             loss += hyper_reg
 
         self._log_common("train", pred, rgb_vals, loss)
