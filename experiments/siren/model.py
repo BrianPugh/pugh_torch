@@ -292,10 +292,15 @@ class HyperSIRENPTL(pt.LightningModule):
             actual_std_first = torch.std(w)
             actual_mean_first = torch.mean(w)
 
-            hyper_reg += F.mse_loss(expected_std_first, actual_std_first)
-            hyper_reg += actual_mean_first * actual_mean_first  # Maybe these should be weighted.
+            hyper_loss_std_layer_0 = F.mse_loss(expected_std_first, actual_std_first)
+            hyper_reg += hyper_loss_std_layer_0
+            hyper_loss_mean_layer_0 = actual_mean_first * actual_mean_first  # Maybe these should be weighted.
+            hyper_reg += hyper_loss_mean_layer_0
 
-            for w in siren_weights[1:]:
+            self.log("hyper_loss_std_layer_0", hyper_loss_std_layer_0)
+            self.log("hyper_loss_mean_layer_0", hyper_loss_mean_layer_0)
+
+            for i, w in enumerate(siren_weights[1:]):
                 fan_in = w.shape[-1]
                 # Assumes the 30 w0 frequency
                 # This 2 is just here because impirically i saw that trained weights ha
@@ -304,8 +309,14 @@ class HyperSIRENPTL(pt.LightningModule):
                 actual_std = torch.std(w)
                 actual_mean = torch.mean(w)
 
-                hyper_reg += F.mse_loss(expected_std, actual_std)
-                hyper_reg += actual_mean * actual_mean  # Maybe these should be weighted.
+                hyper_reg_loss_std = F.mse_loss(expected_std, actual_std)
+                hyper_reg_loss_mean = actual_mean * actual_mean  # Maybe these should be weighted.
+                self.log(f"hyper_loss_std_layer_{i}", hyper_reg_loss_std)
+                self.log(f"hyper_loss_mean_layer_{i}", hyper_reg_loss_mean)
+
+                hyper_reg += hyper_reg_loss_std 
+                hyper_reg += hyper_reg_loss_mean
+            self.log("hyper_reg", hyper_reg)
             loss += hyper_reg
 
         self._log_common("train", pred, rgb_vals, loss)
