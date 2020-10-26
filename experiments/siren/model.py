@@ -30,7 +30,7 @@ from pathlib import Path
 from math import sqrt
 
 from dataset import ImageNetSample, SingleImageDataset, unnormalize_coords
-from callbacks import RasterMontageCallback
+from callbacks import RasterMontageCallback, LinearHistogramCallback
 
 log = logging.getLogger(__name__)
 
@@ -137,7 +137,7 @@ class HyperNetwork(nn.Module):
 
 
 class SIREN(nn.Sequential):
-    def __init__(self, layers):
+    def __init__(self, layers, bias=True):
         """
         Parameters
         ----------
@@ -148,12 +148,12 @@ class SIREN(nn.Sequential):
 
         modules = []
 
-        modules.append(BatchLinear(layers[0], layers[1]))
+        modules.append(BatchLinear(layers[0], layers[1], bias=bias))
         modules.append(pt.modules.Activation("sine", modules[-1], first=True))
 
         # hidden layers
         for f_in, f_out in zip(layers[1:-2], layers[2:-1]):
-            modules.append(BatchLinear(f_in, f_out))
+            modules.append(BatchLinear(f_in, f_out, bias=bias))
             modules.append(pt.modules.Activation("sine", modules[-1]))
 
         modules.append(BatchLinear(layers[-2], layers[-1]))
@@ -509,6 +509,7 @@ class SIRENCoordToImg(pt.LightningModule):
         optimizer="adamw",
         optimizer_kwargs={},
         hyper_ckpt=None,
+        coord_gain=1/0.5779279084228418,
     ):
         super().__init__()
         self.save_hyperparameters()
@@ -518,6 +519,8 @@ class SIRENCoordToImg(pt.LightningModule):
         self.learning_rate = learning_rate
         self.optimizer = optimizer
         self.optimizer_kwargs = optimizer_kwargs
+
+        self.coord_gain = coord_gain
 
         siren_nodes = [2, *layers, 3]
         self.model = SIREN(siren_nodes)
@@ -548,6 +551,7 @@ class SIRENCoordToImg(pt.LightningModule):
                 load_siren_params(self.model, siren_weights, siren_biases)
 
     def forward(self, x):
+        x = x * self.coord_gain
         res = self.model(x[None])
         return res
 
@@ -676,7 +680,9 @@ class SIRENCoordToImg(pt.LightningModule):
             List of callback objects to initialize the Trainer object with.
         """
 
-        callbacks = []
+        callbacks = [
+            LinearHistogramCallback(logging_batch_interval=100),
+        ]
         return callbacks
 
     def train_dataloader(self):
