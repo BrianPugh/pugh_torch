@@ -19,12 +19,17 @@ experiment(s), so the order is all over the place.
 While the MSE value doesn't directly reflect upon the quality of the image,
 the following values indicated different usability levels on this cat image:
 1. `0.08` - low frequency info is there
-![0.08 MSE](assets/random_init/mse/mse_0.08.png)
+
+<p align="center">
+  <img src="assets/random_init/mse/mse_0.08.png" />
+</p>
 
 2. `0.02` - majority of structure is present.
+
 ![0.02 MSE](assets/random_init/mse/mse_0.02.png)
 
 3. `0.0008` - Produced image looks largely similar to the input image, some high frequency detail is missing. Going past this error rate is mostly just for bragging rights.
+
 ![0.0008 MSE](assets/random_init/mse/mse_0.0008.png)
 
 Initialization methods:
@@ -86,6 +91,8 @@ Notes:
 Intuition says that a uniform bias in range `+- pi` would yield best results, and it does eventually converge to the lowest loss, however these emperical results say dividing the He bias initialization by 10 reach an acceptable loss faster. No idea why.
 
 
+![most important initialization comparison](assets/random_init/tensorboard/init_1_vs_init_22_vs_init_33.png)
+
 Tensorboard files are located at:
     https://drive.google.com/file/d/1ITFoX_o3FCR_3gyPUr-mcd-iOlqh8li2/view?usp=sharing
 
@@ -99,3 +106,10 @@ Conclusions:
 
 ## HyperNetwork for SIREN initialization (metalearning)
 TODO
+
+## Not training earlier layers
+Using init method (33), we experimented with the impact of not training the first
+layer and the second layer. They result in a network training that doesn't meet
+our cutoff:
+
+![not training first layers](assets/freezing_layers/freezing_layers.png)
