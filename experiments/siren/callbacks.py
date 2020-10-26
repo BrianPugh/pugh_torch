@@ -30,11 +30,12 @@ class RasterMontageCallback(TensorBoardCallback):
             "train/output_gt_pred",
             canvas,
             global_step=trainer.global_step,
-            **self.logging_kwargs
+            **self.logging_kwargs,
         )
 
+
 class LinearHistogramCallback(TensorBoardCallback):
-    """ Relies on model being stored at ``pl_module.model`` and it being
+    """Relies on model being stored at ``pl_module.model`` and it being
     sequential
     """
 
@@ -51,15 +52,15 @@ class LinearHistogramCallback(TensorBoardCallback):
         for i, layer in enumerate(pl_module.model):
             if hasattr(layer, "weight") and layer.weight is not None:
                 trainer.logger.experiment.add_histogram(
-                        f"linear_weight/{i}",
-                        layer.weight,
-                        global_step=trainer.global_step,
-                        **self.logging_kwargs,
-                        )
+                    f"linear_weight/{i}",
+                    layer.weight,
+                    global_step=trainer.global_step,
+                    **self.logging_kwargs,
+                )
             if hasattr(layer, "bias") and layer.bias is not None:
                 trainer.logger.experiment.add_histogram(
-                        f"linear_bias/{i}",
-                        layer.bias,
-                        global_step=trainer.global_step,
-                        **self.logging_kwargs,
-                        )
+                    f"linear_bias/{i}",
+                    layer.bias,
+                    global_step=trainer.global_step,
+                    **self.logging_kwargs,
+                )

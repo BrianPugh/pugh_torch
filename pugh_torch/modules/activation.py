@@ -117,8 +117,7 @@ class Sine(ActivationModule):
                 sqrt(6 / num_input) / self.frequency,
             )
         if hasattr(m, "bias") and m.bias is not None:
-            m.bias /= (self.frequency / 2)
-
+            m.bias /= self.frequency / 2
 
     @torch.no_grad()
     def init_first_layer(self, m):
@@ -127,7 +126,8 @@ class Sine(ActivationModule):
             m.weight.normal_(std=1 / num_input)
 
         if hasattr(m, "bias") and m.bias is not None:
-            m.bias /= (self.frequency / 2)
+            m.bias /= self.frequency / 2
+
 
 #################################
 # torch.nn activation functions #

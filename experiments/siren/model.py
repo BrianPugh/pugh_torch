@@ -264,12 +264,14 @@ class HyperSIRENPTL(pt.LightningModule):
 
         # Regularization encourages a gaussian prior on embedding from context encoder
         if self.encoder_cfg.get("loss_weight"):
-            embedding_reg = self.encoder_cfg["loss_weight"] * (embedding * embedding).mean()
+            embedding_reg = (
+                self.encoder_cfg["loss_weight"] * (embedding * embedding).mean()
+            )
             loss += embedding_reg
 
         # Regularization encourages a lower frequency representation of the image
         # Not sure i believe that, but its what the paper says.
-        #if self.hyper_cfg.get("loss_weight"):
+        # if self.hyper_cfg.get("loss_weight"):
         #    n_params = sum([w.shape[-1] * w.shape[-2] for w in siren_weights])
         #    cum_mag = sum([torch.sum(w * w, dim=(-1, -2)) for w in siren_weights])
         #    hyper_reg = self.hyper_cfg["loss_weight"] * (cum_mag / n_params).mean()
@@ -288,13 +290,15 @@ class HyperSIRENPTL(pt.LightningModule):
             w = siren_weights[0]
             fan_in = w.shape[-1]
             # Empirically, the trained network had just under twice this std
-            expected_std_first = torch.tensor(1 / (3*fan_in)).to(w.device)
+            expected_std_first = torch.tensor(1 / (3 * fan_in)).to(w.device)
             actual_std_first = torch.std(w)
             actual_mean_first = torch.mean(w)
 
             hyper_loss_std_layer_0 = F.mse_loss(expected_std_first, actual_std_first)
             hyper_reg += hyper_loss_std_layer_0
-            hyper_loss_mean_layer_0 = actual_mean_first * actual_mean_first  # Maybe these should be weighted.
+            hyper_loss_mean_layer_0 = (
+                actual_mean_first * actual_mean_first
+            )  # Maybe these should be weighted.
             hyper_reg += hyper_loss_mean_layer_0
 
             self.log("hyper_loss_std_layer_0", hyper_loss_std_layer_0)
@@ -305,16 +309,20 @@ class HyperSIRENPTL(pt.LightningModule):
                 # Assumes the 30 w0 frequency
                 # This 2 is just here because impirically i saw that trained weights ha
                 # TODO: maybe multiply this std by 2. Empirically, trained networks had twice the std
-                expected_std = torch.tensor(sqrt(6) / 3 / (30 * sqrt(fan_in))).to(w.device)
+                expected_std = torch.tensor(sqrt(6) / 3 / (30 * sqrt(fan_in))).to(
+                    w.device
+                )
                 actual_std = torch.std(w)
                 actual_mean = torch.mean(w)
 
                 hyper_reg_loss_std = F.mse_loss(expected_std, actual_std)
-                hyper_reg_loss_mean = actual_mean * actual_mean  # Maybe these should be weighted.
+                hyper_reg_loss_mean = (
+                    actual_mean * actual_mean
+                )  # Maybe these should be weighted.
                 self.log(f"hyper_loss_std_layer_{i}", hyper_reg_loss_std)
                 self.log(f"hyper_loss_mean_layer_{i}", hyper_reg_loss_mean)
 
-                hyper_reg += hyper_reg_loss_std 
+                hyper_reg += hyper_reg_loss_std
                 hyper_reg += hyper_reg_loss_mean
             self.log("hyper_reg", hyper_reg)
             loss += hyper_reg
@@ -509,7 +517,7 @@ class SIRENCoordToImg(pt.LightningModule):
         optimizer="adamw",
         optimizer_kwargs={},
         hyper_ckpt=None,
-        coord_gain=1/0.5779279084228418,
+        coord_gain=1 / 0.5779279084228418,
     ):
         super().__init__()
         self.save_hyperparameters()
