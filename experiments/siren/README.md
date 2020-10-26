@@ -86,14 +86,16 @@ Notes:
 Intuition says that a uniform bias in range `+- pi` would yield best results, and it does eventually converge to the lowest loss, however these emperical results say dividing the He bias initialization by 10 reach an acceptable loss faster. No idea why.
 
 
-Tensorboard files are located at: TODO. The HPARAMS tab doesn't reflect these
-initialization changes as they were done directly in code.
+Tensorboard files are located at:
+    https://drive.google.com/file/d/1ITFoX_o3FCR_3gyPUr-mcd-iOlqh8li2/view?usp=sharing
+
+The HPARAMS tab doesn't reflect these initialization changes as they were done directly in code.
 
 
 Conclusions:
 
-1. The correct initialization can generate a useable result ~2.2x
-   faster than a poor initialization.
+1. The correct initialization can generate a useable result ~2.78x faster than the initialization recommended by the paper.
+2. The best bias initialization experimented with was a modified He initialization (uniform random with bounds `+-2/(frequency*sqrt(fan_in))`). In this implementation, the activation function is defined as `sin(frequency * (wx + b))` where `frequency=30`. Initialization method (22) where the bias is randomly uniformly sampled from  `+-pi/30` makes the most sense and achieves the lowest loss, but at a slightly slower rate.
 
 ## HyperNetwork for SIREN initialization (metalearning)
 TODO
