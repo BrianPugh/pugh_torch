@@ -82,9 +82,10 @@ In the following initialization experiments, the input coordinates were addition
 
 
 Notes:
-    1. Init method (33) trained the fastest while obtaining a reasonable lowest error. Reached 8e-4 in 450 epochs. The default initialization scheme took 1250 epochs to reach 8e-4, making init method 33 2.78x faster.
-    2. Init method (18) trained fastest, but plateued at a much higher loss (above our 8e-4 requirement.)
-    3. Init method (21) trained slightly slower than (17) until a loss of `7.5e-4`, but then achieved a lower overall loss
+
+1. Init method (33) trained the fastest while obtaining a reasonable lowest error. Reached 8e-4 in 450 epochs. The default initialization scheme took 1250 epochs to reach 8e-4, making init method 33 2.78x faster.
+2. Init method (18) trained fastest, but plateued at a much higher loss (above our 8e-4 requirement.)
+3. Init method (21) trained slightly slower than (17) until a loss of `7.5e-4`, but then achieved a lower overall loss
 
 Intuition says that a uniform bias in range `+- pi` would yield best results, and it does eventually converge to the lowest loss, however these emperical results say dividing the He bias initialization by 10 reach an acceptable loss faster. No idea why.
 
@@ -97,7 +98,7 @@ Tensorboard files are located at:
 The HPARAMS tab doesn't reflect these initialization changes as they were done directly in code.
 
 
-Conclusions:
+###Conclusions:
 
 1. The correct initialization can generate a useable result ~2.78x faster than the initialization recommended by the paper.
 2. The best bias initialization experimented with was a modified He initialization (uniform random with bounds `+-2/(frequency*sqrt(fan_in))`). In this implementation, the activation function is defined as `sin(frequency * (wx + b))` where `frequency=30`. Initialization method (22) where the bias is randomly uniformly sampled from  `+-pi/30` makes the most sense and achieves the lowest loss, but at a slightly slower rate.
