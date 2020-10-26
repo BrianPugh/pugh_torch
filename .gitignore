@@ -111,3 +111,4 @@ ENV/
 pugh_torch/tests/**/*_actual.png
 experiments/**/outputs/
 docker_run.sh
+*DS_Store*
