@@ -16,6 +16,7 @@ One this is done, your activation function will me available as:
 
 import torch
 from torch import nn
+import numpy as np
 from packaging import version
 from math import sqrt
 from . import init as wi
@@ -109,19 +110,24 @@ class Sine(ActivationModule):
 
     @torch.no_grad()
     def init_layer(self, m):
-        if hasattr(m, "weight"):
+        if hasattr(m, "weight") and m.weight is not None:
             num_input = m.weight.size(-1)
             m.weight.uniform_(
                 -sqrt(6 / num_input) / self.frequency,
                 sqrt(6 / num_input) / self.frequency,
             )
+        if hasattr(m, "bias") and m.bias is not None:
+            m.bias /= (self.frequency / 2)
+
 
     @torch.no_grad()
     def init_first_layer(self, m):
-        if hasattr(m, "weight"):
+        if hasattr(m, "weight") and m.weight is not None:
             num_input = m.weight.size(-1)
-            m.weight.uniform_(-1 / num_input, 1 / num_input)
+            m.weight.normal_(std=1 / num_input)
 
+        if hasattr(m, "bias") and m.bias is not None:
+            m.bias /= (self.frequency / 2)
 
 #################################
 # torch.nn activation functions #
