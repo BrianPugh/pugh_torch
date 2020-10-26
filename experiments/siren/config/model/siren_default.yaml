@@ -3,3 +3,5 @@ name: SIRENCoordToImg
 layers: [256, 256, 256, 256, 256]
 loss: "mse_loss"
 optimizer: "adamw"
+optimizer_kwargs:
+    "weight_decay": 0
