@@ -27,4 +27,11 @@ class BatchLinear(nn.Linear):
             assert weight is None and bias is None
             return super().forward(x)
 
-        return x.matmul(weight.transpose(-1, -2)) + bias.unsqueeze(-2)
+        assert weight is not None
+
+        res = x.matmul(weight.transpose(-1, -2))
+
+        if bias is not None:
+            res += bias.unsqueeze(-2)
+
+        return res
