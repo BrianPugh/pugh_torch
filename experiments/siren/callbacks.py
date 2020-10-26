@@ -32,3 +32,34 @@ class RasterMontageCallback(TensorBoardCallback):
             global_step=trainer.global_step,
             **self.logging_kwargs
         )
+
+class LinearHistogramCallback(TensorBoardCallback):
+    """ Relies on model being stored at ``pl_module.model`` and it being
+    sequential
+    """
+
+    def on_train_batch_end(
+        self, trainer, pl_module, outputs, batch, batch_idx, dataloader_idx
+    ):
+        if (trainer.global_step) % self.logging_batch_interval != 0:
+            return
+
+        super().on_train_batch_end(
+            trainer, pl_module, outputs, batch, batch_idx, dataloader_idx
+        )
+
+        for i, layer in enumerate(pl_module.model):
+            if hasattr(layer, "weight") and layer.weight is not None:
+                trainer.logger.experiment.add_histogram(
+                        f"linear_weight/{i}",
+                        layer.weight,
+                        global_step=trainer.global_step,
+                        **self.logging_kwargs,
+                        )
+            if hasattr(layer, "bias") and layer.bias is not None:
+                trainer.logger.experiment.add_histogram(
+                        f"linear_bias/{i}",
+                        layer.bias,
+                        global_step=trainer.global_step,
+                        **self.logging_kwargs,
+                        )
