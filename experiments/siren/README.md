@@ -1,10 +1,4 @@
 
-# Model Description
-
-## Novel module
-
-# Results
-
 # Observations
 
 ## SIREN Random initialization and other hyperparameter experiments.
