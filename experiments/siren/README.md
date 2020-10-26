@@ -20,9 +20,7 @@ While the MSE value doesn't directly reflect upon the quality of the image,
 the following values indicated different usability levels on this cat image:
 1. `0.08` - low frequency info is there
 
-<p align="center">
-  <img src="assets/random_init/mse/mse_0.08.png" />
-</p>
+![0.08 MSE](assets/random_init/mse/mse_0.08.png)
 
 2. `0.02` - majority of structure is present.
 
