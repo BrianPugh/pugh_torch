@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pugh_torch.callbacks.tensorboard_base &mdash; Pugh Torch 0.4.0 documentation</title>
+  <title>pugh_torch.callbacks.histogram &mdash; Pugh Torch 0.4.0 documentation</title>
   
 
   
@@ -179,7 +179,7 @@
         
           <li><a href="../../pugh_torch.html">pugh_torch</a> &raquo;</li>
         
-      <li>pugh_torch.callbacks.tensorboard_base</li>
+      <li>pugh_torch.callbacks.histogram</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -194,51 +194,54 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for pugh_torch.callbacks.tensorboard_base</h1><div class="highlight"><pre>
+  <h1>Source code for pugh_torch.callbacks.histogram</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">torch</span>
-<span class="kn">from</span> <span class="nn">pytorch_lightning</span> <span class="kn">import</span> <span class="n">Callback</span>
-<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-
-<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">TensorBoardLogger</span>
-
-<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">pugh_torch.callbacks.tensorboard_base</span> <span class="kn">import</span> <span class="n">TensorBoardCallback</span>
 
 
-<div class="viewcode-block" id="TensorBoardCallback"><a class="viewcode-back" href="../../../pugh_torch.callbacks.html#pugh_torch.callbacks.tensorboard_base.TensorBoardCallback">[docs]</a><span class="k">class</span> <span class="nc">TensorBoardCallback</span><span class="p">(</span><span class="n">Callback</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Base class for pytorch-lightning callbacks.</span>
-
-<span class="sd">    Can only be used with ``pugh_torch.utils.TensorBoardLogger``</span>
+<div class="viewcode-block" id="Histogram"><a class="viewcode-back" href="../../../pugh_torch.callbacks.html#pugh_torch.callbacks.histogram.Histogram">[docs]</a><span class="k">class</span> <span class="nc">Histogram</span><span class="p">(</span><span class="n">TensorBoardCallback</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Relies on model being stored at ``pl_module.model`` and it being</span>
+<span class="sd">    sequential</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">logging_batch_interval</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">slash_names</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        logging_batch_interval : int</span>
-<span class="sd">            Log image(s) every this many batches.</span>
-<span class="sd">        kwargs : dict</span>
-<span class="sd">            Passed along to ``SummaryWriter`` method on hook</span>
+<span class="sd">        slash_names : bool</span>
+<span class="sd">            For each named parameter, replace &quot;.&quot; with &quot;/&quot; so that</span>
+<span class="sd">            they appear under sublabels in TensorBoard.</span>
+<span class="sd">        names : list of str</span>
+<span class="sd">            The &quot;dot&quot; named parameters to log. Defaults to all model named parameters.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logging_batch_interval</span> <span class="o">=</span> <span class="n">logging_batch_interval</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logging_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">slash_names</span> <span class="o">=</span> <span class="n">slash_names</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">names</span> <span class="o">=</span> <span class="n">names</span>
 
-<div class="viewcode-block" id="TensorBoardCallback.on_train_batch_end"><a class="viewcode-back" href="../../../pugh_torch.callbacks.html#pugh_torch.callbacks.tensorboard_base.TensorBoardCallback.on_train_batch_end">[docs]</a>    <span class="k">def</span> <span class="nf">on_train_batch_end</span><span class="p">(</span>
+<div class="viewcode-block" id="Histogram.on_train_batch_end"><a class="viewcode-back" href="../../../pugh_torch.callbacks.html#pugh_torch.callbacks.histogram.Histogram.on_train_batch_end">[docs]</a>    <span class="k">def</span> <span class="nf">on_train_batch_end</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="n">pl_module</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">,</span> <span class="n">dataloader_idx</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Just some validation checks.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">trainer</span><span class="o">.</span><span class="n">global_step</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">logging_batch_interval</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
 
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
-            <span class="n">trainer</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span> <span class="n">TensorBoardLogger</span>
-        <span class="p">),</span> <span class="s2">&quot;Can only be used with pugh_torch.utils.TensorBoardLogger&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_train_batch_end</span><span class="p">(</span>
+            <span class="n">trainer</span><span class="p">,</span> <span class="n">pl_module</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">,</span> <span class="n">dataloader_idx</span>
+        <span class="p">)</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">pl_module</span><span class="p">,</span> <span class="s2">&quot;last_logits&quot;</span><span class="p">):</span>
-            <span class="n">m</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;please track the last_logits in the training_step like so:</span>
-<span class="s2">                def training_step(...):</span>
-<span class="s2">                    self.last_logits = your_logits</span>
-<span class="s2">            &quot;&quot;&quot;</span>
-            <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">m</span><span class="p">)</span></div></div>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">pl_module</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">():</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">names</span> <span class="ow">and</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">slash_names</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">)</span>
+
+            <span class="n">trainer</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">experiment</span><span class="o">.</span><span class="n">add_histogram</span><span class="p">(</span>
+                <span class="n">name</span><span class="p">,</span>
+                <span class="n">param</span><span class="p">,</span>
+                <span class="n">global_step</span><span class="o">=</span><span class="n">trainer</span><span class="o">.</span><span class="n">global_step</span><span class="p">,</span>
+                <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">logging_kwargs</span><span class="p">,</span>
+            <span class="p">)</span></div></div>
 </pre></div>
 
            </div>

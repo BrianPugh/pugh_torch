@@ -214,6 +214,32 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="module-pugh_torch.callbacks.histogram">
+<span id="pugh-torch-callbacks-histogram-module"></span><h2>pugh_torch.callbacks.histogram module<a class="headerlink" href="#module-pugh_torch.callbacks.histogram" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pugh_torch.callbacks.histogram.Histogram">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.callbacks.histogram.</code><code class="sig-name descname">Histogram</code><span class="sig-paren">(</span><em class="sig-param">*</em>, <em class="sig-param">slash_names=True</em>, <em class="sig-param">names=[]</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/callbacks/histogram.html#Histogram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.callbacks.histogram.Histogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pugh_torch.callbacks.tensorboard_base.TensorBoardCallback" title="pugh_torch.callbacks.tensorboard_base.TensorBoardCallback"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.callbacks.tensorboard_base.TensorBoardCallback</span></code></a></p>
+<p>Relies on model being stored at <code class="docutils literal notranslate"><span class="pre">pl_module.model</span></code> and it being
+sequential</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>slash_names</strong> (<em>bool</em>) – For each named parameter, replace “.” with “/” so that
+they appear under sublabels in TensorBoard.</p></li>
+<li><p><strong>names</strong> (<em>list of str</em>) – The “dot” named parameters to log. Defaults to all model named parameters.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="pugh_torch.callbacks.histogram.Histogram.on_train_batch_end">
+<code class="sig-name descname">on_train_batch_end</code><span class="sig-paren">(</span><em class="sig-param">trainer</em>, <em class="sig-param">pl_module</em>, <em class="sig-param">outputs</em>, <em class="sig-param">batch</em>, <em class="sig-param">batch_idx</em>, <em class="sig-param">dataloader_idx</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/callbacks/histogram.html#Histogram.on_train_batch_end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.callbacks.histogram.Histogram.on_train_batch_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Just some validation checks.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-pugh_torch.callbacks.model_checkpoint">
 <span id="pugh-torch-callbacks-model-checkpoint-module"></span><h2>pugh_torch.callbacks.model_checkpoint module<a class="headerlink" href="#module-pugh_torch.callbacks.model_checkpoint" title="Permalink to this headline">¶</a></h2>
 <dl class="class">

@@ -4,6 +4,14 @@ pugh\_torch.callbacks package
 Submodules
 ----------
 
+pugh\_torch.callbacks.histogram module
+--------------------------------------
+
+.. automodule:: pugh_torch.callbacks.histogram
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pugh\_torch.callbacks.model\_checkpoint module
 ----------------------------------------------
 
