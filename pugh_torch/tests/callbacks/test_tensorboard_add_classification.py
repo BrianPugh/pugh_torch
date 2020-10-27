@@ -38,18 +38,18 @@ def fake_trainer(mocker):
 def test_callback_action(mocker, tmp_path, fake_trainer, fake_batch, fake_pl_module):
     callback = TensorBoardAddClassification()
 
-    batch_idx = callback.logging_batch_interval - 1
+    fake_trainer.global_step = callback.logging_batch_interval
     dataloader_idx = 0
 
     callback.on_train_batch_end(
-        fake_trainer, fake_pl_module, [], fake_batch, batch_idx, dataloader_idx
+        fake_trainer, fake_pl_module, [], fake_batch, 0, dataloader_idx
     )
 
     fake_trainer.logger.experiment.add_rgb.assert_called_once()
     args, kwargs = fake_trainer.logger.experiment.add_rgb.call_args_list[0]
     assert args[0] == "train/output"
     assert (args[1] == fake_batch[0]).all()
-    assert kwargs["global_step"] == 5555
+    assert kwargs["global_step"] == 20
     assert kwargs["labels"] == [
         "Truth: 4 (N/A)\nPred: 7 (N/A)",
         "Truth: 3 (N/A)\nPred: 7 (N/A)",
@@ -61,11 +61,11 @@ def test_callback_action(mocker, tmp_path, fake_trainer, fake_batch, fake_pl_mod
 
 def test_callback_skip(mocker, tmp_path, fake_batch, fake_trainer):
     callback = TensorBoardAddClassification()
-    batch_idx = callback.logging_batch_interval - 2
+    fake_trainer.global_step = callback.logging_batch_interval - 1
     dataloader_idx = 0
 
     callback.on_train_batch_end(
-        fake_trainer, fake_pl_module, [], fake_batch, batch_idx, dataloader_idx
+        fake_trainer, fake_pl_module, [], fake_batch, 0, dataloader_idx
     )
     fake_trainer.logger.experiment.add_rgb.assert_not_called()
 
@@ -75,18 +75,18 @@ def test_callback_classes(
 ):
     callback = TensorBoardAddClassification(classes=classes)
 
-    batch_idx = callback.logging_batch_interval - 1
+    fake_trainer.global_step = callback.logging_batch_interval
     dataloader_idx = 0
 
     callback.on_train_batch_end(
-        fake_trainer, fake_pl_module, [], fake_batch, batch_idx, dataloader_idx
+        fake_trainer, fake_pl_module, [], fake_batch, 0, dataloader_idx
     )
 
     fake_trainer.logger.experiment.add_rgb.assert_called_once()
     args, kwargs = fake_trainer.logger.experiment.add_rgb.call_args_list[0]
     assert args[0] == "train/output"
     assert (args[1] == fake_batch[0]).all()
-    assert kwargs["global_step"] == 5555
+    assert kwargs["global_step"] == 20
     assert kwargs["labels"] == [
         f"Truth: 4 ({classes[4]})\nPred: 7 ({classes[7]})",
         f"Truth: 3 ({classes[3]})\nPred: 7 ({classes[7]})",
