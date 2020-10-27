@@ -36,4 +36,4 @@ ENV DISPLAY_RESOLUTION=1280x1440
 
 # Run a vnc server so we can easily view stuff like the output of matplotlib
 # even if the host doesn't have an X-server.
-CMD x11vnc -create -env FD_PROG=/usr/bin/fluxbox -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 -env X11VNC_CREATE_GEOM=${1:-${DISPLAY_RESOLUTION}x16} -nopw
+CMD while true; do x11vnc -create -env FD_PROG=/usr/bin/fluxbox -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 -env X11VNC_CREATE_GEOM=${1:-${DISPLAY_RESOLUTION}x16} -nopw; done;
