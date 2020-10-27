@@ -1,8 +1,11 @@
 import torch
 from pytorch_lightning import Callback
 from torch import nn
+import logging
 
 from ..utils import TensorBoardLogger
+
+log = logging.getLogger(__name__)
 
 
 class TensorBoardCallback(Callback):
@@ -38,4 +41,4 @@ class TensorBoardCallback(Callback):
                 def training_step(...):
                     self.last_logits = your_logits
             """
-            raise AttributeError(m)
+            log.warning(m)
