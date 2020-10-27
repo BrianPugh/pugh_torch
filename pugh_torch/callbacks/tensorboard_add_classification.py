@@ -30,7 +30,7 @@ class TensorBoardAddClassification(TensorBoardCallback):
     def on_train_batch_end(
         self, trainer, pl_module, outputs, batch, batch_idx, dataloader_idx
     ):
-        if (batch_idx + 1) % self.logging_batch_interval != 0:
+        if trainer.global_step % self.logging_batch_interval != 0:
             return
 
         super().on_train_batch_end(

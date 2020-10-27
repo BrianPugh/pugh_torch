@@ -32,11 +32,11 @@ def fake_trainer(mocker):
 def test_callback_action(mocker, tmp_path, fake_trainer, fake_batch, fake_pl_module):
     callback = TensorBoardAddSS()
 
-    batch_idx = callback.logging_batch_interval - 1
+    fake_trainer.global_step = callback.logging_batch_interval
     dataloader_idx = 0
 
     callback.on_train_batch_end(
-        fake_trainer, fake_pl_module, [], fake_batch, batch_idx, dataloader_idx
+        fake_trainer, fake_pl_module, [], fake_batch, 0, dataloader_idx
     )
 
     fake_trainer.logger.experiment.add_ss.assert_called_once()
@@ -45,7 +45,7 @@ def test_callback_action(mocker, tmp_path, fake_trainer, fake_batch, fake_pl_mod
     assert (args[1] == fake_batch[0]).all()
     assert (args[2] == fake_pl_module.last_logits).all()
     assert (args[3] == fake_batch[1]).all()
-    assert kwargs["global_step"] == 5555
+    assert kwargs["global_step"] == 20
 
 
 def test_callback_skip(mocker, tmp_path, fake_batch, fake_trainer):
