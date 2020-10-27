@@ -27,31 +27,15 @@ import cv2
 from scipy.interpolate import griddata
 import numpy as np
 from pathlib import Path
+from math import sqrt
 
-from dataset import ImageNetSample, SingleImageDataset
+from dataset import ImageNetSample, SingleImageDataset, unnormalize_coords
+from callbacks import RasterMontageCallback, LinearHistogramCallback
 
 log = logging.getLogger(__name__)
 
 this_file_path = Path(__file__).resolve()
 this_file_dir = this_file_path.parent
-
-
-def unnormalize_pos(x, shape):
-    """
-    Parameters
-    ----------
-    x : numpy.ndarray
-        (N, 2) Array representing (x,y) coordinates in range [-1, 1]
-    shape : tuple of length 2
-        (H, W) of the image
-    """
-
-    x += 1
-    x /= 2
-    x[:, 0] *= shape[1] - 1
-    x[:, 1] *= shape[0] - 1
-    x = np.round(x).astype(np.int)
-    return x
 
 
 class HyperHead(nn.Module):
@@ -153,7 +137,7 @@ class HyperNetwork(nn.Module):
 
 
 class SIREN(nn.Sequential):
-    def __init__(self, layers):
+    def __init__(self, layers, bias=True):
         """
         Parameters
         ----------
@@ -164,12 +148,12 @@ class SIREN(nn.Sequential):
 
         modules = []
 
-        modules.append(BatchLinear(layers[0], layers[1]))
+        modules.append(BatchLinear(layers[0], layers[1], bias=bias))
         modules.append(pt.modules.Activation("sine", modules[-1], first=True))
 
         # hidden layers
         for f_in, f_out in zip(layers[1:-2], layers[2:-1]):
-            modules.append(BatchLinear(f_in, f_out))
+            modules.append(BatchLinear(f_in, f_out, bias=bias))
             modules.append(pt.modules.Activation("sine", modules[-1]))
 
         modules.append(BatchLinear(layers[-2], layers[-1]))
@@ -271,22 +255,81 @@ class HyperSIRENPTL(pt.LightningModule):
         embedding, siren_weights, siren_biases, pred = self(imgs, coords)
         self._log_loss("train", pred, rgb_vals)
 
+        self.last_logits = pred
+
+        loss = 0
+
         siren_loss = self.siren_loss_fn(pred, rgb_vals)
+        loss += siren_loss
 
         # Regularization encourages a gaussian prior on embedding from context encoder
-        embedding_reg = self.encoder_cfg["loss_weight"] * (embedding * embedding).mean()
+        if self.encoder_cfg.get("loss_weight"):
+            embedding_reg = (
+                self.encoder_cfg["loss_weight"] * (embedding * embedding).mean()
+            )
+            loss += embedding_reg
 
         # Regularization encourages a lower frequency representation of the image
         # Not sure i believe that, but its what the paper says.
-        n_params = sum([w.shape[-1] * w.shape[-2] for w in siren_weights])
-        cum_mag = sum([torch.sum(w * w, dim=(-1, -2)) for w in siren_weights])
-        hyper_reg = self.hyper_cfg["loss_weight"] * (cum_mag / n_params).mean()
+        # if self.hyper_cfg.get("loss_weight"):
+        #    n_params = sum([w.shape[-1] * w.shape[-2] for w in siren_weights])
+        #    cum_mag = sum([torch.sum(w * w, dim=(-1, -2)) for w in siren_weights])
+        #    hyper_reg = self.hyper_cfg["loss_weight"] * (cum_mag / n_params).mean()
+        #    loss += hyper_reg
 
-        loss = siren_loss + embedding_reg + hyper_reg
+        # The variance of each predicted layers should be approximately equal to
+        # initialization for well behaved training and to avoid vanishing
+        # gradients.
+        # First Layer:    np.sqrt(6 / num_input) / self.frequency,
+        #     This would be similar to:
+        #              = sqrt(2/3) / (self.frequency * sqrt(num_input))
+        # Rest:           m.weight.uniform_(-1 / num_input, 1 / num_input)
+
+        if self.hyper_cfg.get("loss_weight"):
+            hyper_reg = 0
+            w = siren_weights[0]
+            fan_in = w.shape[-1]
+            # Empirically, the trained network had just under twice this std
+            expected_std_first = torch.tensor(1 / (3 * fan_in)).to(w.device)
+            actual_std_first = torch.std(w)
+            actual_mean_first = torch.mean(w)
+
+            hyper_loss_std_layer_0 = F.mse_loss(expected_std_first, actual_std_first)
+            hyper_reg += hyper_loss_std_layer_0
+            hyper_loss_mean_layer_0 = (
+                actual_mean_first * actual_mean_first
+            )  # Maybe these should be weighted.
+            hyper_reg += hyper_loss_mean_layer_0
+
+            self.log("hyper_loss_std_layer_0", hyper_loss_std_layer_0)
+            self.log("hyper_loss_mean_layer_0", hyper_loss_mean_layer_0)
+
+            for i, w in enumerate(siren_weights[1:]):
+                fan_in = w.shape[-1]
+                # Assumes the 30 w0 frequency
+                # This 2 is just here because impirically i saw that trained weights ha
+                # TODO: maybe multiply this std by 2. Empirically, trained networks had twice the std
+                expected_std = torch.tensor(sqrt(6) / 3 / (30 * sqrt(fan_in))).to(
+                    w.device
+                )
+                actual_std = torch.std(w)
+                actual_mean = torch.mean(w)
+
+                hyper_reg_loss_std = F.mse_loss(expected_std, actual_std)
+                hyper_reg_loss_mean = (
+                    actual_mean * actual_mean
+                )  # Maybe these should be weighted.
+                self.log(f"hyper_loss_std_layer_{i}", hyper_reg_loss_std)
+                self.log(f"hyper_loss_mean_layer_{i}", hyper_reg_loss_mean)
+
+                hyper_reg += hyper_reg_loss_std
+                hyper_reg += hyper_reg_loss_mean
+            self.log("hyper_reg", hyper_reg)
+            loss += hyper_reg
 
         self._log_common("train", pred, rgb_vals, loss)
 
-        return loss
+        return siren_loss
 
     def validation_step(self, batch, batch_nb):
         coords, rgb_vals, imgs = batch
@@ -321,6 +364,23 @@ class HyperSIRENPTL(pt.LightningModule):
         )
 
         return optimizers, schedulers
+
+    def configure_callbacks(self):
+        """Moves trainer callback declaration into the model so the same
+        training script can be shared across experiments.
+
+        This is not standard pytorch-lightning
+
+        Returns
+        -------
+        callbacks : list
+            List of callback objects to initialize the Trainer object with.
+        """
+
+        callbacks = [
+            RasterMontageCallback(rgb_transform="imagenet", logging_batch_interval=200)
+        ]
+        return callbacks
 
     def train_dataloader(self):
         transform = A.Compose(
@@ -381,6 +441,69 @@ class HyperSIRENPTL(pt.LightningModule):
         return loader
 
 
+def rasterize(model, weights=None, biases=None, shape=(224, 224)):
+    """Rasterize an entire image from a trained siren network
+
+    Parameters
+    ----------
+    model : nn.Module
+        Uninitialized SIREN network
+    weights : list of torch.Tensor
+        Must have the same number of layers as model. Each layer has a batch dimension.
+    biases : list of torch.Tensor
+        Must have the same number of layers as model. Each layer has a batch dimension.
+    shape : tuple
+        Output (H,W) resolution
+    """
+
+    model = model.eval()
+    ny, nx = shape
+    # (X, Y)
+    meshgrid = np.meshgrid(np.arange(0, nx, 1), np.arange(0, ny, 1))
+    src_pts = torch.Tensor((meshgrid[0].reshape(-1), meshgrid[1].reshape(-1)))
+    src_pts_normalized = (
+        2 * src_pts[0] / (224 - 1) - 1,
+        2 * src_pts[1] / (224 - 1) - 1,
+    )
+    src_pts_normalized = torch.stack(src_pts_normalized, -1)
+    if weights is not None:
+        src_pts_normalized = src_pts_normalized[None].to(weights[0].device)
+        pred = model(src_pts_normalized, weights, biases)
+        pred = pred[0]
+    else:
+        src_pts_normalized = src_pts_normalized.to(model[0].weight.device)
+        pred = model(src_pts_normalized)
+
+    pred_np = pred.detach().cpu().numpy()
+    pred_img = pt.transforms.imagenet.np_unnormalize(pred_np.reshape(224, 224, 3))
+    return pred_img
+
+
+def load_siren_params(model, weights, biases):
+    """Copies weights and biases into the internal parameters of model.
+
+    Parameters
+    ----------
+    model : nn.Module
+        Uninitialized SIREN network
+    weights : list of torch.Tensor
+        Must have the same number of layers as model
+    biases : list of torch.Tensor
+        Must have the same number of layers as model
+    """
+
+    assert len(weights) == len(biases)
+    bl_count = 0
+    for module in model:
+        if isinstance(module, BatchLinear):
+            w = weights[bl_count][0]
+            b = biases[bl_count][0]
+            bl_count += 1
+            module.weight.copy_(w)
+            module.bias.copy_(b)
+    assert bl_count == len(weights)
+
+
 class SIRENCoordToImg(pt.LightningModule):
     """Model that learns coordinate->RGB image mapping"""
 
@@ -394,6 +517,7 @@ class SIRENCoordToImg(pt.LightningModule):
         optimizer="adamw",
         optimizer_kwargs={},
         hyper_ckpt=None,
+        coord_gain=1 / 0.5779279084228418,
     ):
         super().__init__()
         self.save_hyperparameters()
@@ -404,14 +528,19 @@ class SIRENCoordToImg(pt.LightningModule):
         self.optimizer = optimizer
         self.optimizer_kwargs = optimizer_kwargs
 
+        self.coord_gain = coord_gain
+
         siren_nodes = [2, *layers, 3]
         self.model = SIREN(siren_nodes)
 
         self.loss_fn = pt.losses.get_functional_loss(loss)
 
         if hyper_ckpt:
-            # TODO initialize network using hypernetwork here if available
-            hyper = HyperSIRENPTL.load_from_checkpoint(str(this_file_dir / hyper_ckpt))
+            ckpt_path = str(this_file_dir / hyper_ckpt)
+            log.info(f"Loading {ckpt_path}")
+
+            hyper = HyperSIRENPTL.load_from_checkpoint(ckpt_path)
+            hyper.eval()
 
             transform = A.Compose(
                 [
@@ -426,31 +555,13 @@ class SIRENCoordToImg(pt.LightningModule):
             img = transform(image=self.img)["image"]
 
             with torch.no_grad():
-                _, siren_weights, siren_biases = hyper(img[None])
-                bl_count = 0
-                for module in self.model:
-                    if isinstance(module, BatchLinear):
-                        w = siren_weights[bl_count][0]
-                        b = siren_biases[bl_count][0]
-                        bl_count += 1
-                        module.weight.copy_(w)
-                        module.bias.copy_(b)
-                assert bl_count == len(siren_weights)
+                embedding, siren_weights, siren_biases = hyper(img[None])
+                load_siren_params(self.model, siren_weights, siren_biases)
 
     def forward(self, x):
-        """
-        Parameters
-        ----------
-        x : torch.Tensor
-            (B, 3, H, W) Input data
-
-        Returns
-        -------
-        output : torch.Tensor
-            (B, C, H, W) Predicted logits
-        """
-        x = self.model(x)
-        return x
+        x = x * self.coord_gain
+        res = self.model(x[None])
+        return res
 
     ###########################
     # PyTorch Lightning Stuff #
@@ -524,7 +635,7 @@ class SIRENCoordToImg(pt.LightningModule):
         x_np = x.cpu().numpy()
         logits_np = logits.cpu().numpy()
 
-        x_np = unnormalize_pos(x_np, self.cfg.dataset.shape)
+        x_np = unnormalize_coords(x_np, self.cfg.dataset.shape)
 
         self.val_img[x_np[:, 1], x_np[:, 0]] = logits_np
 
@@ -577,7 +688,9 @@ class SIRENCoordToImg(pt.LightningModule):
             List of callback objects to initialize the Trainer object with.
         """
 
-        callbacks = []
+        callbacks = [
+            LinearHistogramCallback(logging_batch_interval=100),
+        ]
         return callbacks
 
     def train_dataloader(self):

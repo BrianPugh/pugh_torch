@@ -1,8 +1,8 @@
 # @package _group_
 path: data/cat.jpg
-batch_size: 40
+batch_size: 26
 shape: [224, 224]  # (H, W)
-num_sample: 4096
+num_sample: 8192
 pin_memory: True
 num_workers: 1
 num_val_subset: 1000  # Uniformly sample 1000 

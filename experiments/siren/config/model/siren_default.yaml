@@ -4,4 +4,4 @@ layers: [256, 256, 256, 256, 256]
 loss: "mse_loss"
 optimizer: "adamw"
 optimizer_kwargs:
-    eps: 1e-8
+    "weight_decay": 0

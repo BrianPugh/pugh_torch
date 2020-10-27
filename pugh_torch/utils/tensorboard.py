@@ -111,7 +111,7 @@ class SummaryWriter(tb.SummaryWriter):
 
         for i, rgb in enumerate(rgbs):
             rgbs[i] = rgb_transform(rgb)
-        rgbs = rgbs.cpu().numpy()
+        rgbs = rgbs.detach().cpu().numpy()
         rgbs = np.clip(rgbs, 0, 1)
         rgbs = np.transpose(rgbs, (0, 2, 3, 1))  # (B, H, W, 3)
         rgbs = (rgbs * 255).astype(np.uint8)
@@ -199,9 +199,9 @@ class SummaryWriter(tb.SummaryWriter):
         preds = torch.argmax(preds, dim=1)  # (B, H, W)
 
         # Move all the data to cpu
-        rgbs = rgbs.cpu().numpy()
-        preds = preds.cpu().numpy().astype(np.int)
-        targets = targets.cpu().numpy().astype(np.int)
+        rgbs = rgbs.detach().cpu().numpy()
+        preds = preds.detach().cpu().numpy().astype(np.int)
+        targets = targets.detach().cpu().numpy().astype(np.int)
 
         # General cleanup operations
         rgbs = np.clip(rgbs, 0, 1)

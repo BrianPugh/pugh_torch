@@ -7,7 +7,22 @@ import pugh_torch as pt
 
 
 def test_batch_linear():
-    # TODO
+    data = torch.rand(10, 2)
     feat_in = 2
     feat_out = 4
-    layer = pt.modules.meta.BatchLinear(feat_in, feat_out)
+
+    linear = pt.modules.meta.BatchLinear(feat_in, feat_out)
+
+    weight = linear.weight.clone()
+    bias = linear.bias.clone()
+
+    batch_weight = weight.unsqueeze(0)
+    batch_bias = bias.unsqueeze(0)
+
+    vanilla_output = linear(data)
+    batch_output = linear(data, weight=batch_weight, bias=batch_bias)
+
+    assert batch_output.shape[0] == 1
+    assert vanilla_output.shape == batch_output.shape[1:]
+
+    assert torch.isclose(vanilla_output, batch_output[0]).all()
