@@ -206,7 +206,7 @@
 <div class="viewcode-block" id="TensorBoardAddSS.on_train_batch_end"><a class="viewcode-back" href="../../../pugh_torch.callbacks.html#pugh_torch.callbacks.tensorboard_add_ss.TensorBoardAddSS.on_train_batch_end">[docs]</a>    <span class="k">def</span> <span class="nf">on_train_batch_end</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="n">pl_module</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">,</span> <span class="n">dataloader_idx</span>
     <span class="p">):</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">batch_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">logging_batch_interval</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">trainer</span><span class="o">.</span><span class="n">global_step</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">logging_batch_interval</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_train_batch_end</span><span class="p">(</span>
