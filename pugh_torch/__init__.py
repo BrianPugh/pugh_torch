@@ -30,6 +30,7 @@ import pugh_torch.modules
 import pugh_torch.optimizers
 import pugh_torch.transforms
 import pugh_torch.utils
+from pugh_torch.utils import batch_index_select
 
 try:
     import pytorch_lightning
