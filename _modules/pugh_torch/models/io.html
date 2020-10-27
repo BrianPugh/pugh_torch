@@ -220,7 +220,6 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">url</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-    <span class="n">local</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">local</span><span class="p">)</span>
 
     <span class="n">gdrive_prefix</span> <span class="o">=</span> <span class="s2">&quot;https://drive.google.com&quot;</span>
     <span class="k">if</span> <span class="n">url</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">gdrive_prefix</span><span class="p">):</span>
@@ -242,6 +241,7 @@
             <span class="n">model_dir</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">file_name</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
+            <span class="n">local</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">local</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">local</span><span class="o">.</span><span class="n">suffix</span><span class="p">:</span>  <span class="c1"># Has extension</span>
                 <span class="n">model_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">hub</span><span class="o">.</span><span class="n">get_dir</span><span class="p">())</span> <span class="o">/</span> <span class="n">local</span><span class="o">.</span><span class="n">parent</span>
                 <span class="n">file_name</span> <span class="o">=</span> <span class="n">local</span><span class="o">.</span><span class="n">name</span>
@@ -262,7 +262,7 @@
         <span class="c1"># TODO: force only works if an explicit local file path is provided.</span>
         <span class="n">state_dict</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">hub</span><span class="o">.</span><span class="n">load_state_dict_from_url</span><span class="p">(</span>
             <span class="n">url</span><span class="p">,</span>
-            <span class="n">model_dir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">model_dir</span><span class="p">),</span>
+            <span class="n">model_dir</span><span class="o">=</span><span class="kc">None</span> <span class="k">if</span> <span class="n">model_dir</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">model_dir</span><span class="p">),</span>
             <span class="n">map_location</span><span class="o">=</span><span class="n">map_location</span><span class="p">,</span>
             <span class="n">progress</span><span class="o">=</span><span class="n">progress</span><span class="p">,</span>
             <span class="n">check_hash</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
