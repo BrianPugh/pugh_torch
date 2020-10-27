@@ -1,0 +1,8 @@
+experiments/
+.git/
+.github/
+*.egg-info
+*.log
+**/.*DS_Store
+**/*cache
+**/*.pyc
