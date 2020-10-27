@@ -4,6 +4,14 @@ pugh\_torch.utils package
 Submodules
 ----------
 
+pugh\_torch.utils.batch\_index\_select module
+---------------------------------------------
+
+.. automodule:: pugh_torch.utils.batch_index_select
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pugh\_torch.utils.io module
 ---------------------------
 

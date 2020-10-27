@@ -359,7 +359,7 @@ that may have different weight initialization methods.</p>
 
 <dl class="class">
 <dt id="pugh_torch.modules.activation.Hardsigmoid">
-<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.activation.</code><code class="sig-name descname">Hardsigmoid</code><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#Hardsigmoid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.Hardsigmoid" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.activation.</code><code class="sig-name descname">Hardsigmoid</code><span class="sig-paren">(</span><em class="sig-param">inplace: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#Hardsigmoid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.Hardsigmoid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.activation.Hardsigmoid</span></code>, <a class="reference internal" href="#pugh_torch.modules.activation.ActivationModule" title="pugh_torch.modules.activation.ActivationModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.modules.activation.ActivationModule</span></code></a></p>
 <p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
 <dl class="method">
@@ -369,15 +369,15 @@ that may have different weight initialization methods.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="pugh_torch.modules.activation.Hardsigmoid.training">
-<code class="sig-name descname">training</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.Hardsigmoid.training" title="Permalink to this definition">¶</a></dt>
+<dt id="pugh_torch.modules.activation.Hardsigmoid.inplace">
+<code class="sig-name descname">inplace</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.Hardsigmoid.inplace" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="pugh_torch.modules.activation.Hardswish">
-<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.activation.</code><code class="sig-name descname">Hardswish</code><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#Hardswish"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.Hardswish" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.activation.</code><code class="sig-name descname">Hardswish</code><span class="sig-paren">(</span><em class="sig-param">inplace: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#Hardswish"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.Hardswish" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.activation.Hardswish</span></code>, <a class="reference internal" href="#pugh_torch.modules.activation.ActivationModule" title="pugh_torch.modules.activation.ActivationModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.modules.activation.ActivationModule</span></code></a></p>
 <p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
 <dl class="method">
@@ -387,8 +387,8 @@ that may have different weight initialization methods.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="pugh_torch.modules.activation.Hardswish.training">
-<code class="sig-name descname">training</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.Hardswish.training" title="Permalink to this definition">¶</a></dt>
+<dt id="pugh_torch.modules.activation.Hardswish.inplace">
+<code class="sig-name descname">inplace</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.activation.Hardswish.inplace" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -487,7 +487,16 @@ that may have different weight initialization methods.</p>
 <dl class="method">
 <dt id="pugh_torch.modules.activation.Noop.forward">
 <code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#Noop.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.Noop.forward" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="pugh_torch.modules.activation.Noop.training">
@@ -634,7 +643,16 @@ that may have different weight initialization methods.</p>
 <dl class="method">
 <dt id="pugh_torch.modules.activation.Sine.forward">
 <code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/activation.html#Sine.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.activation.Sine.forward" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
 
 <dl class="method">
 <dt id="pugh_torch.modules.activation.Sine.init_first_layer">

@@ -214,6 +214,43 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="module-pugh_torch.utils.batch_index_select">
+<span id="pugh-torch-utils-batch-index-select-module"></span><h2>pugh_torch.utils.batch_index_select module<a class="headerlink" href="#module-pugh_torch.utils.batch_index_select" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>Based on:</dt><dd><p><a class="reference external" href="https://discuss.pytorch.org/t/batch-index-select/9115/11">https://discuss.pytorch.org/t/batch-index-select/9115/11</a></p>
+</dd>
+</dl>
+<dl class="function">
+<dt id="pugh_torch.utils.batch_index_select.batch_index_select">
+<code class="sig-prename descclassname">pugh_torch.utils.batch_index_select.</code><code class="sig-name descname">batch_index_select</code><span class="sig-paren">(</span><em class="sig-param">input</em>, <em class="sig-param">dim</em>, <em class="sig-param">index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/utils/batch_index_select.html#batch_index_select"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.utils.batch_index_select.batch_index_select" title="Permalink to this definition">¶</a></dt>
+<dd><p>batch version of <code class="docutils literal notranslate"><span class="pre">torch.index_select</span></code>.</p>
+<p>Returns a new tensor which indexes the input tensor along dimension <code class="docutils literal notranslate"><span class="pre">dim</span></code>
+using the corresponding entries in <code class="docutils literal notranslate"><span class="pre">index</span></code> which is a <code class="docutils literal notranslate"><span class="pre">LongTensor</span></code>.</p>
+<p>The returned tensor has the same number of dimensions as the original tensor (input).
+The <a href="#id1"><span class="problematic" id="id2">``</span></a>dim``th dimension has the same size as the length of index; other dimensions have the same size as in the original tensor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input</strong> (<em>torch.Tensor</em>) – (B, ..)the input tensor.</p></li>
+<li><p><strong>dim</strong> (<em>int</em>) – the dimension in which we index. Must be <code class="docutils literal notranslate"><span class="pre">&gt;0</span></code> since we use the <a href="#id3"><span class="problematic" id="id4">``</span></a>0``th
+index as the batch.
+May be negative.</p></li>
+<li><p><strong>index</strong> (<em>torch.LongTensor</em>) – (B, N) the 1-D tensor containing the indices to index per batch</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>(B, …) tensor that matches the input dimensions, except the <code class="docutils literal notranslate"><span class="pre">dim``th</span>
+<span class="pre">dimension</span> <span class="pre">now</span> <span class="pre">has</span> <span class="pre">length</span> <span class="pre">``N</span></code>.</p>
+<p>NOTE: does NOT use the same storage as <code class="docutils literal notranslate"><span class="pre">input</span></code> Tensor</p>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
 <div class="section" id="module-pugh_torch.utils.io">
 <span id="pugh-torch-utils-io-module"></span><h2>pugh_torch.utils.io module<a class="headerlink" href="#module-pugh_torch.utils.io" title="Permalink to this headline">¶</a></h2>
 <dl class="exception">
