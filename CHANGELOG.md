@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * `Histogram` callback for logging parameter metrics to TensorBoard.
 * `get_scheduler` for having Hydra-configurable schedulers
 * `load_state_dict_from_url` now works with Google Drive links.
+* `batch_index_select`
 
 ## Fixed
 * Prevent docker container from exitting when vnc disconnects/crashes.
