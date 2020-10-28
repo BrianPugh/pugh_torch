@@ -1,6 +1,6 @@
 """
 
-PyTorch Hashing code isBased on code from:
+PyTorch Hashing code is based on code from:
     https://github.com/ma3oun/hrn
 
 Values are stored as gradient-less parameters so they get properly saved.
@@ -119,7 +119,7 @@ class Hash(nn.Module):
         Parameters
         ----------
         x : torch.Tensor
-            Tensor of anyshape; this hash function will be applied element-wise.
+            Tensor of any shape; this hash function will be applied element-wise.
         """
 
         return self.hash(x)
@@ -167,9 +167,10 @@ class MHash(Hash):
             self.a = nn.Parameter(torch.randint(1, p, (1,)), False)
 
         if not b is None:
+            assert 0 < b < p
             self.b = nn.Parameter(torch.LongTensor([b]), False)
         else:
-            self.b = nn.Parameter(torch.randint(1, 10000, (1,)) % self.p, False)
+            self.b = nn.Parameter(torch.randint(1, p, (1,)), False)
 
     @classmethod
     def from_offset(cls, m, p, *args, **kwargs):
@@ -195,7 +196,9 @@ class BinaryHash(MHash):
     def __init__(self, *args, **kwargs):
         super().__init__(2, *args, **kwargs)
 
-    def hash(self, x):
+    def hash(self, x, symmetric=False):
+        """
+        """
         output = super().hash(x)  # in set {0, 1}
         output[output == 0] = -1  # in set {-1, 1}
         return output
