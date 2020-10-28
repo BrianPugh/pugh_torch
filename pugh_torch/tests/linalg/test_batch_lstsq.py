@@ -3,6 +3,9 @@ import numpy as np
 import torch
 from pugh_torch.linalg import batch_lstsq
 
+_rtol = 1e-4
+_atol = 1e-4
+
 
 def test_batch_lstsq():
     n_batch = 3
@@ -21,7 +24,7 @@ def test_batch_lstsq():
         X, _ = torch.lstsq(B_batch[i], A_batch[i])
         X = X[: A_batch[i].shape[1]]
 
-        assert torch.allclose(solution[i], X[: A_batch.shape[1]])
+        assert torch.allclose(solution[i], X, rtol=_rtol, atol=_atol)
 
 
 def test_batch_lstsq_ragged_experiment():
@@ -44,4 +47,4 @@ def test_batch_lstsq_ragged_experiment():
     solution_padded = batch_lstsq(B_batch_padded, A_batch_padded)
 
     # The 0 padding shouldn't influence the solution.
-    assert torch.allclose(solution, solution_padded)
+    assert torch.allclose(solution, solution_padded, rtol=_rtol, atol=_atol)
