@@ -1,0 +1,22 @@
+pugh\_torch.linalg package
+==========================
+
+Submodules
+----------
+
+pugh\_torch.linalg.batch\_lstsq module
+--------------------------------------
+
+.. automodule:: pugh_torch.linalg.batch_lstsq
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: pugh_torch.linalg
+   :members:
+   :undoc-members:
+   :show-inheritance:

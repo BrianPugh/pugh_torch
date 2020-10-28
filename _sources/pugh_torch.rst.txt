@@ -9,6 +9,7 @@ Subpackages
    pugh_torch.augmentations
    pugh_torch.callbacks
    pugh_torch.datasets
+   pugh_torch.linalg
    pugh_torch.losses
    pugh_torch.mappings
    pugh_torch.metrics

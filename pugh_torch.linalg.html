@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Math notation example &mdash; Pugh Torch 0.4.0 documentation</title>
+  <title>pugh_torch.linalg package &mdash; Pugh Torch 0.4.0 documentation</title>
   
 
   
@@ -37,7 +37,8 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Contributing" href="contributing.html" /> 
+    <link rel="next" title="pugh_torch.losses package" href="pugh_torch.losses.html" />
+    <link rel="prev" title="pugh_torch.datasets.segmentation package" href="pugh_torch.datasets.segmentation.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -94,13 +95,13 @@
 <li class="toctree-l2"><a class="reference internal" href="installation.html#from-sources">From sources</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">Package modules</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pugh_torch.html">pugh_torch package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="pugh_torch.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Package modules</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="pugh_torch.html">pugh_torch package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="pugh_torch.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="pugh_torch.augmentations.html">pugh_torch.augmentations package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pugh_torch.callbacks.html">pugh_torch.callbacks package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pugh_torch.datasets.html">pugh_torch.datasets package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pugh_torch.linalg.html">pugh_torch.linalg package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">pugh_torch.linalg package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pugh_torch.losses.html">pugh_torch.losses package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pugh_torch.mappings.html">pugh_torch.mappings package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pugh_torch.metrics.html">pugh_torch.metrics package</a></li>
@@ -130,7 +131,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Math notation example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="math.html">Math notation example</a></li>
 </ul>
 
             
@@ -177,13 +178,17 @@
     
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Math notation example</li>
+          <li><a href="modules.html">pugh_torch</a> &raquo;</li>
+        
+          <li><a href="pugh_torch.html">pugh_torch package</a> &raquo;</li>
+        
+      <li>pugh_torch.linalg package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/math.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/pugh_torch.linalg.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -193,8 +198,10 @@
   
   <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
       
+        <a href="pugh_torch.losses.html" class="btn btn-neutral float-right" title="pugh_torch.losses package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
-        <a href="contributing.html" class="btn btn-neutral float-left" title="Contributing" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+        <a href="pugh_torch.datasets.segmentation.html" class="btn btn-neutral float-left" title="pugh_torch.datasets.segmentation package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
   </div>
   
@@ -203,12 +210,42 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="math-notation-example">
-<h1>Math notation example<a class="headerlink" href="#math-notation-example" title="Permalink to this headline">¶</a></h1>
-<p>When we describe the methods a repository implements, we frequently need to express some of the variables via inline mathematical notation (e.g. <span class="math notranslate nohighlight">\(t\)</span> and <span class="math notranslate nohighlight">\(\tau_i\)</span>) and some of their relations in displayed mathematical notation:</p>
-<div class="math notranslate nohighlight">
-\[t = \sum_{i=1}^n e^{\frac{1}{\tau_i}}\]</div>
-<p>This page serves as an example of how such is done.</p>
+  <div class="section" id="pugh-torch-linalg-package">
+<h1>pugh_torch.linalg package<a class="headerlink" href="#pugh-torch-linalg-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-pugh_torch.linalg.batch_lstsq">
+<span id="pugh-torch-linalg-batch-lstsq-module"></span><h2>pugh_torch.linalg.batch_lstsq module<a class="headerlink" href="#module-pugh_torch.linalg.batch_lstsq" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>Based on:</dt><dd><p><a class="reference external" href="https://github.com/pytorch/pytorch/issues/27749#issuecomment-703387840">https://github.com/pytorch/pytorch/issues/27749#issuecomment-703387840</a></p>
+</dd>
+</dl>
+<dl class="function">
+<dt id="pugh_torch.linalg.batch_lstsq.batch_lstsq">
+<code class="sig-prename descclassname">pugh_torch.linalg.batch_lstsq.</code><code class="sig-name descname">batch_lstsq</code><span class="sig-paren">(</span><em class="sig-param">B</em>, <em class="sig-param">A</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/linalg/batch_lstsq.html#batch_lstsq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.linalg.batch_lstsq.batch_lstsq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the least-squares solution.</p>
+<p>Finds <code class="docutils literal notranslate"><span class="pre">x</span></code> that minimizes <code class="docutils literal notranslate"><span class="pre">Ax</span> <span class="pre">-</span> <span class="pre">B</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input</strong> (<em>torch.Tensor</em>) – (b, m, k)</p></li>
+<li><p><strong>A</strong> (<em>torch.Tensor</em>) – (b, m, n)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(b, n, k) least squares solution.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pugh_torch.linalg">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pugh_torch.linalg" title="Permalink to this headline">¶</a></h2>
+</div>
 </div>
 
 

@@ -99,6 +99,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../pugh_torch.augmentations.html">pugh_torch.augmentations package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../pugh_torch.callbacks.html">pugh_torch.callbacks package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../pugh_torch.datasets.html">pugh_torch.datasets package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../pugh_torch.linalg.html">pugh_torch.linalg package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../pugh_torch.losses.html">pugh_torch.losses package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../pugh_torch.mappings.html">pugh_torch.mappings package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../pugh_torch.metrics.html">pugh_torch.metrics package</a></li>
@@ -218,12 +219,16 @@
 <span class="kn">import</span> <span class="nn">pugh_torch.helpers</span>
 <span class="kn">from</span> <span class="nn">pugh_torch.helpers</span> <span class="kn">import</span> <span class="n">to_obj</span>
 
+<span class="kn">import</span> <span class="nn">pugh_torch.linalg</span>
+<span class="kn">from</span> <span class="nn">pugh_torch.linalg</span> <span class="kn">import</span> <span class="n">batch_lstsq</span>
+
 <span class="kn">import</span> <span class="nn">pugh_torch.losses</span>
 <span class="kn">import</span> <span class="nn">pugh_torch.mappings</span>
 <span class="kn">import</span> <span class="nn">pugh_torch.models</span>
 <span class="kn">import</span> <span class="nn">pugh_torch.modules</span>
 <span class="kn">import</span> <span class="nn">pugh_torch.optimizers</span>
 <span class="kn">import</span> <span class="nn">pugh_torch.transforms</span>
+
 <span class="kn">import</span> <span class="nn">pugh_torch.utils</span>
 <span class="kn">from</span> <span class="nn">pugh_torch.utils</span> <span class="kn">import</span> <span class="n">batch_index_select</span>
 
