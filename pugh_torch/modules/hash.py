@@ -8,7 +8,16 @@ Values are stored as gradient-less parameters so they get properly saved.
 
 import torch
 from torch import nn
+import torch.nn.functional as F
 import numpy as np
+
+def _inf_normalize(x):
+    """ Normalize tensor by the infinite norm.
+
+    Just fancy talk for dividing by the maximum magniutde.
+    """
+
+    return F.normalize(torch.flatten(x, 1), p=float("inf"))
 
 
 def primes(n, copy=False, cache=True):
@@ -83,7 +92,7 @@ def primes_index(i):
     while True:
         list_of_primes = primes(n)
         try:
-            prime = list_of_primes[p]
+            prime = list_of_primes[i]
             break
         except IndexError:
             n *= 10
@@ -108,6 +117,9 @@ class Hash(nn.Module):
         """
 
         super().__init__()
+
+        assert isinstance(m, int)
+        self.dim_int = m
         self.dim = nn.Parameter(torch.Tensor([m]), False)
 
     def hash(self, x):
@@ -135,7 +147,7 @@ class MHash(Hash):
         https://jeffe.cs.illinois.edu/teaching/datastructures/notes/12-hashing.pdf
     """
 
-    def __init__(self, m, p=999_999_937, a=None, b=None):
+    def __init__(self, m, p=None, a=None, b=None):
         """
 
         output = ((a * input + b) % p) % m
@@ -146,7 +158,7 @@ class MHash(Hash):
             Size of output hash.
         p : int
             Large prime number, larger than the size of the universe input
-            set. The default value is a pretty large prime number that should be sufficient for most use-cases.
+            set. Defaults to a random prime at least 10x bigger than ``m``.
         a : int
             Salt A. If not explicitly set, randomly initialized.
         b : int
@@ -154,8 +166,15 @@ class MHash(Hash):
         """
 
         super().__init__(m)
+
+        if p is None:
+            # Generate a random large ``p``
+            offset = np.random.randint(1000000, 5761454)
+            p = primes_index(offset)
+
         assert p >= m
         self.m = nn.Parameter(torch.LongTensor([m]), False)
+
         self.p = nn.Parameter(torch.LongTensor([p]), False)
 
         # Initialize Salts
@@ -194,12 +213,130 @@ class BinaryHash(MHash):
     """
 
     def __init__(self, *args, **kwargs):
+        """
+        Parameters
+        ----------
+        p : int
+            Large prime number, larger than the size of the universe input
+            set. The default value is a random large prime number that should be sufficient for most use-cases.
+        """
         super().__init__(2, *args, **kwargs)
 
-    def hash(self, x, symmetric=False):
-        """
-        """
+    def hash(self, x):
         output = super().hash(x)  # in set {0, 1}
         output[output == 0] = -1  # in set {-1, 1}
         return output
 
+class HashProj(nn.ParameterDict):
+    """ Hashes and projects and arbitrary-feature-length input into a 
+    fixed-feature-length output.
+    """
+
+    # Relatively arbitrary number, just each newly created ``hash_phi``
+    # needs a different offset.
+    prime_offset = 2000
+
+    def __init__(self, out_feat):
+        """ Applies a random feature hashing function.
+
+        This is the function PHI described in section 2 of:
+            https://arxiv.org/abs/2010.05880
+
+        Parameters
+        ----------
+        out_features : int
+            The output hash embedding size
+        """
+
+        super().__init__()
+        out_feat = int(out_feat)
+
+        self.hash_phi = MHash.from_offset(out_feat, HashProj.prime_offset)
+        HashProj.prime_offset += 1
+        self.hash_xi = BinaryHash()
+        self.dim = out_feat
+
+        self._common_init()
+
+    @classmethod
+    def from_hashers(cls, hash_h, hash_xi):
+        """ More advanced initialization from externally defined hashers.
+
+        Parameters
+        ----------
+        hash_h : pugh_torch.modules.Hash
+            Hashing function that outputs in set ``{0, 1, ..., out_feat-1}``
+        hash_xi : pugh_torch.modules.Hash
+            Binary hashing function that outputs in set ``{-1, 1}``
+        """
+
+        self = cls.__new__(cls)
+        super(HashProj, self).__init__()
+
+        self.hash_h = hash_h
+        self.hash_xi = hash_xi
+        self.dim = int(self.hash_h.dim)
+
+        self._common_init()
+
+        return self
+
+    def _common_init(self):
+        # Called at the end of all constructors
+        self.device = 'cpu'
+
+    def __getitem__(self, key):
+        assert isinstance(key, int)
+
+        try:
+            res = super().__getitem__(str(key))
+        except KeyError:
+            # compute it
+            res = self._compute_hash_projection(key)
+            self[str(key)] = res
+
+        return res
+
+    def _compute_hash_projection(self, n_input_feat):
+        """ Computes in_feat x out_feat projection matrix to compute the hash.
+
+        This matrix is not trainable, and contains elements in the set:
+            {-1, 0, 1}
+
+        Returns
+        -------
+        torch.Tensor
+        """
+
+        jj, ii = torch.meshgrid(torch.arange(n_input_feat), torch.arange(self.dim))
+        hashed_h_jj = self.hash_h(jj)
+        hashed_xi_jj = self.hash_xi(jj)
+        proj = (hashed_h_jj == ii) * hashed_xi_jj
+        proj = proj.to(self.device)
+        return nn.Parameter(proj, False)
+
+    def to(self, *args, **kwargs):
+        """ Records the device to ``self.device``
+        """
+
+        device, dtype, non_blocking, convert_to_format = torch._C._nn._parse_to(*args, **kwargs)
+        self.device = device
+        return super().to(*args, **kwargs)
+
+    def forward(self, x):
+        """
+        Parameters
+        ----------
+        x : torch.Tensor
+            (b, input_feat) Tensor to hash
+
+        Returns
+        -------
+        torch.Tensor
+            (b, output_feat) Hashed tensor
+        """
+
+        assert x.dim == 2
+        n_input_feat = x.shape[-1]
+        output = torch.matmul(x, self[n_input_feat])
+        return output

@@ -30,7 +30,7 @@ import pugh_torch.modules
 import pugh_torch.optimizers
 import pugh_torch.transforms
 import pugh_torch.utils
-from pugh_torch.utils import batch_index_select
+from pugh_torch.utils import batch_index_select, timeit
 
 try:
     import pytorch_lightning
