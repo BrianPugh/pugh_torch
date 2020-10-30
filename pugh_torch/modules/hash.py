@@ -352,36 +352,91 @@ class MHashProj(nn.ParameterDict):
         return output
 
 class RandHashProj(nn.Module):
-    """ If a maximum input feature length is known, then we can just intiialize
-    a single projection matrix from random numbers instead of going through
-    the hassle of hash functions.
+    """ We can just extend a single projection matrix without the
+    need for two separate hash functions.
     """
 
-    def __init__(self, out_feat, in_feat_max=8192):
+    def __init__(self, out_feat, sparse=False):
         """
         Parameters
         ----------
         out_feat : int
             Output feature size
-        in_feat_max : int
-            Maximum input feature size.
+        sparse : bool
+            Use a sparse representation for the internal projection matrix.
+            Saves a good amount of memory when ``out_feat`` is >5
+            Defaults to False.
         """
 
         super().__init__()
 
-        # Build the projection matrix
-        jj, ii = torch.meshgrid(torch.arange(in_feat_max), torch.arange(out_feat))
+        self.sparse = sparse
+        if self.sparse:
+            raise NotImplementedError
+        else:
+            self.proj = nn.Parameter(torch.Tensor(0, out_feat), False) 
 
-        selector = torch.randint(0, out_feat, size=(in_feat_max, 1))
-        selector = selector.expand(in_feat_max, out_feat)
-        binary = torch.randint(0, 2, size=(in_feat_max, 1))
-        binary[binary==0] = -1
-        binary = binary.expand(in_feat_max, out_feat)
+    @torch.no_grad()
+    def _get_proj(self, *args, **kwargs):
+        """ Returns a view of the projection matrix
+
+        Parameters
+        ----------
+        in_feat_new : int
+            Number of features that need projecting
+
+        Returns
+        -------
+        torch.Parameter
+            (in_feat_new, out_feat) projection matrix.
+        """
+
+        if self.sparse:
+            return self._get_sparse_proj(*args, **kwargs)
+        else:
+            return self._get_dense_proj(*args, **kwargs)
+
+    @torch.no_grad()
+    def _get_sparse_proj(self, in_feat_new):
+        assert self.sparse
+        raise NotImplementedError
+
+    @torch.no_grad()
+    def _get_dense_proj(self, in_feat_new):
+        assert not self.sparse
+
+        # Extend the existing projection matrix
+        in_feat_old, out_feat = self.proj.shape
+
+        if in_feat_new <= in_feat_old:
+            # We can just return a view of our currently stored projection
+            # matrix
+            return self.proj[:in_feat_new]
+
+        in_feat_diff = in_feat_new - in_feat_old
+        device = self.proj.device
+
+        # We have to extend our existing projection matrix
+
+        ii = torch.arange(in_feat_old, in_feat_new, device=device)
+        ii = ii.unsqueeze(-1)
+        ii = ii.expand(-1, out_feat)
+
+        selector = torch.randint(0, out_feat, size=(in_feat_diff, 1), device=device)
+        selector = selector.expand(-1, out_feat)
 
         selector_mask = selector == ii
-        proj = selector_mask * binary
-        proj = proj.type(torch.float)
-        self.proj = nn.Parameter(proj, False)
+
+        binary = torch.randint(0, 2, size=(in_feat_diff, 1), device=device)
+        binary[binary==0] = -1
+        binary = binary.expand(-1, out_feat)
+
+        new_proj = selector_mask * binary
+        new_proj = new_proj.type(torch.float)
+
+        self.proj = nn.Parameter(torch.cat((self.proj, new_proj), dim=0), False)
+
+        return self.proj
 
     def forward(self, x):
         """
@@ -390,9 +445,9 @@ class RandHashProj(nn.Module):
         x : torch.Tensor
             (B, N) feature vector
         """
-        # TODO: crop the proj matrix
+
         _, n = x.shape
-        assert n <= self.proj.shape[0], f"Input tensor of shape {int(n)} dimension exceeds maximum hashing input dimension of {int(self.proj.shape[1])}"
-        output = torch.matmul(x, self.proj[:n])
+        proj = self._get_proj(n)
+        output = torch.matmul(x, proj)
         return output
 

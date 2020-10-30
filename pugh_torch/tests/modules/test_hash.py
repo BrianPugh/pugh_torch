@@ -154,13 +154,19 @@ def test_hash_projection_computation():
 
 def test_rand_hash_proj_basic(mocker):
     batch = 3
-    in_feat = 10
+    in_feat = 100
     out_feat = 5
     data = torch.rand(batch, in_feat)
 
     proj = ptmh.RandHashProj(out_feat)
+    assert proj.proj.shape == (0, 5)
 
-    actual = proj(data)
+    actual_10 = proj(data[:, :10])
+    assert proj.proj.shape == (10, 5)
 
-    assert actual.shape == (batch, out_feat)
-    import ipdb as pdb; pdb.set_trace()
+    actual_full = proj(data)
+    assert proj.proj.shape == (in_feat, 5)
+
+    actual_10_2 = proj(data[:, :10])
+    assert proj.proj.shape == (100, 5)
+    assert torch.allclose(actual_10, actual_10_2)
