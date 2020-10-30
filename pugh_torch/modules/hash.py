@@ -236,6 +236,7 @@ class BinaryMHash(MHash):
         output[output == 0] = -1  # in set {-1, 1}
         return output
 
+
 class MHashProj(nn.ParameterDict):
     """ Hashes and projects and arbitrary-feature-length input into a 
     fixed-feature-length output.
@@ -349,3 +350,49 @@ class MHashProj(nn.ParameterDict):
         n_input_feat = x.shape[-1]
         output = torch.matmul(x, self[n_input_feat])
         return output
+
+class RandHashProj(nn.Module):
+    """ If a maximum input feature length is known, then we can just intiialize
+    a single projection matrix from random numbers instead of going through
+    the hassle of hash functions.
+    """
+
+    def __init__(self, out_feat, in_feat_max=8192):
+        """
+        Parameters
+        ----------
+        out_feat : int
+            Output feature size
+        in_feat_max : int
+            Maximum input feature size.
+        """
+
+        super().__init__()
+
+        # Build the projection matrix
+        jj, ii = torch.meshgrid(torch.arange(in_feat_max), torch.arange(out_feat))
+
+        selector = torch.randint(0, out_feat, size=(in_feat_max, 1))
+        selector = selector.expand(in_feat_max, out_feat)
+        binary = torch.randint(0, 2, size=(in_feat_max, 1))
+        binary[binary==0] = -1
+        binary = binary.expand(in_feat_max, out_feat)
+
+        selector_mask = selector == ii
+        proj = selector_mask * binary
+        proj = proj.type(torch.float)
+        self.proj = nn.Parameter(proj, False)
+
+    def forward(self, x):
+        """
+        Parameters
+        ----------
+        x : torch.Tensor
+            (B, N) feature vector
+        """
+        # TODO: crop the proj matrix
+        _, n = x.shape
+        assert n <= self.proj.shape[0], f"Input tensor of shape {int(n)} dimension exceeds maximum hashing input dimension of {int(self.proj.shape[1])}"
+        output = torch.matmul(x, self.proj[:n])
+        return output
+
