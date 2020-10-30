@@ -169,7 +169,7 @@ class MHash(Hash):
 
         if p is None:
             # Generate a random large ``p``
-            offset = np.random.randint(1000000, 5761454)
+            offset = np.random.randint(1, 5761454)
             p = primes_index(offset)
 
         assert p >= m
@@ -204,11 +204,20 @@ class MHash(Hash):
         prime = primes_index(p)
         return cls(m, prime, *args, **kwargs)
 
+    def __repr__(self):
+        elems = [self.__class__.__name__, '(']
+        for i, (name, param) in enumerate(self.named_parameters()):
+            if i > 0:
+                elems.append(', ')
+            elems.append(f"{name}={int(param)}")
+        elems.append(')')
+        return "".join(elems)
+
     def hash(self, x):
         # This may overflow, but it's (probably?) not a big deal.
         return ((self.a * x + self.b) % self.p) % self.m
 
-class BinaryHash(MHash):
+class BinaryMHash(MHash):
     """ Special case of MHash where the output is in the set {-1, 1}
     """
 
@@ -227,7 +236,7 @@ class BinaryHash(MHash):
         output[output == 0] = -1  # in set {-1, 1}
         return output
 
-class HashProj(nn.ParameterDict):
+class MHashProj(nn.ParameterDict):
     """ Hashes and projects and arbitrary-feature-length input into a 
     fixed-feature-length output.
     """
