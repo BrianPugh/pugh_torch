@@ -159,14 +159,34 @@ def test_rand_hash_proj_basic(mocker):
     data = torch.rand(batch, in_feat)
 
     proj = ptmh.RandHashProj(out_feat)
-    assert proj.proj.shape == (0, 5)
+    assert proj.proj.shape == (5, 0)
 
     actual_10 = proj(data[:, :10])
-    assert proj.proj.shape == (10, 5)
+    assert proj.proj.shape == (5, 10)
 
     actual_full = proj(data)
-    assert proj.proj.shape == (in_feat, 5)
+    assert proj.proj.shape == (5, in_feat)
 
     actual_10_2 = proj(data[:, :10])
-    assert proj.proj.shape == (100, 5)
+    assert proj.proj.shape == (5, 100)
+
     assert torch.allclose(actual_10, actual_10_2)
+
+def test_rand_hash_proj_state_dict():
+    pass
+
+def test_rand_hash_proj_dense_vs_sparse():
+    batch = 3
+    in_feat = 100
+    out_feat = 5
+    data = torch.rand(batch, in_feat)
+
+    torch.manual_seed(0)
+    proj = ptmh.RandHashProj(out_feat, sparse=False)
+    res_dense = proj(data)
+
+    torch.manual_seed(0)
+    proj = ptmh.RandHashProj(out_feat, sparse=True)
+    res_sparse = proj(data)
+
+    assert torch.allclose(res_dense, res_sparse)

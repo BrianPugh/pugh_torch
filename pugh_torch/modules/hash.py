@@ -281,7 +281,7 @@ class MHashProj(nn.ParameterDict):
         """
 
         self = cls.__new__(cls)
-        super(HashProj, self).__init__()
+        super(MHashProj, self).__init__()
 
         self.hash_h = hash_h
         self.hash_xi = hash_xi
@@ -354,9 +354,15 @@ class MHashProj(nn.ParameterDict):
 class RandHashProj(nn.Module):
     """ We can just extend a single projection matrix without the
     need for two separate hash functions.
+
+    Attributes
+    ----------
+    proj : torch.nn.Parameter
+        (out_feat, in_feat) where in_feat is the maximum input feature
+        size fed through yet.
     """
 
-    def __init__(self, out_feat, sparse=False):
+    def __init__(self, out_feat, sparse=True):
         """
         Parameters
         ----------
@@ -364,20 +370,22 @@ class RandHashProj(nn.Module):
             Output feature size
         sparse : bool
             Use a sparse representation for the internal projection matrix.
-            Saves a good amount of memory when ``out_feat`` is >5
-            Defaults to False.
+            Saves a good amount of memory when expected TODO
+            Defaults to True.
         """
 
         super().__init__()
 
+        # TODO: automatically set ``sparse`` depending on expected size
+
         self.sparse = sparse
         if self.sparse:
-            raise NotImplementedError
+            self.proj = nn.Parameter(torch.sparse.FloatTensor(out_feat, 0), False)
         else:
-            self.proj = nn.Parameter(torch.Tensor(0, out_feat), False) 
+            self.proj = nn.Parameter(torch.Tensor(out_feat, 0), False) 
 
     @torch.no_grad()
-    def _get_proj(self, *args, **kwargs):
+    def _get_proj(self, in_feat_new):
         """ Returns a view of the projection matrix
 
         Parameters
@@ -391,52 +399,67 @@ class RandHashProj(nn.Module):
             (in_feat_new, out_feat) projection matrix.
         """
 
-        if self.sparse:
-            return self._get_sparse_proj(*args, **kwargs)
-        else:
-            return self._get_dense_proj(*args, **kwargs)
-
-    @torch.no_grad()
-    def _get_sparse_proj(self, in_feat_new):
-        assert self.sparse
-        raise NotImplementedError
-
-    @torch.no_grad()
-    def _get_dense_proj(self, in_feat_new):
-        assert not self.sparse
-
-        # Extend the existing projection matrix
-        in_feat_old, out_feat = self.proj.shape
+        out_feat, in_feat_old = self.proj.shape
 
         if in_feat_new <= in_feat_old:
             # We can just return a view of our currently stored projection
             # matrix
-            return self.proj[:in_feat_new]
+            if self.sparse:
+                # Have to do some hacky stuff because strides aren't available
+                # directly when using sparse tensors
+                indices = self.proj.indices() # (2, N) sorted because its coalesced
+                values = self.proj.values()
 
+                mask = indices[1] < in_feat_new
+
+                proj = torch.sparse.FloatTensor(indices[:, mask], values[mask], (out_feat, in_feat_new))
+                return proj
+            else:
+                return self.proj[:, :in_feat_new]
+
+        ext = self._get_dense_ext(in_feat_new)
+
+        if self.sparse:
+            ext = ext.to_sparse()
+
+        new_proj = torch.cat((self.proj, ext), dim=1)
+
+        if self.sparse:
+            new_proj = new_proj.coalesce()
+
+        self.proj = nn.Parameter(new_proj, False)
+
+        return self.proj
+
+    @torch.no_grad()
+    def _get_dense_ext(self, in_feat_new):
+        """ Create the new extension portion of projection matrix
+        """
+
+        # Extend the existing projection matrix
+        out_feat, in_feat_old  = self.proj.shape
         in_feat_diff = in_feat_new - in_feat_old
         device = self.proj.device
 
         # We have to extend our existing projection matrix
 
-        ii = torch.arange(in_feat_old, in_feat_new, device=device)
+        ii = torch.arange(0, out_feat, device=device)
         ii = ii.unsqueeze(-1)
-        ii = ii.expand(-1, out_feat)
+        ii = ii.expand(-1, in_feat_diff)
 
-        selector = torch.randint(0, out_feat, size=(in_feat_diff, 1), device=device)
-        selector = selector.expand(-1, out_feat)
+        selector = torch.randint(0, out_feat, size=(1, in_feat_diff), device=device)
+        selector = selector.expand(out_feat, -1)
 
         selector_mask = selector == ii
 
-        binary = torch.randint(0, 2, size=(in_feat_diff, 1), device=device)
+        binary = torch.randint(0, 2, size=(1, in_feat_diff), device=device)
         binary[binary==0] = -1
-        binary = binary.expand(-1, out_feat)
+        binary = binary.expand(out_feat, -1)
 
-        new_proj = selector_mask * binary
-        new_proj = new_proj.type(torch.float)
+        ext = selector_mask * binary
+        ext = ext.type(self.proj.dtype)
 
-        self.proj = nn.Parameter(torch.cat((self.proj, new_proj), dim=0), False)
-
-        return self.proj
+        return ext
 
     def forward(self, x):
         """
@@ -448,6 +471,10 @@ class RandHashProj(nn.Module):
 
         _, n = x.shape
         proj = self._get_proj(n)
-        output = torch.matmul(x, proj)
+        # Matmul only supporse (sparse, dense) multiply, not (dense, sparse)
+        # So we do the matmul (and the proj dimensions) sort of "backwards"
+        # from intuitive
+        output = torch.matmul(proj, x.transpose(0, 1))
+        output = output.transpose(0, 1)
         return output
 
