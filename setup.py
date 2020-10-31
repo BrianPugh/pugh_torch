@@ -26,8 +26,8 @@ requirements = [
     "ranger-adabelief>=0.0.9",
     "scikit-image==0.17.2",
     "tensorboard>=2.2.1",
-    "torch>=1.4.0",
-    "torchvision>=0.5.0",
+    "torch>=1.7.0",
+    "torchvision>=0.8.1",
 ]
 
 test_requirements = [
@@ -40,7 +40,7 @@ test_requirements = [
     "pytest-mock>=3.3.1",
     "pytest-raises>=0.11",
     "pytest>=5.4.3",
-    "pytorch-lightning>=1.0.0rc4",
+    "pytorch-lightning>=1.0.4",
 ]
 
 dev_requirements = [
