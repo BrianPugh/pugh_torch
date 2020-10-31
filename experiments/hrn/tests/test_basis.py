@@ -72,5 +72,13 @@ def test_basis_crud_vector():
     assert (basis.basis[:, 0] == 0).all()
     assert basis.init[0] == False
 
+def test_repr():
+    feat = 10
+    n_basis = 3
+
+    basis = HRNBasis(feat, n_basis)
+    actual = basis.__repr__()
+    assert actual == 'HRNBasis(feat=10, n=3)'
+
 def test_basis_state_dict():
     pass

@@ -56,6 +56,14 @@ class HRNBasis(nn.Module):
         self.age_thresh = nn.Parameter(torch.Tensor(5,), False)  # TODO: expose this if necessary
         self.prev_inputs = deque(maxlen=aging_lookback)
 
+    def __repr__(self):
+        return (
+                f"{self.__class__.__name__}("
+                f"feat={int(self.basis.shape[0])}, "
+                f"n={int(self.basis.shape[1])}"
+                ")"
+                )
+
     @property
     def is_empty(self):
         """
