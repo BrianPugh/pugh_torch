@@ -3,6 +3,8 @@ from .activation import Activation, ActivationModule
 import pugh_torch.modules.init
 from .load_state_dict_mixin import LoadStateDictMixin
 import pugh_torch.modules.meta
+import pugh_torch.modules.hash
+from pugh_torch.modules.hash import RandHashProj
 
 try:
     import pytorch_lightning

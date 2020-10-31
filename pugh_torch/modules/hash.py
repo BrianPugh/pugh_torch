@@ -549,12 +549,20 @@ class RandHashProj(nn.Module):
         # Re-add it to the dictionary so that
         state_dict["proj"] = proj
 
-    def forward(self, x):
+    def forward(self, x, normalize=True):
         """
         Parameters
         ----------
         x : torch.Tensor
             (B, N) feature vector
+        normalize : bool
+            L2-norms the output hashed vector.
+            Defaults to True.
+
+        Returns
+        -------
+        torch.Tensor
+            (B, out_feat) hashed feature vector.
         """
 
         _, n = x.shape
@@ -564,4 +572,8 @@ class RandHashProj(nn.Module):
         # from intuitive
         output = torch.matmul(proj, x.transpose(0, 1))
         output = output.transpose(0, 1)
+
+        if normalize:
+            output = F.normalize(output)
+
         return output
