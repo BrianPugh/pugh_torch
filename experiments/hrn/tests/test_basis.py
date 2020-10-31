@@ -105,12 +105,15 @@ def test_basis_state_dict(full_basis):
     new_basis = HRNBasis(10, 3)
     new_basis.load_state_dict(state_dict)
 
-def test_basis_aging():
+def test_basis_aging(mocker, full_basis):
+    basis = full_basis
+
     batch = 2
     feat = 10
     n_basis = 3
 
     basis = HRNBasis(feat, n_basis)
+    _update_basis_mock = mocker.patch.object(basis, '_update_basis')
     basis.insert_vector(torch.rand(feat))
     basis.insert_vector(torch.rand(feat))
     basis.insert_vector(torch.rand(feat))
@@ -136,4 +139,15 @@ def test_basis_aging():
         assert (basis.prev_inputs[-1], data)
 
     # The next selection should trigger the basis update mechanism 
+    # We'll test that method more indepth in another test.
+    _update_basis_mock.assert_not_called()
+    basis.select()
+    _update_basis_mock.assert_called_once()
 
+    # Make sure all the counters got reset
+    assert basis.age == 0
+    assert (basis.lpc == 0).all()
+    assert basis.age_thresh == 50
+
+def test_basis_update_basis():
+    pass

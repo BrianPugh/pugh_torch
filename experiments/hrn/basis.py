@@ -80,10 +80,12 @@ class HRNBasis(nn.Module):
 
     @property
     def feat(self):
+        """Size of each basis vector."""
         return self.basis.shape[0]
 
     @property
     def n(self):
+        """Max number of basis vectors."""
         return self.basis.shape[1]
 
     @torch.no_grad()
