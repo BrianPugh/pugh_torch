@@ -20,6 +20,14 @@ pugh\_torch.modules.conv module
    :undoc-members:
    :show-inheritance:
 
+pugh\_torch.modules.hash module
+-------------------------------
+
+.. automodule:: pugh_torch.modules.hash
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pugh\_torch.modules.init module
 -------------------------------
 

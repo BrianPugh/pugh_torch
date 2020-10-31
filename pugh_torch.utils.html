@@ -285,6 +285,28 @@ necessary and use the name from google drive.</p></li>
 </dd></dl>
 
 </div>
+<div class="section" id="module-pugh_torch.utils.misc">
+<span id="pugh-torch-utils-misc-module"></span><h2>pugh_torch.utils.misc module<a class="headerlink" href="#module-pugh_torch.utils.misc" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pugh_torch.utils.misc.timeit">
+<code class="sig-prename descclassname">pugh_torch.utils.misc.</code><code class="sig-name descname">timeit</code><span class="sig-paren">(</span><em class="sig-param">msg=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/utils/misc.html#timeit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.utils.misc.timeit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Timing context manager</p>
+<dl>
+<dt>Example usage:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">timeit</span><span class="p">(</span><span class="s1">&#39;Data Reading&#39;</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="go">Data Reading executed in 5.002 seconds.</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>msg</strong> (<em>str</em>) – Message to be prepended to ” executed in %.3f seconds.”</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
 <div class="section" id="module-pugh_torch.utils.tensorboard">
 <span id="pugh-torch-utils-tensorboard-module"></span><h2>pugh_torch.utils.tensorboard module<a class="headerlink" href="#module-pugh_torch.utils.tensorboard" title="Permalink to this headline">¶</a></h2>
 <dl class="class">

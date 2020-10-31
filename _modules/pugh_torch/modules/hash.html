@@ -1,0 +1,814 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pugh_torch.modules.hash &mdash; Pugh Torch 0.4.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> Pugh Torch
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.4.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Package modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../pugh_torch.html">pugh_torch package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../pugh_torch.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../pugh_torch.augmentations.html">pugh_torch.augmentations package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pugh_torch.callbacks.html">pugh_torch.callbacks package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pugh_torch.datasets.html">pugh_torch.datasets package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pugh_torch.linalg.html">pugh_torch.linalg package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pugh_torch.losses.html">pugh_torch.losses package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pugh_torch.mappings.html">pugh_torch.mappings package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pugh_torch.metrics.html">pugh_torch.metrics package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pugh_torch.models.html">pugh_torch.models package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pugh_torch.modules.html">pugh_torch.modules package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pugh_torch.optimizers.html">pugh_torch.optimizers package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pugh_torch.transforms.html">pugh_torch.transforms package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../pugh_torch.utils.html">pugh_torch.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../pugh_torch.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../pugh_torch.html#module-pugh_torch.exceptions">pugh_torch.exceptions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../pugh_torch.html#module-pugh_torch.helpers">pugh_torch.helpers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../pugh_torch.html#module-pugh_torch">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#deploying">Deploying</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#development">Development</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#the-four-commands-you-need-to-know">The Four Commands You Need To Know</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#additional-optional-setup-steps">Additional Optional Setup Steps:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#suggested-git-branch-strategy">Suggested Git Branch Strategy</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../math.html">Math notation example</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Pugh Torch</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../pugh_torch.html">pugh_torch</a> &raquo;</li>
+        
+      <li>pugh_torch.modules.hash</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pugh_torch.modules.hash</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Right now, only ``RandHashProj`` is recommended for use.</span>
+
+<span class="sd">PyTorch Hashing code is based on code from:</span>
+<span class="sd">    https://github.com/ma3oun/hrn</span>
+
+<span class="sd">Values are stored as gradient-less parameters so they get properly saved.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<span class="k">def</span> <span class="nf">_inf_normalize</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Normalize tensor by the infinite norm.</span>
+
+<span class="sd">    Just fancy talk for dividing by the maximum magniutde.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">p</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="primes"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.hash.primes">[docs]</a><span class="k">def</span> <span class="nf">primes</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a array of primes, 3 &lt;= p &lt; n</span>
+
+<span class="sd">    This is very fast, the following takes &lt;1 second:</span>
+<span class="sd">        res = primes(100_000_000)</span>
+<span class="sd">        assert len(res) == 5_761_454</span>
+<span class="sd">        assert res[0] == 3</span>
+<span class="sd">        assert res[-1] == 99_999_989</span>
+
+<span class="sd">    Caches the largest ``n`` array for future calls.</span>
+
+<span class="sd">    Modified from:</span>
+<span class="sd">        https://stackoverflow.com/a/3035188/13376237</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n : int</span>
+<span class="sd">        Generate primes up to this number</span>
+<span class="sd">    copy : bool</span>
+<span class="sd">        Copy the output array from the internal cache. Only set to ``true``</span>
+<span class="sd">        if you intend to modify the returned array inplace.</span>
+<span class="sd">        Defaults to ``False``.</span>
+<span class="sd">    cache : bool</span>
+<span class="sd">        Use the internal cache for generating/storing prime values.</span>
+<span class="sd">        Defaults to ``True``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy.ndarray</span>
+<span class="sd">        Array of output primes. Do not modify this array inplace unless</span>
+<span class="sd">        you set ``copy=True``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="n">n</span> <span class="o">&gt;=</span> <span class="mi">3</span>
+
+    <span class="k">if</span> <span class="n">cache</span> <span class="ow">and</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="n">primes</span><span class="o">.</span><span class="n">largest_n</span><span class="p">:</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">primes</span><span class="o">.</span><span class="n">cache</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">side</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">primes</span><span class="o">.</span><span class="n">cache</span><span class="p">[:</span><span class="n">index</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">cache</span> <span class="ow">and</span> <span class="n">n</span> <span class="o">==</span> <span class="n">primes</span><span class="o">.</span><span class="n">largest_n</span><span class="p">:</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">primes</span><span class="o">.</span><span class="n">cache</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># This could be sped up using cache, but this is good enough</span>
+        <span class="c1"># for now since this will usually be called with constant ``n``</span>
+        <span class="n">sieve</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">bool</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">sieve</span><span class="p">[</span><span class="n">i</span> <span class="o">//</span> <span class="mi">2</span><span class="p">]:</span>
+                <span class="n">sieve</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="n">i</span> <span class="o">//</span> <span class="mi">2</span> <span class="p">::</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">sieve</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">::]</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="n">cache</span><span class="p">:</span>
+            <span class="n">primes</span><span class="o">.</span><span class="n">largest_n</span> <span class="o">=</span> <span class="n">n</span>
+            <span class="n">primes</span><span class="o">.</span><span class="n">cache</span> <span class="o">=</span> <span class="n">output</span>
+
+    <span class="k">if</span> <span class="n">copy</span><span class="p">:</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">output</span></div>
+
+
+<span class="n">primes</span><span class="o">.</span><span class="n">largest_n</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># For caching primes call</span>
+
+
+<div class="viewcode-block" id="primes_index"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.hash.primes_index">[docs]</a><span class="k">def</span> <span class="nf">primes_index</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the prime value at index.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    index : int</span>
+<span class="sd">        Index into the list of primes (starting at 3) to get.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">100_000_000</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">list_of_primes</span> <span class="o">=</span> <span class="n">primes</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">prime</span> <span class="o">=</span> <span class="n">list_of_primes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">break</span>
+        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+            <span class="n">n</span> <span class="o">*=</span> <span class="mi">10</span>
+    <span class="k">return</span> <span class="n">prime</span></div>
+
+
+<div class="viewcode-block" id="Hash"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.hash.Hash">[docs]</a><span class="k">class</span> <span class="nc">Hash</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base module for other pytorch hash functions.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dim : torch.Tensor</span>
+<span class="sd">        Scalar output dimensionality (output hash size)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        m : int</span>
+<span class="sd">            Output size of this hash function</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dim_int</span> <span class="o">=</span> <span class="n">m</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">([</span><span class="n">m</span><span class="p">]),</span> <span class="kc">False</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Hash.hash"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.hash.Hash.hash">[docs]</a>    <span class="k">def</span> <span class="nf">hash</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="c1"># Called by ``self.forward``</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="Hash.forward"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.hash.Hash.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : torch.Tensor</span>
+<span class="sd">            Tensor of any shape; this hash function will be applied element-wise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">hash</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="MHash"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.hash.MHash">[docs]</a><span class="k">class</span> <span class="nc">MHash</span><span class="p">(</span><span class="n">Hash</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Multiplicative Universal Hashing</span>
+
+<span class="sd">    First described by Lawrence Carter and Mark Wegman</span>
+<span class="sd">    Universal Hash Function</span>
+
+<span class="sd">    See:</span>
+<span class="sd">        https://jeffe.cs.illinois.edu/teaching/datastructures/notes/12-hashing.pdf</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        output = ((a * input + b) % p) % m</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        m : int</span>
+<span class="sd">            Size of output hash.</span>
+<span class="sd">        p : int</span>
+<span class="sd">            Large prime number, larger than the size of the universe input</span>
+<span class="sd">            set. Defaults to a random prime at least 10x bigger than ``m``.</span>
+<span class="sd">        a : int</span>
+<span class="sd">            Salt A. If not explicitly set, randomly initialized.</span>
+<span class="sd">        b : int</span>
+<span class="sd">            Salt B. If not explicitly set, randomly initialized.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Generate a random large ``p``</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5761454</span><span class="p">)</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">primes_index</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">p</span> <span class="o">&gt;=</span> <span class="n">m</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">m</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">([</span><span class="n">m</span><span class="p">]),</span> <span class="kc">False</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">([</span><span class="n">p</span><span class="p">]),</span> <span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># Initialize Salts</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">a</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># 0 and p lead to degenerate cases; and it&#39;s cyclic.</span>
+            <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">p</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">([</span><span class="n">a</span><span class="p">]),</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)),</span> <span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">b</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">b</span> <span class="o">&lt;</span> <span class="n">p</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">([</span><span class="n">b</span><span class="p">]),</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)),</span> <span class="kc">False</span><span class="p">)</span>
+
+<div class="viewcode-block" id="MHash.from_offset"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.hash.MHash.from_offset">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_offset</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set prime number via index into a list of primes starting from 3.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        p : int</span>
+<span class="sd">            Index into list of primes to use.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">prime</span> <span class="o">=</span> <span class="n">primes_index</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">prime</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">elems</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="s2">&quot;(&quot;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">param</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">elems</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="p">)</span>
+            <span class="n">elems</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">param</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">elems</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;)&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">elems</span><span class="p">)</span>
+
+<div class="viewcode-block" id="MHash.hash"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.hash.MHash.hash">[docs]</a>    <span class="k">def</span> <span class="nf">hash</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="c1"># This may overflow, but it&#39;s (probably?) not a big deal.</span>
+        <span class="k">return</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">m</span></div></div>
+
+
+<div class="viewcode-block" id="BinaryMHash"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.hash.BinaryMHash">[docs]</a><span class="k">class</span> <span class="nc">BinaryMHash</span><span class="p">(</span><span class="n">MHash</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Special case of MHash where the output is in the set {-1, 1}&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        p : int</span>
+<span class="sd">            Large prime number, larger than the size of the universe input</span>
+<span class="sd">            set. The default value is a random large prime number that should be sufficient for most use-cases.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BinaryMHash.hash"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.hash.BinaryMHash.hash">[docs]</a>    <span class="k">def</span> <span class="nf">hash</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">hash</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># in set {0, 1}</span>
+        <span class="n">output</span><span class="p">[</span><span class="n">output</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>  <span class="c1"># in set {-1, 1}</span>
+        <span class="k">return</span> <span class="n">output</span></div></div>
+
+
+<div class="viewcode-block" id="MHashProj"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.hash.MHashProj">[docs]</a><span class="k">class</span> <span class="nc">MHashProj</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">ParameterDict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Hashes and projects and arbitrary-feature-length input into a</span>
+<span class="sd">    fixed-feature-length output.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Relatively arbitrary number, just each newly created ``hash_phi``</span>
+    <span class="c1"># needs a different offset.</span>
+    <span class="n">prime_offset</span> <span class="o">=</span> <span class="mi">2000</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_feat</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Applies a random feature hashing function.</span>
+
+<span class="sd">        This is the function PHI described in section 2 of:</span>
+<span class="sd">            https://arxiv.org/abs/2010.05880</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        out_features : int</span>
+<span class="sd">            The output hash embedding size</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="n">out_feat</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">out_feat</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">hash_phi</span> <span class="o">=</span> <span class="n">MHash</span><span class="o">.</span><span class="n">from_offset</span><span class="p">(</span><span class="n">out_feat</span><span class="p">,</span> <span class="n">HashProj</span><span class="o">.</span><span class="n">prime_offset</span><span class="p">)</span>
+        <span class="n">HashProj</span><span class="o">.</span><span class="n">prime_offset</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hash_xi</span> <span class="o">=</span> <span class="n">BinaryHash</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="n">out_feat</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_common_init</span><span class="p">()</span>
+
+<div class="viewcode-block" id="MHashProj.from_hashers"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.hash.MHashProj.from_hashers">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_hashers</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">hash_h</span><span class="p">,</span> <span class="n">hash_xi</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;More advanced initialization from externally defined hashers.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        hash_h : pugh_torch.modules.Hash</span>
+<span class="sd">            Hashing function that outputs in set ``{0, 1, ..., out_feat-1}``</span>
+<span class="sd">        hash_xi : pugh_torch.modules.Hash</span>
+<span class="sd">            Binary hashing function that outputs in set ``{-1, 1}``</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MHashProj</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">hash_h</span> <span class="o">=</span> <span class="n">hash_h</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hash_xi</span> <span class="o">=</span> <span class="n">hash_xi</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hash_h</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_common_init</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="k">def</span> <span class="nf">_common_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Called at the end of all constructors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="c1"># compute it</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_hash_projection</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="bp">self</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)]</span> <span class="o">=</span> <span class="n">res</span>
+
+        <span class="k">return</span> <span class="n">res</span>
+
+    <span class="k">def</span> <span class="nf">_compute_hash_projection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_input_feat</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Computes in_feat x out_feat projection matrix to compute the hash.</span>
+
+<span class="sd">        This matrix is not trainable, and contains elements in the set:</span>
+<span class="sd">            {-1, 0, 1}</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        torch.Tensor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">jj</span><span class="p">,</span> <span class="n">ii</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_input_feat</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">))</span>
+        <span class="n">hashed_h_jj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hash_h</span><span class="p">(</span><span class="n">jj</span><span class="p">)</span>
+        <span class="n">hashed_xi_jj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hash_xi</span><span class="p">(</span><span class="n">jj</span><span class="p">)</span>
+        <span class="n">proj</span> <span class="o">=</span> <span class="p">(</span><span class="n">hashed_h_jj</span> <span class="o">==</span> <span class="n">ii</span><span class="p">)</span> <span class="o">*</span> <span class="n">hashed_xi_jj</span>
+        <span class="n">proj</span> <span class="o">=</span> <span class="n">proj</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">proj</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+<div class="viewcode-block" id="MHashProj.to"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.hash.MHashProj.to">[docs]</a>    <span class="k">def</span> <span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Records the device to ``self.device``&quot;&quot;&quot;</span>
+
+        <span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">non_blocking</span><span class="p">,</span> <span class="n">convert_to_format</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">_C</span><span class="o">.</span><span class="n">_nn</span><span class="o">.</span><span class="n">_parse_to</span><span class="p">(</span>
+            <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MHashProj.forward"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.hash.MHashProj.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : torch.Tensor</span>
+<span class="sd">            (b, input_feat) Tensor to hash</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        torch.Tensor</span>
+<span class="sd">            (b, output_feat) Hashed tensor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="n">x</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span>
+        <span class="n">n_input_feat</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="p">[</span><span class="n">n_input_feat</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">output</span></div></div>
+
+
+<div class="viewcode-block" id="RandHashProj"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.hash.RandHashProj">[docs]</a><span class="k">class</span> <span class="nc">RandHashProj</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;We can just extend a single projection matrix without the</span>
+<span class="sd">    need for two separate hash functions.</span>
+
+<span class="sd">    This algorithm deterministically maps an arbitrarily long ``in_feat``</span>
+<span class="sd">    vector into a fixed-length ``out_feat`` vector. It accomplishes this by</span>
+<span class="sd">    the following algorithm:</span>
+<span class="sd">        For each element in the input feature vector:</span>
+<span class="sd">            1. Based on the index, deterministically multiply it by ``1`` or ``-1``</span>
+<span class="sd">            2. Based on the index, deterministically map it to a single element</span>
+<span class="sd">               in the output feature vector.</span>
+<span class="sd">        Each element in the output feature vector is the sum of all the</span>
+<span class="sd">        input elements mapped to it.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    proj : torch.nn.Parameter</span>
+<span class="sd">        (out_feat, in_feat) where in_feat is the maximum input feature</span>
+<span class="sd">        size fed through yet.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_feat</span><span class="p">,</span> <span class="n">sparse</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        out_feat : int</span>
+<span class="sd">            Output feature size</span>
+<span class="sd">        sparse : bool</span>
+<span class="sd">            Use a sparse representation for the internal projection matrix.</span>
+<span class="sd">            Saves a good amount of memory when ``out_feat&gt;5``, which is a pretty</span>
+<span class="sd">            typical use-case.</span>
+<span class="sd">            Defaults to whichever representation would be more memory efficient.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="c1"># Automatically set ``sparse`` depending on output feature size.</span>
+        <span class="k">if</span> <span class="n">sparse</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">out_feat</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>
+                <span class="n">sparse</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">sparse</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># Only use the following attribute for loading from state_dict</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__init_sparse</span> <span class="o">=</span> <span class="n">sparse</span>
+
+        <span class="k">if</span> <span class="n">sparse</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">proj</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">(</span><span class="n">out_feat</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">proj</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">out_feat</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(out_feat=</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">proj</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sparse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">proj</span><span class="o">.</span><span class="n">is_sparse</span>
+
+    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">_get_proj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_feat_new</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a view of the projection matrix</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        in_feat_new : int</span>
+<span class="sd">            Number of features that need projecting</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        torch.Parameter</span>
+<span class="sd">            (in_feat_new, out_feat) projection matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">out_feat</span><span class="p">,</span> <span class="n">in_feat_old</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">proj</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="k">if</span> <span class="n">in_feat_new</span> <span class="o">&lt;=</span> <span class="n">in_feat_old</span><span class="p">:</span>
+            <span class="c1"># We can just return a view of our currently stored projection</span>
+            <span class="c1"># matrix</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sparse</span><span class="p">:</span>
+                <span class="c1"># Have to do some hacky stuff because strides aren&#39;t available</span>
+                <span class="c1"># directly when using sparse tensors</span>
+                <span class="n">indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">proj</span><span class="o">.</span><span class="n">indices</span><span class="p">()</span>  <span class="c1"># (2, N) sorted because its coalesced</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">proj</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+
+                <span class="n">mask</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">in_feat_new</span>
+
+                <span class="n">proj</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">(</span>
+                    <span class="n">indices</span><span class="p">[:,</span> <span class="n">mask</span><span class="p">],</span> <span class="n">values</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="p">(</span><span class="n">out_feat</span><span class="p">,</span> <span class="n">in_feat_new</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="k">return</span> <span class="n">proj</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">proj</span><span class="p">[:,</span> <span class="p">:</span><span class="n">in_feat_new</span><span class="p">]</span>
+
+        <span class="n">ext</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_dense_ext</span><span class="p">(</span><span class="n">in_feat_new</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sparse</span><span class="p">:</span>
+            <span class="n">ext</span> <span class="o">=</span> <span class="n">ext</span><span class="o">.</span><span class="n">to_sparse</span><span class="p">()</span>
+
+        <span class="n">new_proj</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">proj</span><span class="p">,</span> <span class="n">ext</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sparse</span><span class="p">:</span>
+            <span class="n">new_proj</span> <span class="o">=</span> <span class="n">new_proj</span><span class="o">.</span><span class="n">coalesce</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">proj</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">new_proj</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">proj</span>
+
+    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">_get_dense_ext</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_feat_new</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create the new extension portion of projection matrix&quot;&quot;&quot;</span>
+
+        <span class="c1"># Extend the existing projection matrix</span>
+        <span class="n">out_feat</span><span class="p">,</span> <span class="n">in_feat_old</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">proj</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">in_feat_diff</span> <span class="o">=</span> <span class="n">in_feat_new</span> <span class="o">-</span> <span class="n">in_feat_old</span>
+        <span class="n">device</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">proj</span><span class="o">.</span><span class="n">device</span>
+
+        <span class="c1"># We have to extend our existing projection matrix</span>
+
+        <span class="n">ii</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">out_feat</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">ii</span> <span class="o">=</span> <span class="n">ii</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">ii</span> <span class="o">=</span> <span class="n">ii</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">in_feat_diff</span><span class="p">)</span>
+
+        <span class="n">selector</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">out_feat</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">in_feat_diff</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">selector</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="n">out_feat</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">selector_mask</span> <span class="o">=</span> <span class="n">selector</span> <span class="o">==</span> <span class="n">ii</span>
+
+        <span class="n">binary</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">in_feat_diff</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">binary</span><span class="p">[</span><span class="n">binary</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="n">binary</span> <span class="o">=</span> <span class="n">binary</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="n">out_feat</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">ext</span> <span class="o">=</span> <span class="n">selector_mask</span> <span class="o">*</span> <span class="n">binary</span>
+        <span class="n">ext</span> <span class="o">=</span> <span class="n">ext</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">proj</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ext</span>
+
+    <span class="k">def</span> <span class="nf">_load_from_state_dict</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">state_dict</span><span class="p">,</span>
+        <span class="n">prefix</span><span class="p">,</span>
+        <span class="n">local_metadata</span><span class="p">,</span>
+        <span class="n">strict</span><span class="p">,</span>
+        <span class="n">missing_keys</span><span class="p">,</span>
+        <span class="n">unexpected_keys</span><span class="p">,</span>
+        <span class="n">error_msgs</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Normally, pytorch will raise an exception because the existing</span>
+<span class="sd">        parameter ``proj`` and the one in the state dict will mismatch along</span>
+<span class="sd">        dimension(1), the in_feat dimension.</span>
+<span class="sd">        This override will allow for the successful load of the projection matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Pop &quot;proj&quot; so that we can load it using our special rules.</span>
+        <span class="n">proj</span> <span class="o">=</span> <span class="n">state_dict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;proj&quot;</span><span class="p">)</span>
+        <span class="n">out_feat</span><span class="p">,</span> <span class="n">in_feat</span> <span class="o">=</span> <span class="n">proj</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">self_out_feat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">proj</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="n">out_feat</span> <span class="o">==</span> <span class="n">self_out_feat</span>
+        <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;State dict out_feat=</span><span class="si">{</span><span class="n">out_feat</span><span class="si">}</span><span class="s2"> mismatches object&#39;s out_feat=</span><span class="si">{</span><span class="n">self_out_feat</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">proj</span>  <span class="c1"># so that upstream loading from state dict doesn&#39;t look for it</span>
+
+        <span class="c1"># Perform the loading; the parent method will perform the data copy</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_load_from_state_dict</span><span class="p">(</span>
+            <span class="n">state_dict</span><span class="p">,</span>
+            <span class="n">prefix</span><span class="p">,</span>
+            <span class="n">local_metadata</span><span class="p">,</span>
+            <span class="n">strict</span><span class="p">,</span>
+            <span class="n">missing_keys</span><span class="p">,</span>
+            <span class="n">unexpected_keys</span><span class="p">,</span>
+            <span class="n">error_msgs</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Create the projection matrix of the same shape, but the __init__</span>
+        <span class="c1"># sparse/dense configuration.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__init_sparse</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">proj</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">(</span><span class="n">out_feat</span><span class="p">,</span> <span class="n">in_feat</span><span class="p">),</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">proj</span><span class="o">.</span><span class="n">is_sparse</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">proj</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span><span class="n">proj</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">proj</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span><span class="n">proj</span><span class="o">.</span><span class="n">to_sparse</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">proj</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">out_feat</span><span class="p">,</span> <span class="n">in_feat</span><span class="p">),</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">proj</span><span class="o">.</span><span class="n">is_sparse</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">proj</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span><span class="n">proj</span><span class="o">.</span><span class="n">to_dense</span><span class="p">())</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">proj</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span><span class="n">proj</span><span class="p">)</span>
+
+        <span class="c1"># Re-add it to the dictionary so that</span>
+        <span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;proj&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">proj</span>
+
+<div class="viewcode-block" id="RandHashProj.forward"><a class="viewcode-back" href="../../../pugh_torch.modules.html#pugh_torch.modules.hash.RandHashProj.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : torch.Tensor</span>
+<span class="sd">            (B, N) feature vector</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">_</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">proj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_proj</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="c1"># Matmul only supporse (sparse, dense) multiply, not (dense, sparse)</span>
+        <span class="c1"># So we do the matmul (and the proj dimensions) sort of &quot;backwards&quot;</span>
+        <span class="c1"># from intuitive</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">proj</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Brian Pugh
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

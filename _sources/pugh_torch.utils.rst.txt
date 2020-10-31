@@ -20,6 +20,14 @@ pugh\_torch.utils.io module
    :undoc-members:
    :show-inheritance:
 
+pugh\_torch.utils.misc module
+-----------------------------
+
+.. automodule:: pugh_torch.utils.misc
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pugh\_torch.utils.tensorboard module
 ------------------------------------
 

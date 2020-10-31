@@ -807,6 +807,289 @@ registered hooks while the latter silently ignores them.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-pugh_torch.modules.hash">
+<span id="pugh-torch-modules-hash-module"></span><h2>pugh_torch.modules.hash module<a class="headerlink" href="#module-pugh_torch.modules.hash" title="Permalink to this headline">¶</a></h2>
+<p>Right now, only <code class="docutils literal notranslate"><span class="pre">RandHashProj</span></code> is recommended for use.</p>
+<dl class="simple">
+<dt>PyTorch Hashing code is based on code from:</dt><dd><p><a class="reference external" href="https://github.com/ma3oun/hrn">https://github.com/ma3oun/hrn</a></p>
+</dd>
+</dl>
+<p>Values are stored as gradient-less parameters so they get properly saved.</p>
+<dl class="class">
+<dt id="pugh_torch.modules.hash.BinaryMHash">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.hash.</code><code class="sig-name descname">BinaryMHash</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/hash.html#BinaryMHash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.hash.BinaryMHash" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pugh_torch.modules.hash.MHash" title="pugh_torch.modules.hash.MHash"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.modules.hash.MHash</span></code></a></p>
+<p>Special case of MHash where the output is in the set {-1, 1}</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>p</strong> (<em>int</em>) – Large prime number, larger than the size of the universe input
+set. The default value is a random large prime number that should be sufficient for most use-cases.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="pugh_torch.modules.hash.BinaryMHash.hash">
+<code class="sig-name descname">hash</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/hash.html#BinaryMHash.hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.hash.BinaryMHash.hash" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.hash.BinaryMHash.training">
+<code class="sig-name descname">training</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.hash.BinaryMHash.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pugh_torch.modules.hash.Hash">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.hash.</code><code class="sig-name descname">Hash</code><span class="sig-paren">(</span><em class="sig-param">m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/hash.html#Hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.hash.Hash" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Base module for other pytorch hash functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><strong>dim</strong> (<em>torch.Tensor</em>) – Scalar output dimensionality (output hash size)</p>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><p><strong>m</strong> (<em>int</em>) – Output size of this hash function</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="pugh_torch.modules.hash.Hash.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/hash.html#Hash.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.hash.Hash.forward" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Tensor of any shape; this hash function will be applied element-wise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pugh_torch.modules.hash.Hash.hash">
+<code class="sig-name descname">hash</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/hash.html#Hash.hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.hash.Hash.hash" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.hash.Hash.training">
+<code class="sig-name descname">training</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.hash.Hash.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pugh_torch.modules.hash.MHash">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.hash.</code><code class="sig-name descname">MHash</code><span class="sig-paren">(</span><em class="sig-param">m</em>, <em class="sig-param">p=None</em>, <em class="sig-param">a=None</em>, <em class="sig-param">b=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/hash.html#MHash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.hash.MHash" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pugh_torch.modules.hash.Hash" title="pugh_torch.modules.hash.Hash"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.modules.hash.Hash</span></code></a></p>
+<p>Multiplicative Universal Hashing</p>
+<p>First described by Lawrence Carter and Mark Wegman
+Universal Hash Function</p>
+<dl class="simple">
+<dt>See:</dt><dd><p><a class="reference external" href="https://jeffe.cs.illinois.edu/teaching/datastructures/notes/12-hashing.pdf">https://jeffe.cs.illinois.edu/teaching/datastructures/notes/12-hashing.pdf</a></p>
+</dd>
+</dl>
+<p>output = ((a * input + b) % p) % m</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>m</strong> (<em>int</em>) – Size of output hash.</p></li>
+<li><p><strong>p</strong> (<em>int</em>) – Large prime number, larger than the size of the universe input
+set. Defaults to a random prime at least 10x bigger than <code class="docutils literal notranslate"><span class="pre">m</span></code>.</p></li>
+<li><p><strong>a</strong> (<em>int</em>) – Salt A. If not explicitly set, randomly initialized.</p></li>
+<li><p><strong>b</strong> (<em>int</em>) – Salt B. If not explicitly set, randomly initialized.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="pugh_torch.modules.hash.MHash.from_offset">
+<em class="property">classmethod </em><code class="sig-name descname">from_offset</code><span class="sig-paren">(</span><em class="sig-param">m</em>, <em class="sig-param">p</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/hash.html#MHash.from_offset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.hash.MHash.from_offset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set prime number via index into a list of primes starting from 3.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>p</strong> (<em>int</em>) – Index into list of primes to use.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pugh_torch.modules.hash.MHash.hash">
+<code class="sig-name descname">hash</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/hash.html#MHash.hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.hash.MHash.hash" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.hash.MHash.training">
+<code class="sig-name descname">training</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.hash.MHash.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pugh_torch.modules.hash.MHashProj">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.hash.</code><code class="sig-name descname">MHashProj</code><span class="sig-paren">(</span><em class="sig-param">out_feat</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/hash.html#MHashProj"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.hash.MHashProj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.container.ParameterDict</span></code></p>
+<p>Hashes and projects and arbitrary-feature-length input into a
+fixed-feature-length output.</p>
+<p>Applies a random feature hashing function.</p>
+<dl class="simple">
+<dt>This is the function PHI described in section 2 of:</dt><dd><p><a class="reference external" href="https://arxiv.org/abs/2010.05880">https://arxiv.org/abs/2010.05880</a></p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>out_features</strong> (<em>int</em>) – The output hash embedding size</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="pugh_torch.modules.hash.MHashProj.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/hash.html#MHashProj.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.hash.MHashProj.forward" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – (b, input_feat) Tensor to hash</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(b, output_feat) Hashed tensor</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pugh_torch.modules.hash.MHashProj.from_hashers">
+<em class="property">classmethod </em><code class="sig-name descname">from_hashers</code><span class="sig-paren">(</span><em class="sig-param">hash_h</em>, <em class="sig-param">hash_xi</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/hash.html#MHashProj.from_hashers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.hash.MHashProj.from_hashers" title="Permalink to this definition">¶</a></dt>
+<dd><p>More advanced initialization from externally defined hashers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hash_h</strong> (<em>pugh_torch.modules.Hash</em>) – Hashing function that outputs in set <code class="docutils literal notranslate"><span class="pre">{0,</span> <span class="pre">1,</span> <span class="pre">...,</span> <span class="pre">out_feat-1}</span></code></p></li>
+<li><p><strong>hash_xi</strong> (<em>pugh_torch.modules.Hash</em>) – Binary hashing function that outputs in set <code class="docutils literal notranslate"><span class="pre">{-1,</span> <span class="pre">1}</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.hash.MHashProj.prime_offset">
+<code class="sig-name descname">prime_offset</code><em class="property"> = 2000</em><a class="headerlink" href="#pugh_torch.modules.hash.MHashProj.prime_offset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pugh_torch.modules.hash.MHashProj.to">
+<code class="sig-name descname">to</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/hash.html#MHashProj.to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.hash.MHashProj.to" title="Permalink to this definition">¶</a></dt>
+<dd><p>Records the device to <code class="docutils literal notranslate"><span class="pre">self.device</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.hash.MHashProj.training">
+<code class="sig-name descname">training</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.hash.MHashProj.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pugh_torch.modules.hash.RandHashProj">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.modules.hash.</code><code class="sig-name descname">RandHashProj</code><span class="sig-paren">(</span><em class="sig-param">out_feat</em>, <em class="sig-param">sparse=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/hash.html#RandHashProj"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.hash.RandHashProj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>We can just extend a single projection matrix without the
+need for two separate hash functions.</p>
+<p>This algorithm deterministically maps an arbitrarily long <code class="docutils literal notranslate"><span class="pre">in_feat</span></code>
+vector into a fixed-length <code class="docutils literal notranslate"><span class="pre">out_feat</span></code> vector. It accomplishes this by
+the following algorithm:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>For each element in the input feature vector:</dt><dd><ol class="arabic simple">
+<li><p>Based on the index, deterministically multiply it by <code class="docutils literal notranslate"><span class="pre">1</span></code> or <code class="docutils literal notranslate"><span class="pre">-1</span></code></p></li>
+<li><p>Based on the index, deterministically map it to a single element
+in the output feature vector.</p></li>
+</ol>
+</dd>
+</dl>
+<p>Each element in the output feature vector is the sum of all the
+input elements mapped to it.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><strong>proj</strong> (<em>torch.nn.Parameter</em>) – (out_feat, in_feat) where in_feat is the maximum input feature
+size fed through yet.</p>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>out_feat</strong> (<em>int</em>) – Output feature size</p></li>
+<li><p><strong>sparse</strong> (<em>bool</em>) – Use a sparse representation for the internal projection matrix.
+Saves a good amount of memory when <code class="docutils literal notranslate"><span class="pre">out_feat&gt;5</span></code>, which is a pretty
+typical use-case.
+Defaults to whichever representation would be more memory efficient.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="pugh_torch.modules.hash.RandHashProj.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/hash.html#RandHashProj.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.hash.RandHashProj.forward" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – (B, N) feature vector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pugh_torch.modules.hash.RandHashProj.sparse">
+<em class="property">property </em><code class="sig-name descname">sparse</code><a class="headerlink" href="#pugh_torch.modules.hash.RandHashProj.sparse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.modules.hash.RandHashProj.training">
+<code class="sig-name descname">training</code><em class="property"> = None</em><a class="headerlink" href="#pugh_torch.modules.hash.RandHashProj.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pugh_torch.modules.hash.primes">
+<code class="sig-prename descclassname">pugh_torch.modules.hash.</code><code class="sig-name descname">primes</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">copy=False</em>, <em class="sig-param">cache=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/hash.html#primes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.hash.primes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a array of primes, 3 &lt;= p &lt; n</p>
+<dl class="simple">
+<dt>This is very fast, the following takes &lt;1 second:</dt><dd><p>res = primes(100_000_000)
+assert len(res) == 5_761_454
+assert res[0] == 3
+assert res[-1] == 99_999_989</p>
+</dd>
+</dl>
+<p>Caches the largest <code class="docutils literal notranslate"><span class="pre">n</span></code> array for future calls.</p>
+<dl class="simple">
+<dt>Modified from:</dt><dd><p><a class="reference external" href="https://stackoverflow.com/a/3035188/13376237">https://stackoverflow.com/a/3035188/13376237</a></p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> (<em>int</em>) – Generate primes up to this number</p></li>
+<li><p><strong>copy</strong> (<em>bool</em>) – Copy the output array from the internal cache. Only set to <code class="docutils literal notranslate"><span class="pre">true</span></code>
+if you intend to modify the returned array inplace.
+Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>cache</strong> (<em>bool</em>) – Use the internal cache for generating/storing prime values.
+Defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Array of output primes. Do not modify this array inplace unless
+you set <code class="docutils literal notranslate"><span class="pre">copy=True</span></code></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pugh_torch.modules.hash.primes_index">
+<code class="sig-prename descclassname">pugh_torch.modules.hash.</code><code class="sig-name descname">primes_index</code><span class="sig-paren">(</span><em class="sig-param">i</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/modules/hash.html#primes_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.modules.hash.primes_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the prime value at index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>index</strong> (<em>int</em>) – Index into the list of primes (starting at 3) to get.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
 <div class="section" id="module-pugh_torch.modules.init">
 <span id="pugh-torch-modules-init-module"></span><h2>pugh_torch.modules.init module<a class="headerlink" href="#module-pugh_torch.modules.init" title="Permalink to this headline">¶</a></h2>
 <dl class="simple">
