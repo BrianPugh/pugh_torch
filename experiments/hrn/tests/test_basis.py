@@ -104,3 +104,36 @@ def test_basis_state_dict(full_basis):
 
     new_basis = HRNBasis(10, 3)
     new_basis.load_state_dict(state_dict)
+
+def test_basis_aging():
+    batch = 2
+    feat = 10
+    n_basis = 3
+
+    basis = HRNBasis(feat, n_basis)
+    basis.insert_vector(torch.rand(feat))
+    basis.insert_vector(torch.rand(feat))
+    basis.insert_vector(torch.rand(feat))
+    basis.train()
+
+    assert basis.age == 0
+
+    # Age should not increase if this basis was not selected.
+    for i in range(5):
+        data = torch.rand(batch, feat)
+        output = basis(data)
+        assert basis.age == 0
+        # Make sure previous inputs are recorded
+        assert (basis.prev_inputs[-1], data)
+
+    # Age should increase when selected
+    for i in range(4):
+        data = torch.rand(batch, feat)
+        output = basis(data)
+        basis.select()
+        assert basis.age == (i+1)
+        # Make sure previous inputs are recorded
+        assert (basis.prev_inputs[-1], data)
+
+    # The next selection should trigger the basis update mechanism 
+

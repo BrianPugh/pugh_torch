@@ -59,8 +59,8 @@ class HRNBasis(nn.Module):
     def __repr__(self):
         return (
                 f"{self.__class__.__name__}("
-                f"feat={int(self.basis.shape[0])}, "
-                f"n={int(self.basis.shape[1])}"
+                f"feat={int(self.feat)}, "
+                f"n={int(self.n)}"
                 ")"
                 )
 
@@ -77,6 +77,14 @@ class HRNBasis(nn.Module):
     @property
     def is_full(self):
         return torch.all(self.init)
+
+    @property
+    def feat(self):
+        return self.basis.shape[0]
+
+    @property
+    def n(self):
+        return self.basis.shape[1]
 
     @torch.no_grad()
     def insert_vector(self, vector, index=None, normalize=False, reset_lpc=True):
@@ -149,7 +157,7 @@ class HRNBasis(nn.Module):
         self.eval()
 
         # Form a minibatch of the previous inputs
-        input_batch = torch.cat(self.prev_inputs, dim=0)
+        input_batch = torch.cat(tuple(self.prev_inputs), dim=0)
 
         # Compute the average residual
         output_projection = self(input_batch)
@@ -164,20 +172,29 @@ class HRNBasis(nn.Module):
 
 
     @torch.no_grad()
-    def select(self):
+    def select(self, mask=None):
         """ Increment internal state that this basis was selected during routing.
 
         Only updates internal state while in training mode.
 
         This isn't exactly Algorithm 2 in the paper, but its similar
+
+        Parameters
+        ----------
+        mask : torch.Tensor
+            (B,) If provided, only these indices (or boolean mask) are selected.
+            Defaults to all exemplars in the batch
         """
 
         if not self.training:
             return
 
+        if mask is None:
+            mask = torch.ones((self.prev_unreduced_output.shape[0]), dtype=torch.bool)
+
         # Increment low projection counter of the basis output with the
         # smallest magnitude
-        mags = torch.linalg.norm(self.prev_unreduced_output, dim=1)  # (B, n_initialized)
+        mags = torch.linalg.norm(self.prev_unreduced_output[mask], dim=1)  # (B, n_initialized)
         lp_index = torch.argmin(mags, dim=-1)  # (B, )
         lp_index, lp_count = torch.unique(lp_index, return_counts=True)
         self.lpc[lp_index] += lp_count
