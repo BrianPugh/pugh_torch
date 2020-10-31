@@ -372,7 +372,7 @@ class RandHashProj(nn.Module):
         size fed through yet.
     """
 
-    def __init__(self, out_feat, sparse=True):
+    def __init__(self, out_feat, sparse=None):
         """
         Parameters
         ----------
@@ -380,13 +380,19 @@ class RandHashProj(nn.Module):
             Output feature size
         sparse : bool
             Use a sparse representation for the internal projection matrix.
-            Saves a good amount of memory when expected TODO
-            Defaults to True.
+            Saves a good amount of memory when ``out_feat>5``, which is a pretty
+            typical use-case.
+            Defaults to whichever representation would be more memory efficient.
         """
 
         super().__init__()
 
-        # TODO: automatically set ``sparse`` depending on expected size
+        # Automatically set ``sparse`` depending on output feature size.
+        if sparse is None:
+            if out_feat > 5:
+                sparse = True
+            else:
+                sparse = False
 
         # Only use the following attribute for loading from state_dict
         self.__init_sparse = sparse
