@@ -6,6 +6,16 @@ import torch.nn.functional as F
 
 from basis import HRNBasis, EmptyBasisError
 
+def test_basis_properties():
+    feat = 10
+    n_basis = 7
+
+    basis = HRNBasis(feat, n_basis)
+    assert basis.n == n_basis
+    assert basis.feat == feat
+    assert basis.is_empty == True
+    assert basis.is_full == False
+
 def test_basis_forward():
     batch = 3
     feat = 10
@@ -138,7 +148,7 @@ def test_basis_aging(mocker, full_basis):
         basis.select()
         assert basis.age == (i+1)
         # Make sure previous inputs are recorded
-        assert (basis.prev_inputs[-1], data)
+        assert torch.allclose(basis.prev_inputs[-1], data)
 
     # The next selection should trigger the basis update mechanism 
     # We'll test that method more indepth in another test.
