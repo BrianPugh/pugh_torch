@@ -10,6 +10,15 @@ class EmptyBasisError(Exception):
 
 class HRNBasis(nn.Module):
     """
+    Typical use-case:
+        1. Instantiate this object:
+            basis = HRNBasis(feat=10, n=5)
+        2. Run a batch through using the normal __call__ method
+            proj = basis(data) 
+        3. If you choose to use this basis in your routing, call:
+            proj.select()
+           to update the internal state during training.
+           If not in training mode, this call does nothing.
     """
 
     def __init__(self, feat, n, aging_rate=10, aging_lookback=1):
@@ -148,10 +157,15 @@ class HRNBasis(nn.Module):
 
     @torch.no_grad()
     def select(self):
-        """ Increment internal state that this basis was selected.
+        """ Increment internal state that this basis was selected during routing.
+
+        Only updates internal state while in training mode.
 
         This isn't exactly Algorithm 2 in the paper, but its similar
         """
+
+        if not self.training:
+            return
 
         # Increment low projection counter of the basis output with the
         # smallest magnitude
