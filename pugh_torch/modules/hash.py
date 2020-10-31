@@ -378,6 +378,9 @@ class RandHashProj(nn.Module):
 
         # TODO: automatically set ``sparse`` depending on expected size
 
+        # Only use the following attribute for loading from state_dict
+        self.__init_sparse = sparse
+
         if sparse:
             self.proj = nn.Parameter(torch.sparse.FloatTensor(out_feat, 0), False)
         else:
@@ -466,6 +469,59 @@ class RandHashProj(nn.Module):
         ext = ext.type(self.proj.dtype)
 
         return ext
+
+    def _load_from_state_dict(
+        self,
+        state_dict,
+        prefix,
+        local_metadata,
+        strict,
+        missing_keys,
+        unexpected_keys,
+        error_msgs,
+    ):
+        """ Normally, pytorch will raise an exception because the existing
+        parameter ``proj`` and the one in the state dict will mismatch along
+        dimension(1), the in_feat dimension.
+        This override will allow for the successful load of the projection matrix.
+        """
+
+        # Pop "proj" so that we can load it using our special rules.
+        proj = state_dict.pop('proj')
+        out_feat, in_feat = proj.shape
+        self_out_feat = self.proj.shape[0]
+        assert out_feat == self_out_feat, f"State dict out_feat={out_feat} mismatches object's out_feat={self_out_feat}"
+
+        del self.proj  # so that upstream loading from state dict doesn't look for it
+
+        # Perform the loading; the parent method will perform the data copy
+        super()._load_from_state_dict(
+                    state_dict,
+                    prefix,
+                    local_metadata,
+                    strict,
+                    missing_keys,
+                    unexpected_keys,
+                    error_msgs,
+                )
+
+        # Create the projection matrix of the same shape, but the __init__
+        # sparse/dense configuration.
+        if self.__init_sparse:
+            self.proj = nn.Parameter(torch.sparse.FloatTensor(out_feat, in_feat), False)
+            if proj.is_sparse:
+                self.proj.copy_(proj)
+            else:
+                self.proj.copy_(proj.to_sparse())
+        else:
+            self.proj = nn.Parameter(torch.Tensor(out_feat, in_feat), False) 
+            if proj.is_sparse:
+                self.proj.copy_(proj.to_dense())
+            else:
+                self.proj.copy_(proj)
+
+        # Re-add it to the dictionary so that 
+        state_dict['proj'] = proj
 
     def forward(self, x):
         """

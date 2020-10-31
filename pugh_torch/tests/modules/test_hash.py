@@ -186,11 +186,37 @@ def test_rand_hash_proj_state_dict():
 
     assert state_dict['proj'].shape == (5, 100)
 
+    # dense->dense
     new_proj = ptmh.RandHashProj(out_feat, sparse=False)
     new_proj.load_state_dict(state_dict)
+    assert torch.allclose(state_dict['proj'], proj.proj)
+    assert not new_proj.proj.is_sparse
     assert torch.allclose(new_proj.proj, proj.proj)
 
-    import ipdb as pdb; pdb.set_trace()
+    # dense->sparse
+    new_proj = ptmh.RandHashProj(out_feat, sparse=True)
+    new_proj.load_state_dict(state_dict)
+    assert new_proj.proj.is_sparse
+    assert not state_dict['proj'].is_sparse
+    assert torch.allclose(new_proj.proj.to_dense(), proj.proj)
+
+    # Create the sparse state_dict
+    state_dict = new_proj.state_dict()
+    assert state_dict['proj'].is_sparse
+
+    # sparse->dense
+    new_proj = ptmh.RandHashProj(out_feat, sparse=False)
+    new_proj.load_state_dict(state_dict)
+    assert not new_proj.proj.is_sparse
+    assert state_dict['proj'].is_sparse
+    assert torch.allclose(new_proj.proj, proj.proj)
+
+    # sparse->sparse
+    new_proj = ptmh.RandHashProj(out_feat, sparse=True)
+    new_proj.load_state_dict(state_dict)
+    assert new_proj.proj.is_sparse
+    assert state_dict['proj'].is_sparse
+    assert torch.allclose(new_proj.proj.to_dense(), proj.proj)
 
 def test_rand_hash_proj_dense_vs_sparse():
     batch = 3
