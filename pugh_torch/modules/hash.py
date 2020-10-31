@@ -1,4 +1,5 @@
 """
+Right now, only ``RandHashProj`` is recommended for use.
 
 PyTorch Hashing code is based on code from:
     https://github.com/ma3oun/hrn
@@ -11,8 +12,9 @@ from torch import nn
 import torch.nn.functional as F
 import numpy as np
 
+
 def _inf_normalize(x):
-    """ Normalize tensor by the infinite norm.
+    """Normalize tensor by the infinite norm.
 
     Just fancy talk for dividing by the maximum magniutde.
     """
@@ -21,7 +23,7 @@ def _inf_normalize(x):
 
 
 def primes(n, copy=False, cache=True):
-    """ Returns a array of primes, 3 <= p < n 
+    """Returns a array of primes, 3 <= p < n
 
     This is very fast, the following takes <1 second:
         res = primes(100_000_000)
@@ -56,18 +58,18 @@ def primes(n, copy=False, cache=True):
     assert n >= 3
 
     if cache and n < primes.largest_n:
-        index = np.searchsorted(primes.cache, n, side='right')
+        index = np.searchsorted(primes.cache, n, side="right")
         output = primes.cache[:index]
     elif cache and n == primes.largest_n:
         output = primes.cache
     else:
         # This could be sped up using cache, but this is good enough
         # for now since this will usually be called with constant ``n``
-        sieve = np.ones(n//2, dtype=np.bool)
-        for i in range(3,int(n**0.5)+1,2):
-            if sieve[i//2]:
-                sieve[i*i//2::i] = False
-        output = 2*np.nonzero(sieve)[0][1::]+1
+        sieve = np.ones(n // 2, dtype=np.bool)
+        for i in range(3, int(n ** 0.5) + 1, 2):
+            if sieve[i // 2]:
+                sieve[i * i // 2 :: i] = False
+        output = 2 * np.nonzero(sieve)[0][1::] + 1
 
         if cache:
             primes.largest_n = n
@@ -77,10 +79,13 @@ def primes(n, copy=False, cache=True):
         output = output.copy()
 
     return output
+
+
 primes.largest_n = 0  # For caching primes call
 
+
 def primes_index(i):
-    """ Get the prime value at index.
+    """Get the prime value at index.
 
     Parameters
     ----------
@@ -88,7 +93,7 @@ def primes_index(i):
         Index into the list of primes (starting at 3) to get.
     """
 
-    n = 100_000_000 
+    n = 100_000_000
     while True:
         list_of_primes = primes(n)
         try:
@@ -100,7 +105,7 @@ def primes_index(i):
 
 
 class Hash(nn.Module):
-    """ Base module for other pytorch hash functions.
+    """Base module for other pytorch hash functions.
 
     Attributes
     ----------
@@ -138,9 +143,9 @@ class Hash(nn.Module):
 
 
 class MHash(Hash):
-    """ Multiplicative Universal Hashing
+    """Multiplicative Universal Hashing
 
-    First described by Lawrence Carter and Mark Wegman 
+    First described by Lawrence Carter and Mark Wegman
     Universal Hash Function
 
     See:
@@ -193,7 +198,7 @@ class MHash(Hash):
 
     @classmethod
     def from_offset(cls, m, p, *args, **kwargs):
-        """ Set prime number via index into a list of primes starting from 3.
+        """Set prime number via index into a list of primes starting from 3.
 
         Parameters
         ----------
@@ -205,21 +210,21 @@ class MHash(Hash):
         return cls(m, prime, *args, **kwargs)
 
     def __repr__(self):
-        elems = [self.__class__.__name__, '(']
+        elems = [self.__class__.__name__, "("]
         for i, (name, param) in enumerate(self.named_parameters()):
             if i > 0:
-                elems.append(', ')
+                elems.append(", ")
             elems.append(f"{name}={int(param)}")
-        elems.append(')')
+        elems.append(")")
         return "".join(elems)
 
     def hash(self, x):
         # This may overflow, but it's (probably?) not a big deal.
         return ((self.a * x + self.b) % self.p) % self.m
 
+
 class BinaryMHash(MHash):
-    """ Special case of MHash where the output is in the set {-1, 1}
-    """
+    """Special case of MHash where the output is in the set {-1, 1}"""
 
     def __init__(self, *args, **kwargs):
         """
@@ -238,7 +243,7 @@ class BinaryMHash(MHash):
 
 
 class MHashProj(nn.ParameterDict):
-    """ Hashes and projects and arbitrary-feature-length input into a 
+    """Hashes and projects and arbitrary-feature-length input into a
     fixed-feature-length output.
     """
 
@@ -247,7 +252,7 @@ class MHashProj(nn.ParameterDict):
     prime_offset = 2000
 
     def __init__(self, out_feat):
-        """ Applies a random feature hashing function.
+        """Applies a random feature hashing function.
 
         This is the function PHI described in section 2 of:
             https://arxiv.org/abs/2010.05880
@@ -270,7 +275,7 @@ class MHashProj(nn.ParameterDict):
 
     @classmethod
     def from_hashers(cls, hash_h, hash_xi):
-        """ More advanced initialization from externally defined hashers.
+        """More advanced initialization from externally defined hashers.
 
         Parameters
         ----------
@@ -293,7 +298,7 @@ class MHashProj(nn.ParameterDict):
 
     def _common_init(self):
         # Called at the end of all constructors
-        self.device = 'cpu'
+        self.device = "cpu"
 
     def __getitem__(self, key):
         assert isinstance(key, int)
@@ -308,7 +313,7 @@ class MHashProj(nn.ParameterDict):
         return res
 
     def _compute_hash_projection(self, n_input_feat):
-        """ Computes in_feat x out_feat projection matrix to compute the hash.
+        """Computes in_feat x out_feat projection matrix to compute the hash.
 
         This matrix is not trainable, and contains elements in the set:
             {-1, 0, 1}
@@ -326,10 +331,11 @@ class MHashProj(nn.ParameterDict):
         return nn.Parameter(proj, False)
 
     def to(self, *args, **kwargs):
-        """ Records the device to ``self.device``
-        """
+        """Records the device to ``self.device``"""
 
-        device, dtype, non_blocking, convert_to_format = torch._C._nn._parse_to(*args, **kwargs)
+        device, dtype, non_blocking, convert_to_format = torch._C._nn._parse_to(
+            *args, **kwargs
+        )
         self.device = device
         return super().to(*args, **kwargs)
 
@@ -351,8 +357,9 @@ class MHashProj(nn.ParameterDict):
         output = torch.matmul(x, self[n_input_feat])
         return output
 
+
 class RandHashProj(nn.Module):
-    """ We can just extend a single projection matrix without the
+    """We can just extend a single projection matrix without the
     need for two separate hash functions.
 
     This algorithm deterministically maps an arbitrarily long ``in_feat``
@@ -362,7 +369,7 @@ class RandHashProj(nn.Module):
             1. Based on the index, deterministically multiply it by ``1`` or ``-1``
             2. Based on the index, deterministically map it to a single element
                in the output feature vector.
-        Each element in the output feature vector is the sum of all the 
+        Each element in the output feature vector is the sum of all the
         input elements mapped to it.
 
     Attributes
@@ -400,7 +407,7 @@ class RandHashProj(nn.Module):
         if sparse:
             self.proj = nn.Parameter(torch.sparse.FloatTensor(out_feat, 0), False)
         else:
-            self.proj = nn.Parameter(torch.Tensor(out_feat, 0), False) 
+            self.proj = nn.Parameter(torch.Tensor(out_feat, 0), False)
 
     def __repr__(self):
         return f"{self.__class__.__name__}(out_feat={int(self.proj.shape[0])})"
@@ -411,7 +418,7 @@ class RandHashProj(nn.Module):
 
     @torch.no_grad()
     def _get_proj(self, in_feat_new):
-        """ Returns a view of the projection matrix
+        """Returns a view of the projection matrix
 
         Parameters
         ----------
@@ -432,12 +439,14 @@ class RandHashProj(nn.Module):
             if self.sparse:
                 # Have to do some hacky stuff because strides aren't available
                 # directly when using sparse tensors
-                indices = self.proj.indices() # (2, N) sorted because its coalesced
+                indices = self.proj.indices()  # (2, N) sorted because its coalesced
                 values = self.proj.values()
 
                 mask = indices[1] < in_feat_new
 
-                proj = torch.sparse.FloatTensor(indices[:, mask], values[mask], (out_feat, in_feat_new))
+                proj = torch.sparse.FloatTensor(
+                    indices[:, mask], values[mask], (out_feat, in_feat_new)
+                )
                 return proj
             else:
                 return self.proj[:, :in_feat_new]
@@ -458,11 +467,10 @@ class RandHashProj(nn.Module):
 
     @torch.no_grad()
     def _get_dense_ext(self, in_feat_new):
-        """ Create the new extension portion of projection matrix
-        """
+        """Create the new extension portion of projection matrix"""
 
         # Extend the existing projection matrix
-        out_feat, in_feat_old  = self.proj.shape
+        out_feat, in_feat_old = self.proj.shape
         in_feat_diff = in_feat_new - in_feat_old
         device = self.proj.device
 
@@ -478,7 +486,7 @@ class RandHashProj(nn.Module):
         selector_mask = selector == ii
 
         binary = torch.randint(0, 2, size=(1, in_feat_diff), device=device)
-        binary[binary==0] = -1
+        binary[binary == 0] = -1
         binary = binary.expand(out_feat, -1)
 
         ext = selector_mask * binary
@@ -496,30 +504,32 @@ class RandHashProj(nn.Module):
         unexpected_keys,
         error_msgs,
     ):
-        """ Normally, pytorch will raise an exception because the existing
+        """Normally, pytorch will raise an exception because the existing
         parameter ``proj`` and the one in the state dict will mismatch along
         dimension(1), the in_feat dimension.
         This override will allow for the successful load of the projection matrix.
         """
 
         # Pop "proj" so that we can load it using our special rules.
-        proj = state_dict.pop('proj')
+        proj = state_dict.pop("proj")
         out_feat, in_feat = proj.shape
         self_out_feat = self.proj.shape[0]
-        assert out_feat == self_out_feat, f"State dict out_feat={out_feat} mismatches object's out_feat={self_out_feat}"
+        assert (
+            out_feat == self_out_feat
+        ), f"State dict out_feat={out_feat} mismatches object's out_feat={self_out_feat}"
 
         del self.proj  # so that upstream loading from state dict doesn't look for it
 
         # Perform the loading; the parent method will perform the data copy
         super()._load_from_state_dict(
-                    state_dict,
-                    prefix,
-                    local_metadata,
-                    strict,
-                    missing_keys,
-                    unexpected_keys,
-                    error_msgs,
-                )
+            state_dict,
+            prefix,
+            local_metadata,
+            strict,
+            missing_keys,
+            unexpected_keys,
+            error_msgs,
+        )
 
         # Create the projection matrix of the same shape, but the __init__
         # sparse/dense configuration.
@@ -530,14 +540,14 @@ class RandHashProj(nn.Module):
             else:
                 self.proj.copy_(proj.to_sparse())
         else:
-            self.proj = nn.Parameter(torch.Tensor(out_feat, in_feat), False) 
+            self.proj = nn.Parameter(torch.Tensor(out_feat, in_feat), False)
             if proj.is_sparse:
                 self.proj.copy_(proj.to_dense())
             else:
                 self.proj.copy_(proj)
 
-        # Re-add it to the dictionary so that 
-        state_dict['proj'] = proj
+        # Re-add it to the dictionary so that
+        state_dict["proj"] = proj
 
     def forward(self, x):
         """
@@ -555,4 +565,3 @@ class RandHashProj(nn.Module):
         output = torch.matmul(proj, x.transpose(0, 1))
         output = output.transpose(0, 1)
         return output
-

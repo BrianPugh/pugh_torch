@@ -1,9 +1,10 @@
 from contextlib import contextmanager
 from time import time
 
+
 @contextmanager
-def timeit(msg=''):
-    """ Timing context manager
+def timeit(msg=""):
+    """Timing context manager
 
     Example usage:
         >>> with timeit('Data Reading'):
@@ -17,7 +18,7 @@ def timeit(msg=''):
     """
 
     try:
-        print(f'Starting \"{msg}\" ...')
+        print(f'Starting "{msg}" ...')
         t_start = time()
         yield
     finally:
