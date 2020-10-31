@@ -230,7 +230,7 @@ class HRNBasis(nn.Module):
         Returns
         -------
         torch.Tensor
-            (B, )
+            (B, feat) result
         """
 
         if self.is_empty:
