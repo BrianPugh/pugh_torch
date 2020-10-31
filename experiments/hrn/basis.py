@@ -99,7 +99,7 @@ class HRNBasis(nn.Module):
         """
 
         if index is None:
-            index = torch.nonzero(~self.init)[0]
+            index = torch.nonzero(~self.init)[0][0]
 
         if normalize:
             vector = F.normalize(vector, dim=0)
@@ -111,7 +111,7 @@ class HRNBasis(nn.Module):
             self.lpc[index] = 0
 
     @torch.no_grad()
-    def del_vector(self, index):
+    def delete_vector(self, index):
         """ Zero-out a vector from the basis set.
         """
 
@@ -134,7 +134,7 @@ class HRNBasis(nn.Module):
         # Find the lowest-projection-index:
         lpi = torch.argmin(self.lpc)
 
-        self.del_vector(lpi)
+        self.delete_vector(lpi)
 
         # Put self in eval mode so we don't update internal state during
         # the forward pass.
