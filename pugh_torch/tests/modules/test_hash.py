@@ -218,6 +218,28 @@ def test_rand_hash_proj_state_dict():
     assert state_dict['proj'].is_sparse
     assert torch.allclose(new_proj.proj.to_dense(), proj.proj)
 
+def test_rand_hash_proj_sparsity_sanity_check():
+    batch = 3
+    in_feat = 11
+    out_feat = 5
+    data = torch.rand(batch, in_feat)
+
+    for _ in range(10):
+        hasher = ptmh.RandHashProj(out_feat, sparse=False)
+
+        # Do a forward pass just to populate the projection_matrix
+        hasher(data)
+
+        proj = hasher.proj.detach().cpu().numpy()
+        nnz = (proj != 0).sum()
+
+        perc_nnz = nnz / proj.size
+
+        # since each row should contain one element, the expected value is independent
+        # of the size of in_feat.
+        perc_expected = 1 / out_feat
+        assert perc_expected == perc_nnz
+
 def test_rand_hash_proj_dense_vs_sparse():
     batch = 3
     in_feat = 100

@@ -355,6 +355,16 @@ class RandHashProj(nn.Module):
     """ We can just extend a single projection matrix without the
     need for two separate hash functions.
 
+    This algorithm deterministically maps an arbitrarily long ``in_feat``
+    vector into a fixed-length ``out_feat`` vector. It accomplishes this by
+    the following algorithm:
+        For each element in the input feature vector:
+            1. Based on the index, deterministically multiply it by ``1`` or ``-1``
+            2. Based on the index, deterministically map it to a single element
+               in the output feature vector.
+        Each element in the output feature vector is the sum of all the 
+        input elements mapped to it.
+
     Attributes
     ----------
     proj : torch.nn.Parameter
