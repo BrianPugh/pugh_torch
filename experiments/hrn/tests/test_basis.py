@@ -80,5 +80,27 @@ def test_repr():
     actual = basis.__repr__()
     assert actual == 'HRNBasis(feat=10, n=3)'
 
-def test_basis_state_dict():
-    pass
+@pytest.fixture
+def full_basis():
+    feat = 10
+    n_basis = 3
+
+    basis = HRNBasis(feat, n_basis)
+    basis.insert_vector(torch.rand(feat))
+    basis.insert_vector(torch.rand(feat))
+    basis.insert_vector(torch.rand(feat))
+
+    return basis
+
+def test_basis_state_dict(full_basis):
+    state_dict = full_basis.state_dict()
+
+    assert state_dict['basis'].shape == (10, 3)
+    assert state_dict['init'].shape == (3,)
+    assert state_dict['lpc'].shape == (3,)
+    assert state_dict['age'] == 0
+    assert state_dict['aging_rate'] == 10
+    assert state_dict['age_thresh'] == 5
+
+    new_basis = HRNBasis(10, 3)
+    new_basis.load_state_dict(state_dict)

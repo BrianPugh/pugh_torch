@@ -53,7 +53,7 @@ class HRNBasis(nn.Module):
         # Differing experiments may use different replacement techniques.
         self.age = nn.Parameter(torch.LongTensor([0]), False) # Number of times this basis has been selected.
         self.aging_rate = nn.Parameter(torch.Tensor([aging_rate]), False)
-        self.age_thresh = nn.Parameter(torch.Tensor(5,), False)  # TODO: expose this if necessary
+        self.age_thresh = nn.Parameter(torch.Tensor([5]), False)  # TODO: expose this if necessary
         self.prev_inputs = deque(maxlen=aging_lookback)
 
     def __repr__(self):
