@@ -378,11 +378,17 @@ class RandHashProj(nn.Module):
 
         # TODO: automatically set ``sparse`` depending on expected size
 
-        self.sparse = sparse
-        if self.sparse:
+        if sparse:
             self.proj = nn.Parameter(torch.sparse.FloatTensor(out_feat, 0), False)
         else:
             self.proj = nn.Parameter(torch.Tensor(out_feat, 0), False) 
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}(out_feat={int(self.proj.shape[0])})"
+
+    @property
+    def sparse(self):
+        return self.proj.is_sparse
 
     @torch.no_grad()
     def _get_proj(self, in_feat_new):

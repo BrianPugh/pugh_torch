@@ -173,7 +173,24 @@ def test_rand_hash_proj_basic(mocker):
     assert torch.allclose(actual_10, actual_10_2)
 
 def test_rand_hash_proj_state_dict():
-    pass
+    batch = 3
+    in_feat = 100
+    out_feat = 5
+    data = torch.rand(batch, in_feat)
+
+    torch.manual_seed(0)
+    proj = ptmh.RandHashProj(out_feat, sparse=False)
+    res_dense = proj(data)
+
+    state_dict = proj.state_dict()
+
+    assert state_dict['proj'].shape == (5, 100)
+
+    new_proj = ptmh.RandHashProj(out_feat, sparse=False)
+    new_proj.load_state_dict(state_dict)
+    assert torch.allclose(new_proj.proj, proj.proj)
+
+    import ipdb as pdb; pdb.set_trace()
 
 def test_rand_hash_proj_dense_vs_sparse():
     batch = 3
