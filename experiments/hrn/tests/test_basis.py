@@ -109,8 +109,8 @@ def test_basis_aging(mocker, full_basis):
     basis = full_basis
 
     batch = 2
-    feat = 10
-    n_basis = 3
+    feat = basis.feat
+    n_basis = basis.n
 
     basis = HRNBasis(feat, n_basis)
     _update_basis_mock = mocker.patch.object(basis, '_update_basis')
@@ -126,8 +126,10 @@ def test_basis_aging(mocker, full_basis):
         data = torch.rand(batch, feat)
         output = basis(data)
         assert basis.age == 0
-        # Make sure previous inputs are recorded
-        assert (basis.prev_inputs[-1], data)
+        # Make sure ``prev_input`` IS recorded
+        assert torch.allclose(basis.prev_input, data)
+        # Make sure ``prev_inputs`` are NOT recorded
+        assert len(basis.prev_inputs) == 0
 
     # Age should increase when selected
     for i in range(4):
@@ -149,5 +151,50 @@ def test_basis_aging(mocker, full_basis):
     assert (basis.lpc == 0).all()
     assert basis.age_thresh == 50
 
-def test_basis_update_basis():
-    pass
+def test_basis_update_basis(mocker):
+    batch = 2
+    feat = 5
+    n_basis = 3
+
+    basis = HRNBasis(feat, n_basis)
+
+    vector0 = torch.zeros(feat)
+    vector0[0] = 1
+    vector1 = torch.zeros(feat)
+    vector1[1] = 1
+    vector2 = torch.zeros(feat)
+    vector2[2] = 1
+
+    basis.insert_vector(vector0)
+    basis.insert_vector(vector1)
+    basis.insert_vector(vector2)
+
+    insert_vector_spy = mocker.spy(basis, 'insert_vector')
+    delete_vector_spy = mocker.spy(basis, "delete_vector")
+
+    feat = basis.feat
+    n_basis = basis.n
+
+    basis.train()
+    assert basis.training == True
+
+    # Populate a ``prev_inputs`` 
+    data = torch.ones(batch, feat)
+    basis.prev_inputs.append(data)
+
+    # Populate a fake lpc that forces vector2 to be selected as the worst
+    basis.lpc.fill_(0)
+    basis.lpc[2] = 5
+
+    basis._update_basis()
+
+    # Make sure we're still in training mode
+    assert basis.training == True
+
+    # Verify the update
+    expected_residual = torch.Tensor([0., 0., 1., 1., 1.])
+    delete_vector_spy.assert_called_once_with(2)
+    insert_vector_spy.assert_called_once()
+    args, kwargs = insert_vector_spy.call_args_list[0]
+    assert torch.allclose(args[0], expected_residual)
+    assert kwargs['normalize'] == True

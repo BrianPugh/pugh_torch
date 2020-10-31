@@ -40,13 +40,14 @@ class HRNBasis(nn.Module):
 
         # Currently basis's aren't directly learned, they are simply replaced
         # periodically (see "Aging Attributes")
-        # TODO: would it be beneficial to make this parameter trainable?
         self.basis = nn.Parameter(torch.zeros(feat, n), False)
 
         self.init = nn.Parameter(torch.zeros(n, dtype=torch.bool), False)  # Mask of which basis has been initialized
         self.lpc = nn.Parameter(torch.zeros(n,), False)  # low projection counter
 
-        # Aging Attributes
+        ####################
+        # Aging Attributes #
+        ####################
         # Every time a basis is selected, the age gets incremented.
         # Once age_thresh is reached, the "weakest" vector is removed. And age_thresh is increased geometrically.
         # The removed vector is replaced with a new one.
@@ -54,6 +55,10 @@ class HRNBasis(nn.Module):
         self.age = nn.Parameter(torch.LongTensor([0]), False) # Number of times this basis has been selected.
         self.aging_rate = nn.Parameter(torch.Tensor([aging_rate]), False)
         self.age_thresh = nn.Parameter(torch.Tensor([5]), False)  # TODO: expose this if necessary
+
+        # A fixed-length deque of minibatches that have been selected.
+        # TODO: while the deque length is fixed, the actual number of exemplars
+        # is not, should fix this.
         self.prev_inputs = deque(maxlen=aging_lookback)
 
     def __repr__(self):
@@ -149,8 +154,8 @@ class HRNBasis(nn.Module):
 
         original_mode = self.training
 
-        # Find the lowest-projection-index:
-        lpi = torch.argmin(self.lpc)
+        # Find the vector that most frequently had the lowest projection
+        lpi = torch.argmax(self.lpc)
 
         self.delete_vector(lpi)
 
@@ -194,6 +199,8 @@ class HRNBasis(nn.Module):
         if mask is None:
             mask = torch.ones((self.prev_unreduced_output.shape[0]), dtype=torch.bool)
 
+        self.prev_inputs.append(self.prev_input[mask].clone().detach())
+
         # Increment low projection counter of the basis output with the
         # smallest magnitude
         mags = torch.linalg.norm(self.prev_unreduced_output[mask], dim=1)  # (B, n_initialized)
@@ -231,7 +238,7 @@ class HRNBasis(nn.Module):
 
         if self.training:
             # Save the last input for potential future basis updates 
-            self.prev_inputs.append(x.detach())
+            self.prev_input = x.clone().detach()
 
         x = x.unsqueeze(-1)  # (B, feat, 1)
 
