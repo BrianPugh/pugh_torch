@@ -30,7 +30,7 @@ def test_basis_forward():
     with pytest.raises(EmptyBasisError):
         output = basis(data)
 
-    basis.insert_vector(basis_vector)
+    basis.insert(basis_vector)
 
     output = basis(data)
 
@@ -50,13 +50,13 @@ def test_basis_crud_vector():
     assert basis.is_empty
 
     # Should go in first slot
-    basis.insert_vector(vector0, normalize=False)
+    basis.insert(vector0, normalize=False)
     assert not basis.is_empty
     assert torch.allclose(basis.basis[:, 0], vector0)
     assert basis.init[0] == True
 
     # Should go in second slot, leaving slot 0 unaffected
-    basis.insert_vector(vector1, normalize=False)
+    basis.insert(vector1, normalize=False)
     assert not basis.is_empty
     assert torch.allclose(basis.basis[:, 0], vector0)
     assert torch.allclose(basis.basis[:, 1], vector1)
@@ -67,16 +67,16 @@ def test_basis_crud_vector():
     assert not torch.allclose(basis.basis[:, 0], vector0)
 
     # Insert based on a provided index
-    basis.insert_vector(vector0, index=0, normalize=False)
+    basis.insert(vector0, index=0, normalize=False)
     assert torch.allclose(basis.basis[:, 0], vector0)
 
     # Insert a third vector, so it should be full now
-    basis.insert_vector(vector2, normalize=False)
+    basis.insert(vector2, normalize=False)
     assert basis.is_full
     assert torch.allclose(basis.basis[:, 2], vector2)
 
     # Delete a vector
-    basis.delete_vector(0)
+    basis.delete(0)
     assert not basis.is_empty
     assert not basis.is_full
     assert (basis.basis[:, 0] == 0).all()
@@ -96,9 +96,9 @@ def full_basis():
     n_basis = 3
 
     basis = HRNBasis(feat, n_basis)
-    basis.insert_vector(torch.rand(feat))
-    basis.insert_vector(torch.rand(feat))
-    basis.insert_vector(torch.rand(feat))
+    basis.insert(torch.rand(feat))
+    basis.insert(torch.rand(feat))
+    basis.insert(torch.rand(feat))
 
     return basis
 
@@ -124,9 +124,9 @@ def test_basis_aging(mocker, full_basis):
 
     basis = HRNBasis(feat, n_basis)
     _update_basis_mock = mocker.patch.object(basis, '_update_basis')
-    basis.insert_vector(torch.rand(feat))
-    basis.insert_vector(torch.rand(feat))
-    basis.insert_vector(torch.rand(feat))
+    basis.insert(torch.rand(feat))
+    basis.insert(torch.rand(feat))
+    basis.insert(torch.rand(feat))
     basis.train()
 
     assert basis.age == 0
@@ -175,12 +175,12 @@ def test_basis_update_basis(mocker):
     vector2 = torch.zeros(feat)
     vector2[2] = 1
 
-    basis.insert_vector(vector0)
-    basis.insert_vector(vector1)
-    basis.insert_vector(vector2)
+    basis.insert(vector0)
+    basis.insert(vector1)
+    basis.insert(vector2)
 
-    insert_vector_spy = mocker.spy(basis, 'insert_vector')
-    delete_vector_spy = mocker.spy(basis, "delete_vector")
+    insert_spy = mocker.spy(basis, 'insert')
+    delete_spy = mocker.spy(basis, "delete")
 
     feat = basis.feat
     n_basis = basis.n
@@ -203,7 +203,7 @@ def test_basis_update_basis(mocker):
 
     # Verify the update
     expected_residual = torch.Tensor([0., 0., 1., 1., 1.])
-    delete_vector_spy.assert_called_once_with(2)
-    insert_vector_spy.assert_called_once()
-    args, kwargs = insert_vector_spy.call_args_list[0]
+    delete_spy.assert_called_once_with(2)
+    insert_spy.assert_called_once()
+    args, kwargs = insert_spy.call_args_list[0]
     assert torch.allclose(args[0], expected_residual)

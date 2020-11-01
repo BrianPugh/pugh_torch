@@ -96,7 +96,7 @@ class HRNBasis(nn.Module):
         return self.basis.shape[1]
 
     @torch.no_grad()
-    def insert_vector(self, vector, index=None, normalize=True, reset_lpc=True):
+    def insert(self, vector, index=None, normalize=True, reset_lpc=True):
         """ Insert ``vector`` into the basis.
 
         If the vector isn't already normalized (L2 magnitude of 1),
@@ -138,7 +138,7 @@ class HRNBasis(nn.Module):
         self.prev_unreduced_output = None
 
     @torch.no_grad()
-    def delete_vector(self, index):
+    def delete(self, index):
         """ Zero-out a vector from the basis set.
         """
 
@@ -163,7 +163,7 @@ class HRNBasis(nn.Module):
         # Find the vector that most frequently had the lowest projection
         lpi = torch.argmax(self.lpc)
 
-        self.delete_vector(lpi)
+        self.delete(lpi)
 
         # Put self in eval mode so we don't update internal state during
         # the forward pass.
@@ -178,7 +178,7 @@ class HRNBasis(nn.Module):
         residual = residual.mean(dim=0)
 
         # Insert the residual into the basis
-        self.insert_vector(residual)
+        self.insert(residual)
 
         # Put the module back into the state before calling this method
         self.train(original_mode)
