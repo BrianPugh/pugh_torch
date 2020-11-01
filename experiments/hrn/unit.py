@@ -55,6 +55,10 @@ class HRNUnit(nn.Module):
                 raise Exception(f"{self.__class__.__name__} already has attribute \"{basis_method}\" defined.")
             setattr(self, basis_method, getattr(self.basis, basis_method))
 
+    @property
+    def hash_feat(self):
+        return self.hasher.out_feat
+
     @torch.no_grad()
     def hash(self, x):
         """ Hash an input tensor.
@@ -87,7 +91,7 @@ class HRNUnit(nn.Module):
             (B, feat) Basis response
         """
 
-        return self.basis
+        return self.basis(x)
 
 
     def forward(self, x):
