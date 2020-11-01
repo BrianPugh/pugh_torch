@@ -270,3 +270,13 @@ def test_rand_hash_proj_dense_vs_sparse():
     res_sparse = proj(data)
 
     assert torch.allclose(res_dense, res_sparse)
+
+def test_rand_hash_proj_4d():
+    batch = 3
+    in_feat = 100
+    h, w = 64, 96
+    out_feat = 5
+    data = torch.rand(batch, in_feat, h, w)
+
+    proj = ptmh.RandHashProj(out_feat, sparse=False)
+    res = proj(data)

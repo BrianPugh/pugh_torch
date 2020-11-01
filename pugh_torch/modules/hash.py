@@ -410,11 +410,15 @@ class RandHashProj(nn.Module):
             self.proj = nn.Parameter(torch.Tensor(out_feat, 0), False)
 
     def __repr__(self):
-        return f"{self.__class__.__name__}(out_feat={int(self.proj.shape[0])})"
+        return f"{self.__class__.__name__}(out_feat={int(self.out_feat)})"
 
     @property
     def sparse(self):
         return self.proj.is_sparse
+
+    @property
+    def out_feat(self):
+        return self.proj.shape[0]
 
     @torch.no_grad()
     def _get_proj(self, in_feat_new):
@@ -554,7 +558,7 @@ class RandHashProj(nn.Module):
         Parameters
         ----------
         x : torch.Tensor
-            (B, N) feature vector
+            (B, in_feat, ...) feature vector
         normalize : bool
             L2-norms the output hashed vector.
             Defaults to True.
@@ -562,18 +566,26 @@ class RandHashProj(nn.Module):
         Returns
         -------
         torch.Tensor
-            (B, out_feat) hashed feature vector.
+            (B, out_feat, ...) hashed feature vector.
         """
 
-        _, n = x.shape
-        proj = self._get_proj(n)
+        input_shape = x.shape
+        # Move in_feat to the first dimension, and flatten everything else
+        x = x.transpose(0,1)
+        x = x.flatten(1)
+
+        proj = self._get_proj(input_shape[1])  # (out_feat, in_feat)
+
         # Matmul only supporse (sparse, dense) multiply, not (dense, sparse)
         # So we do the matmul (and the proj dimensions) sort of "backwards"
         # from intuitive
-        output = torch.matmul(proj, x.transpose(0, 1))
+        output = torch.matmul(proj, x)
         output = output.transpose(0, 1)
 
+        # reshape back into input spatial dimensions
+        output = output.reshape(input_shape[0], self.out_feat, *input_shape[2:])
+
         if normalize:
-            output = F.normalize(output)
+            output = F.normalize(output, dim=1)
 
         return output
