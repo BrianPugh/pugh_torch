@@ -89,25 +89,19 @@ class HRNUnit(nn.Module):
 
         return self.basis
 
-    @torch.no_grad()
-    def hash_and_proj(self, x):
-        """ Hash and projects a feature vector
-        x : torch.Tensor
-            (B, arbitrary) Feature Vector
+
+    def forward(self, x):
+        """
 
         Returns
         -------
-        torch.Tensor
-            (B, feat) Hashed basis response
+        y : torch.Tensor
+            (B, C, H, W) Output feature Map
+        h : torch.Tensor
+            (B, feat) Output normalized hashed vector for the produced feature map.
         """
 
-        hash = self.hash(x)
-        proj = self.proj(x)
-        return proj
-
-
-    def forward(self):
-        """
-        """
-        raise NotImplementedError
+        y = self.cnn(x)
+        h = self.hash(y.flatten(1))
+        return y, h
     
