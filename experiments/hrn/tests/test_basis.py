@@ -50,13 +50,13 @@ def test_basis_crud_vector():
     assert basis.is_empty
 
     # Should go in first slot
-    basis.insert_vector(vector0)
+    basis.insert_vector(vector0, normalize=False)
     assert not basis.is_empty
     assert torch.allclose(basis.basis[:, 0], vector0)
     assert basis.init[0] == True
 
     # Should go in second slot, leaving slot 0 unaffected
-    basis.insert_vector(vector1)
+    basis.insert_vector(vector1, normalize=False)
     assert not basis.is_empty
     assert torch.allclose(basis.basis[:, 0], vector0)
     assert torch.allclose(basis.basis[:, 1], vector1)
@@ -67,11 +67,11 @@ def test_basis_crud_vector():
     assert not torch.allclose(basis.basis[:, 0], vector0)
 
     # Insert based on a provided index
-    basis.insert_vector(vector0, index=0)
+    basis.insert_vector(vector0, index=0, normalize=False)
     assert torch.allclose(basis.basis[:, 0], vector0)
 
     # Insert a third vector, so it should be full now
-    basis.insert_vector(vector2)
+    basis.insert_vector(vector2, normalize=False)
     assert basis.is_full
     assert torch.allclose(basis.basis[:, 2], vector2)
 
@@ -207,4 +207,3 @@ def test_basis_update_basis(mocker):
     insert_vector_spy.assert_called_once()
     args, kwargs = insert_vector_spy.call_args_list[0]
     assert torch.allclose(args[0], expected_residual)
-    assert kwargs['normalize'] == True

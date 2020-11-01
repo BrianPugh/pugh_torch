@@ -45,6 +45,8 @@ class HRNBasis(nn.Module):
         self.init = nn.Parameter(torch.zeros(n, dtype=torch.bool), False)  # Mask of which basis has been initialized
         self.lpc = nn.Parameter(torch.zeros(n,), False)  # low projection counter
 
+        self.prev_unreduced_output = None
+
         ####################
         # Aging Attributes #
         ####################
@@ -94,7 +96,7 @@ class HRNBasis(nn.Module):
         return self.basis.shape[1]
 
     @torch.no_grad()
-    def insert_vector(self, vector, index=None, normalize=False, reset_lpc=True):
+    def insert_vector(self, vector, index=None, normalize=True, reset_lpc=True):
         """ Insert ``vector`` into the basis.
 
         If the vector isn't already normalized (L2 magnitude of 1),
@@ -115,7 +117,7 @@ class HRNBasis(nn.Module):
             Raises an ``IndexError`` if the basis is full
         normalize : bool
             L2-norm the input bector.
-            Defaults to ``False``.
+            Defaults to ``True``.
         reset_lpc : bool
             Set the low-projection-counter for this vector to 0.
             Defaults to ``True``.
@@ -133,6 +135,8 @@ class HRNBasis(nn.Module):
         if reset_lpc:
             self.lpc[index] = 0
 
+        self.prev_unreduced_output = None
+
     @torch.no_grad()
     def delete_vector(self, index):
         """ Zero-out a vector from the basis set.
@@ -144,6 +148,8 @@ class HRNBasis(nn.Module):
         self.lpc[index] = 0
         # Mark this vector as uninitialized
         self.init[index] = False
+
+        self.prev_unreduced_output = None
 
     @torch.no_grad()
     def _update_basis(self):
@@ -172,10 +178,12 @@ class HRNBasis(nn.Module):
         residual = residual.mean(dim=0)
 
         # Insert the residual into the basis
-        self.insert_vector(residual, normalize=True)
+        self.insert_vector(residual)
 
         # Put the module back into the state before calling this method
         self.train(original_mode)
+
+        self.prev_unreduced_output = None
 
 
     @torch.no_grad()
@@ -195,6 +203,11 @@ class HRNBasis(nn.Module):
 
         if not self.training:
             return
+
+        if self.prev_unreduced_output is None:
+            # prev_unreduced_output gets set to None whenever the basis changes
+            # since the previous output is no longer relevant.
+            self.prev_unreduced_output = self(self.prev_input)
 
         if mask is None:
             mask = torch.ones((self.prev_unreduced_output.shape[0]), dtype=torch.bool)
