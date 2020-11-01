@@ -13,7 +13,59 @@ def _extract_kwargs(kwargs, *args):
             output[arg] = kwargs[arg]
     return output
 
-class HRNUnit(nn.Module):
+class _HRNBasisMixin:
+    @property
+    def is_full(self):
+        return self.basis.is_full
+
+    @property
+    def is_empty(self):
+        return self.basis.is_empty
+
+    def select(self, *args, **kwargs):
+        return self.basis.select(*args, **kwargs)
+
+    @torch.no_grad()
+    def proj(self, x):
+        """ Project tensor via the basis.
+
+        Parameters
+        ----------
+        x : torch.Tensor
+            (B, feat) Hashed feature vector
+
+        Returns
+        -------
+        torch.Tensor
+            (B, feat) Basis response
+        """
+
+        return self.basis(x)
+
+class _HashMixin:
+    @property
+    def hash_feat(self):
+        return self.hasher.out_feat
+
+    @torch.no_grad()
+    def hash(self, x):
+        """ Hash an input tensor.
+
+        Parameters
+        ----------
+        x : torch.Tensor
+            (B, arbitrary) Feature vector
+
+        Returns
+        -------
+        torch.Tensor
+            (B, feat) Normalized hashed feature vector.
+        """
+
+        return self.hasher(x)
+
+
+class HRNUnit(nn.Module, _HRNBasisMixin, _HashMixin):
     """ This is a module that computing gets routed to.
 
     Unit consists of 3 primary components:
@@ -41,58 +93,9 @@ class HRNUnit(nn.Module):
 
         super().__init__()
 
-        #self.basis = HRNBasis(n_basis, **_extract_kwargs(kwargs, "aging_rate", "aging_lookback"))
         self.basis = HRNBasis(feat, n_basis, **kwargs)
         self.cnn = cnn
         self.hasher = RandHashProj(feat)
-
-        ########################################
-        # Basis Method and Property Forwarding #
-        ########################################
-        basis_methods = ["is_full", "is_empty", "insert_vector", "select"]
-        for basis_method in basis_methods:
-            if hasattr(self, basis_method):
-                raise Exception(f"{self.__class__.__name__} already has attribute \"{basis_method}\" defined.")
-            setattr(self, basis_method, getattr(self.basis, basis_method))
-
-    @property
-    def hash_feat(self):
-        return self.hasher.out_feat
-
-    @torch.no_grad()
-    def hash(self, x):
-        """ Hash an input tensor.
-
-        Parameters
-        ----------
-        x : torch.Tensor
-            (B, arbitrary) Feature vector
-
-        Returns
-        -------
-        torch.Tensor
-            (B, feat) Normalized hashed feature vector.
-        """
-
-        return self.hasher(x)
-
-    @torch.no_grad()
-    def proj(self, x):
-        """ Project tensor via the basis.
-
-        Parameters
-        ----------
-        x : torch.Tensor
-            (B, feat) Hashed feature vector
-
-        Returns
-        -------
-        torch.Tensor
-            (B, feat) Basis response
-        """
-
-        return self.basis(x)
-
 
     def forward(self, x):
         """
