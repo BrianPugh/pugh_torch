@@ -271,6 +271,7 @@ def test_rand_hash_proj_dense_vs_sparse():
 
     assert torch.allclose(res_dense, res_sparse)
 
+
 def test_rand_hash_proj_4d():
     batch = 3
     in_feat = 100

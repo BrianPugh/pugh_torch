@@ -6,9 +6,11 @@ import torch.nn.functional as F
 
 from unit import HRNUnit
 
+
 class DummyCNN(nn.Module):
     def forward(self, x):
         return x
+
 
 def test_hrnunit_end_to_end():
     dummy_cnn = DummyCNN()

@@ -6,12 +6,14 @@ from pugh_torch.modules import RandHashProj
 
 from basis import HRNBasis
 
+
 def _extract_kwargs(kwargs, *args):
     output = {}
     for arg in args:
         if arg in kwargs:
             output[arg] = kwargs[arg]
     return output
+
 
 class _HRNBasisMixin:
     @property
@@ -27,7 +29,7 @@ class _HRNBasisMixin:
 
     @torch.no_grad()
     def proj(self, x):
-        """ Project tensor via the basis.
+        """Project tensor via the basis.
 
         Parameters
         ----------
@@ -42,6 +44,7 @@ class _HRNBasisMixin:
 
         return self.basis(x)
 
+
 class _HashMixin:
     @property
     def hash_feat(self):
@@ -49,7 +52,7 @@ class _HashMixin:
 
     @torch.no_grad()
     def hash(self, x):
-        """ Hash an input tensor.
+        """Hash an input tensor.
 
         Parameters
         ----------
@@ -66,7 +69,7 @@ class _HashMixin:
 
 
 class HRNUnit(nn.Module, _HRNBasisMixin, _HashMixin):
-    """ This is a module that computing gets routed to.
+    """This is a module that computing gets routed to.
 
     Unit consists of 3 primary components:
         1. A set of convolution operators
@@ -111,4 +114,3 @@ class HRNUnit(nn.Module, _HRNBasisMixin, _HashMixin):
         y = self.cnn(x)
         h = self.hash(y.flatten(1))
         return y, h
-    

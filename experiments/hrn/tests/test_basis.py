@@ -6,6 +6,7 @@ import torch.nn.functional as F
 
 from basis import HRNBasis, EmptyBasisError
 
+
 def test_basis_properties():
     feat = 10
     n_basis = 7
@@ -15,6 +16,7 @@ def test_basis_properties():
     assert basis.feat == feat
     assert basis.is_empty == True
     assert basis.is_full == False
+
 
 def test_basis_forward():
     batch = 3
@@ -35,6 +37,7 @@ def test_basis_forward():
     output = basis(data)
 
     assert output.shape == (batch, feat)
+
 
 def test_basis_crud_vector():
     batch = 2
@@ -82,13 +85,15 @@ def test_basis_crud_vector():
     assert (basis.basis[:, 0] == 0).all()
     assert basis.init[0] == False
 
+
 def test_repr():
     feat = 10
     n_basis = 3
 
     basis = HRNBasis(feat, n_basis)
     actual = basis.__repr__()
-    assert actual == 'HRNBasis(feat=10, n=3)'
+    assert actual == "HRNBasis(feat=10, n=3)"
+
 
 @pytest.fixture
 def full_basis():
@@ -102,18 +107,20 @@ def full_basis():
 
     return basis
 
+
 def test_basis_state_dict(full_basis):
     state_dict = full_basis.state_dict()
 
-    assert state_dict['basis'].shape == (10, 3)
-    assert state_dict['init'].shape == (3,)
-    assert state_dict['lpc'].shape == (3,)
-    assert state_dict['age'] == 0
-    assert state_dict['aging_rate'] == 10
-    assert state_dict['age_thresh'] == 5
+    assert state_dict["basis"].shape == (10, 3)
+    assert state_dict["init"].shape == (3,)
+    assert state_dict["lpc"].shape == (3,)
+    assert state_dict["age"] == 0
+    assert state_dict["aging_rate"] == 10
+    assert state_dict["age_thresh"] == 5
 
     new_basis = HRNBasis(10, 3)
     new_basis.load_state_dict(state_dict)
+
 
 def test_basis_aging(mocker, full_basis):
     basis = full_basis
@@ -123,7 +130,7 @@ def test_basis_aging(mocker, full_basis):
     n_basis = basis.n
 
     basis = HRNBasis(feat, n_basis)
-    _update_basis_mock = mocker.patch.object(basis, '_update_basis')
+    _update_basis_mock = mocker.patch.object(basis, "_update_basis")
     basis.insert(torch.rand(feat))
     basis.insert(torch.rand(feat))
     basis.insert(torch.rand(feat))
@@ -146,11 +153,11 @@ def test_basis_aging(mocker, full_basis):
         data = torch.rand(batch, feat)
         output = basis(data)
         basis.select()
-        assert basis.age == (i+1)
+        assert basis.age == (i + 1)
         # Make sure previous inputs are recorded
         assert torch.allclose(basis.prev_inputs[-1], data)
 
-    # The next selection should trigger the basis update mechanism 
+    # The next selection should trigger the basis update mechanism
     # We'll test that method more indepth in another test.
     _update_basis_mock.assert_not_called()
     basis.select()
@@ -160,6 +167,7 @@ def test_basis_aging(mocker, full_basis):
     assert basis.age == 0
     assert (basis.lpc == 0).all()
     assert basis.age_thresh == 50
+
 
 def test_basis_update_basis(mocker):
     batch = 2
@@ -179,7 +187,7 @@ def test_basis_update_basis(mocker):
     basis.insert(vector1)
     basis.insert(vector2)
 
-    insert_spy = mocker.spy(basis, 'insert')
+    insert_spy = mocker.spy(basis, "insert")
     delete_spy = mocker.spy(basis, "delete")
 
     feat = basis.feat
@@ -188,7 +196,7 @@ def test_basis_update_basis(mocker):
     basis.train()
     assert basis.training == True
 
-    # Populate a ``prev_inputs`` 
+    # Populate a ``prev_inputs``
     data = torch.ones(batch, feat)
     basis.prev_inputs.append(data)
 
@@ -202,7 +210,7 @@ def test_basis_update_basis(mocker):
     assert basis.training == True
 
     # Verify the update
-    expected_residual = torch.Tensor([0., 0., 1., 1., 1.])
+    expected_residual = torch.Tensor([0.0, 0.0, 1.0, 1.0, 1.0])
     delete_spy.assert_called_once_with(2)
     insert_spy.assert_called_once()
     args, kwargs = insert_spy.call_args_list[0]

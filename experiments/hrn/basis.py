@@ -4,9 +4,10 @@ import torch.nn.functional as F
 
 from collections import deque
 
+
 class EmptyBasisError(Exception):
-    """ Forward pass of an uninitialized/empty basis attempted.
-    """
+    """Forward pass of an uninitialized/empty basis attempted."""
+
 
 class HRNBasis(nn.Module):
     """
@@ -14,7 +15,7 @@ class HRNBasis(nn.Module):
         1. Instantiate this object:
             basis = HRNBasis(feat=10, n=5)
         2. Run a batch through using the normal __call__ method
-            proj = basis(data) 
+            proj = basis(data)
         3. If you choose to use this basis in your routing, call:
             proj.select()
            to update the internal state during training.
@@ -42,8 +43,15 @@ class HRNBasis(nn.Module):
         # periodically (see "Aging Attributes")
         self.basis = nn.Parameter(torch.zeros(feat, n), False)
 
-        self.init = nn.Parameter(torch.zeros(n, dtype=torch.bool), False)  # Mask of which basis has been initialized
-        self.lpc = nn.Parameter(torch.zeros(n,), False)  # low projection counter
+        self.init = nn.Parameter(
+            torch.zeros(n, dtype=torch.bool), False
+        )  # Mask of which basis has been initialized
+        self.lpc = nn.Parameter(
+            torch.zeros(
+                n,
+            ),
+            False,
+        )  # low projection counter
 
         self.prev_unreduced_output = None
 
@@ -54,9 +62,13 @@ class HRNBasis(nn.Module):
         # Once age_thresh is reached, the "weakest" vector is removed. And age_thresh is increased geometrically.
         # The removed vector is replaced with a new one.
         # Differing experiments may use different replacement techniques.
-        self.age = nn.Parameter(torch.LongTensor([0]), False) # Number of times this basis has been selected.
+        self.age = nn.Parameter(
+            torch.LongTensor([0]), False
+        )  # Number of times this basis has been selected.
         self.aging_rate = nn.Parameter(torch.Tensor([aging_rate]), False)
-        self.age_thresh = nn.Parameter(torch.Tensor([5]), False)  # TODO: expose this if necessary
+        self.age_thresh = nn.Parameter(
+            torch.Tensor([5]), False
+        )  # TODO: expose this if necessary
 
         # A fixed-length deque of minibatches that have been selected.
         # TODO: while the deque length is fixed, the actual number of exemplars
@@ -65,11 +77,11 @@ class HRNBasis(nn.Module):
 
     def __repr__(self):
         return (
-                f"{self.__class__.__name__}("
-                f"feat={int(self.feat)}, "
-                f"n={int(self.n)}"
-                ")"
-                )
+            f"{self.__class__.__name__}("
+            f"feat={int(self.feat)}, "
+            f"n={int(self.n)}"
+            ")"
+        )
 
     @property
     def is_empty(self):
@@ -97,7 +109,7 @@ class HRNBasis(nn.Module):
 
     @torch.no_grad()
     def insert(self, vector, index=None, normalize=True, reset_lpc=True):
-        """ Insert ``vector`` into the basis.
+        """Insert ``vector`` into the basis.
 
         If the vector isn't already normalized (L2 magnitude of 1),
         you should set ``normalize=True``.
@@ -139,8 +151,7 @@ class HRNBasis(nn.Module):
 
     @torch.no_grad()
     def delete(self, index):
-        """ Zero-out a vector from the basis set.
-        """
+        """Zero-out a vector from the basis set."""
 
         # Zero out this basis (not strictly necessary)
         self.basis[:, index].zero_()
@@ -153,7 +164,7 @@ class HRNBasis(nn.Module):
 
     @torch.no_grad()
     def _update_basis(self):
-        """ Replace a basis vector using information from internal-state.
+        """Replace a basis vector using information from internal-state.
 
         Called when age_thresh has been reached
         """
@@ -185,10 +196,9 @@ class HRNBasis(nn.Module):
 
         self.prev_unreduced_output = None
 
-
     @torch.no_grad()
     def select(self, mask=None):
-        """ Increment internal state that this basis was selected during routing.
+        """Increment internal state that this basis was selected during routing.
 
         Only updates internal state while in training mode.
 
@@ -216,7 +226,9 @@ class HRNBasis(nn.Module):
 
         # Increment low projection counter of the basis output with the
         # smallest magnitude
-        mags = torch.linalg.norm(self.prev_unreduced_output[mask], dim=1)  # (B, n_initialized)
+        mags = torch.linalg.norm(
+            self.prev_unreduced_output[mask], dim=1
+        )  # (B, n_initialized)
         lp_index = torch.argmin(mags, dim=-1)  # (B, )
         lp_index, lp_count = torch.unique(lp_index, return_counts=True)
         self.lpc[lp_index] += lp_count
@@ -233,7 +245,7 @@ class HRNBasis(nn.Module):
             self.lpc.zero_()
 
     def forward(self, x):
-        """ Computes the inner product
+        """Computes the inner product
 
         Parameters
         ----------
@@ -250,7 +262,7 @@ class HRNBasis(nn.Module):
             raise EmptyBasisError
 
         if self.training:
-            # Save the last input for potential future basis updates 
+            # Save the last input for potential future basis updates
             self.prev_input = x.clone().detach()
 
         x = x.unsqueeze(-1)  # (B, feat, 1)
@@ -258,7 +270,7 @@ class HRNBasis(nn.Module):
         basis = self.basis[:, self.init]  # (feat, n_initialized)
         basis = basis.unsqueeze(0)  # (1, feat, n_initialized)
 
-        output = (x * basis)  # (B, feat, n_initialized)
+        output = x * basis  # (B, feat, n_initialized)
 
         if self.training:
             self.prev_unreduced_output = output.detach()

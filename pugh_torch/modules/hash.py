@@ -571,7 +571,7 @@ class RandHashProj(nn.Module):
 
         input_shape = x.shape
         # Move in_feat to the first dimension, and flatten everything else
-        x = x.transpose(0,1)
+        x = x.transpose(0, 1)
         x = x.flatten(1)
 
         proj = self._get_proj(input_shape[1])  # (out_feat, in_feat)

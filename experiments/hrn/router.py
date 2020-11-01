@@ -6,12 +6,11 @@ from pugh_torch.modules import RandHashProj
 
 
 class _NoEmptyUnits(Exception):
-    """ There are no empty units available
-    """
+    """There are no empty units available"""
+
 
 class HRN(nn.Module):
-    """ Routes data through a provided set of units
-    """
+    """Routes data through a provided set of units"""
 
     def __init__(self, units, depth_thresh=1e-5, empty_thresh=0.2, expand_thresh=0.01):
         """
@@ -26,8 +25,8 @@ class HRN(nn.Module):
             routing if none of the populated units have a basis response
             above this threshold.
         expand_thresh : float
-            While training, for a selected unit, if there are uninitialized 
-            vectors in its basis, then add a basis vector if the 
+            While training, for a selected unit, if there are uninitialized
+            vectors in its basis, then add a basis vector if the
             projection magnitude is below this threshold.
         """
 
@@ -46,7 +45,9 @@ class HRN(nn.Module):
         # Make sure all units have the same hash size
         hash_size = units[0].hash_feat
         for i, unit in enumerate(units):
-            assert unit.hash_feat == hash_size, f"Unit[{i}] hash hashing size {unit.hash_feat}; expected {hash_size}"
+            assert (
+                unit.hash_feat == hash_size
+            ), f"Unit[{i}] hash hashing size {unit.hash_feat}; expected {hash_size}"
 
         # initial hasher (phi-0) for hashing the input vector.
         self.hasher = RandHashProj(hash_size)
@@ -59,7 +60,7 @@ class HRN(nn.Module):
         return self.hasher.out_feat
 
     def forward_exemplar(self, x, depth=-1):
-        """ Forward pass of a single exemplar
+        """Forward pass of a single exemplar
 
         Parameters
         ----------
@@ -83,10 +84,10 @@ class HRN(nn.Module):
         available_units = dict(enumerate(self.units))
 
         def get_empty_units_idx():
-            return [ idx for idx, unit in available_units.items() if unit.is_empty ]
+            return [idx for idx, unit in available_units.items() if unit.is_empty]
 
         def get_non_empty_units_idx():
-            return [ idx for idx, unit in available_units.items() if not unit.is_empty ]
+            return [idx for idx, unit in available_units.items() if not unit.is_empty]
 
         def init_random_empty_unit():
             empty_units_idx = get_empty_units_idx()
@@ -112,7 +113,9 @@ class HRN(nn.Module):
                 break
 
             # Choose a  unit based on basis response.
-            projs = torch.stack([available_units[idx].proj(h) for idx in non_empty_units_idx], dim=-1)
+            projs = torch.stack(
+                [available_units[idx].proj(h) for idx in non_empty_units_idx], dim=-1
+            )
             mags = torch.linalg.norm(projs, dim=1)
 
             max_idx = int(torch.argmax(mags.squeeze()))
@@ -191,5 +194,3 @@ class HRN(nn.Module):
 
         hashes = torch.stack(hashes, 0)
         return hashes, routes
-
-
