@@ -39,6 +39,8 @@ class HRNBasis(nn.Module):
         """
         super().__init__()
 
+        assert n > 0
+
         # Currently basis's aren't directly learned, they are simply replaced
         # periodically (see "Aging Attributes")
         self.basis = nn.Parameter(torch.zeros(feat, n), False)
@@ -135,6 +137,8 @@ class HRNBasis(nn.Module):
             Defaults to ``True``.
         """
 
+        assert vector.ndim == 1, f"Basis vector must be one dimensional"
+
         if index is None:
             index = torch.nonzero(~self.init)[0][0]
 
@@ -184,8 +188,11 @@ class HRNBasis(nn.Module):
         input_batch = torch.cat(tuple(self.prev_inputs), dim=0)
 
         # Compute the average residual
-        output_projection = self(input_batch)
-        residual = input_batch - output_projection
+        if self.is_empty:
+            residual = input_batch
+        else:
+            output_projection = self(input_batch)
+            residual = input_batch - output_projection
         residual = residual.mean(dim=0)
 
         # Insert the residual into the basis

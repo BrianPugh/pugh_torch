@@ -13,7 +13,7 @@ class DummyCNN(nn.Module):
         return x
 
 
-def test_hrn_empty():
+def test_hrn_basic():
     torch.manual_seed(0)
     dummy_cnn = DummyCNN()
 
@@ -27,8 +27,9 @@ def test_hrn_empty():
     h = 33
     w = 33
 
-    data = torch.rand(batch, channel, h, w)
-    hashes, routes = hrn(data)
+    for i in range(100):
+        data = torch.rand(batch, channel, h, w)
+        hashes, routes = hrn(data)
 
     assert hashes.shape == (batch, feat)
     assert isinstance(routes, list)

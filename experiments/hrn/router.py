@@ -95,13 +95,11 @@ class HRN(nn.Module):
             if not empty_units_idx:
                 raise _NoEmptyUnits
 
-            # Select a random first unit
             idx = empty_units_idx[torch.randint(len(empty_units_idx), size=())]
             unit = available_units.pop(idx)
             route.append(idx)
 
             # Add the current hash to the unit's basis
-            # h0 already has unit-norm
             unit.basis.insert(h.squeeze(0))
 
         h = h0
@@ -112,13 +110,13 @@ class HRN(nn.Module):
                 init_random_empty_unit()
                 break
 
-            # Choose a  unit based on basis response.
-            projs = torch.stack(
-                [available_units[idx].proj(h) for idx in non_empty_units_idx], dim=-1
+            # Choose a unit based on basis response.
+            projs = torch.cat(
+                [available_units[idx].proj(h) for idx in non_empty_units_idx], dim=0
             )
             mags = torch.linalg.norm(projs, dim=1)
 
-            max_idx = int(torch.argmax(mags.squeeze()))
+            max_idx = int(torch.argmax(mags))
             max_mag = mags[max_idx]
 
             if max_mag < self.empty_thresh:
@@ -133,15 +131,20 @@ class HRN(nn.Module):
 
             idx = non_empty_units_idx[max_idx]
             unit = available_units.pop(idx)
+            assert not unit.is_empty
+
+            proj = projs[max_idx, :].unsqueeze(0)
+            assert not unit.is_empty
+            residual = h - proj
+            assert not unit.is_empty
 
             if max_mag < self.expand_thresh and not unit.is_full:
-                unit.basis.insert(residual)
+                unit.basis.insert(residual.squeeze(0))
                 # Recompute the projection with the updated basis
                 proj = unit.proj(h)
-            else:
-                proj = projs[:, max_idx]
+                residual = h - proj
+            assert not unit.is_empty
 
-            residual = h - proj
             unit.select()
 
             output += residual.squeeze(0)
