@@ -24,7 +24,12 @@ class TorchVisionDataset(Dataset):
         of the same name
         """
         super().__init_subclass__(**kwargs)
-        cls.torchvision_constructor = getattr(torchvision.datasets, cls.__name__)
+
+        # Example: if you subclass MNIST, then the above
+        # ``super().__init__subclass__()`` call will have already initialized
+        # the ``torchvision_constructor`` to MNIST
+        if not hasattr(cls, "torchvision_constructor"):
+            cls.torchvision_constructor = getattr(torchvision.datasets, cls.__name__)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
