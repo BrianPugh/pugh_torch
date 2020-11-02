@@ -75,6 +75,7 @@ class HRN(nn.Module):
         x = x.unsqueeze(0)
 
         route = []
+        residuals_l1 = 0
         # Will store the accumulated residuals
         output = torch.zeros(self.hash_feat)
 
@@ -145,9 +146,11 @@ class HRN(nn.Module):
                 residual = h - proj
             assert not unit.is_empty
 
+            # Increments the unit's internal state.
             unit.select()
 
             output += residual.squeeze(0)
+            residual_l1 += residual.abs().sum()
             route.append(idx)
 
             # Check other route-ending conditions
@@ -161,7 +164,7 @@ class HRN(nn.Module):
             # Compute the next feature-map and hashed-feature-vector
             x, h = unit(x)
 
-        return output, route
+        return output, route, residuals_l1
 
     def forward(self, x, depth=-1):
         """
@@ -184,6 +187,9 @@ class HRN(nn.Module):
             (B, out_feat) Output feature vector
         list
             Routing path taken
+        torch.Tensor
+            (B,) The cumulative sum of the routed residuals L1 magnitude.
+            Used in loss to encourage sparsity.
         """
 
         if isinstance(x, torch.Tensor):
@@ -191,9 +197,13 @@ class HRN(nn.Module):
 
         hashes, routes = [], []
         for exemplar in x:
-            exemplar_hash, exemplar_route = self.forward_exemplar(exemplar, depth=depth)
+            exemplar_hash, exemplar_route, residuals_l1 = self.forward_exemplar(
+                exemplar, depth=depth
+            )
             hashes.append(exemplar_hash)
             routes.append(exemplar_route)
 
         hashes = torch.stack(hashes, 0)
-        return hashes, routes
+        residuals_l1 = torch.stack(residuals_l1, 0)
+
+        return hashes, routes, residuals_l1
