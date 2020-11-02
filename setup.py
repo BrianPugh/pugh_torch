@@ -20,6 +20,7 @@ requirements = [
     "adabelief-pytorch>=0.0.5",
     "albumentations>=0.4.6",
     "gdown>=3.10.1",
+    "h5py>=3.0.0",
     "numpy>=1.17.1",
     "opencv-python>=4.2.0",
     "packaging>=20.2.4",

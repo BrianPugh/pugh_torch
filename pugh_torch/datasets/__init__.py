@@ -45,3 +45,5 @@ def get(genre, name):
 
 # Alias for ``get`` function
 get_dataset = get
+
+from .nyuv2 import NYUv2

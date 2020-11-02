@@ -34,7 +34,7 @@ class ADE20K(Dataset):
         self,
     ):
         """Extract the downloaded zip files.
-        No furth processing required.
+        No further processing required.
         """
 
         for payload in self.PAYLOAD_NAMES:
