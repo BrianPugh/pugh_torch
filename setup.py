@@ -21,6 +21,7 @@ requirements = [
     "albumentations>=0.4.6",
     "gdown>=3.10.1",
     "h5py>=3.0.0",
+    "matplotlib>=3.3.2",
     "numpy>=1.17.1",
     "opencv-python>=4.2.0",
     "packaging>=20.2.4",
@@ -61,7 +62,6 @@ dev_requirements = [
 experiment_requirements = [
     "hydra-core==1.0.2",
     "ipdb",
-    "matplotlib>=3.0.3",
     "open3d>=0.10.0.0",
     "scipy>=1.5.1",
     "tqdm>=4.45.0",

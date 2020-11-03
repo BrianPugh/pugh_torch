@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * `batch_index_select`
 * `batch_lstsq`
 * `RandHashProj` - Algorithm to implement the "hashing trick" in an easy-to-use, memory efficient way.
+* `turbo` color mapping (primarily for depth images)
+* `nyuv2` dataset
 
 ## Fixed
 * Prevent docker container from exitting when vnc disconnects/crashes.
