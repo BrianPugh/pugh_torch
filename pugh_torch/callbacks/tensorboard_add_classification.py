@@ -5,6 +5,8 @@ from .tensorboard_base import TensorBoardCallback
 class TensorBoardAddClassification(TensorBoardCallback):
     """Adds the rgb, ground truth label, and the network prediction
     to tensorboard.
+
+    Relies on the attribute ``last_logits``.
     """
 
     def __init__(self, *, classes=None, **kwargs):

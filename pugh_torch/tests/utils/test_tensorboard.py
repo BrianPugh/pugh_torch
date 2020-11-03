@@ -149,3 +149,24 @@ def test_add_rgb_multi_label(mock_add_text_under_img, mock_add_image):
     args, kwargs = mock_add_image.call_args_list[1]
     actual_tag, actual_rgb = args
     assert actual_rgb == "annotated img placeholder test label 2"
+
+
+def test_add_depth(mock_add_image):
+    """Tests different sizes of inputs and for general common operation."""
+
+    writer = NoInitSummaryWriter()
+
+    rgbs = torch.rand(10, 3, 480, 640)
+    preds = torch.rand(10, 120, 160)
+    targets = torch.rand(10, 240, 320)
+
+    writer.add_depth("foo", rgbs, preds, targets)
+
+    mock_add_image.assert_called_once()
+    args, kwargs = mock_add_image.call_args_list[0]
+    actual_tag, actual_montage = args
+
+    assert actual_tag == "foo/0"
+
+    assert actual_montage.shape == (480, 3 * 640, 3)
+    # TODO: more strict tests on the produced montage
