@@ -52,12 +52,20 @@ class Dataset(torch.utils.data.Dataset):
         # Register in DATASETS
         modules = cls.__module__.split(".")
         if len(modules) > 3 and modules[0] == "pugh_torch" and modules[1] == "datasets":
+            # This is a dataset defined by the pugh_torch package and has a hierarchy
             d = DATASETS
             for module in modules[2:-1]:
                 if module not in d:
                     d[module] = {}
                 d = d[module]
             d[cls.__name__.lower()] = cls
+        else:
+            # dataset came from another source, just add it to the root.
+            name = cls.__name__.lower()
+            assert (
+                name not in DATASETS
+            ), f"{name} already registered in pugh_torch dataset registry. Choose a different name for your dataset class."
+            DATASETS[cls.__name__.lower()] = cls
 
     def __init__(self, split="train", *, transform=None, **kwargs):
         """

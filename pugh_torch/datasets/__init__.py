@@ -24,23 +24,29 @@ import pugh_torch.datasets.classification
 import pugh_torch.datasets.segmentation
 
 
-def get(genre, name):
+def get(*args):
     """Gets dataset constructor from string identifiers
+
+    Example:
+        constructor = get("classification", "imagenet")
 
     Parameters
     ----------
-    genre : str
+    *args : str
+        Case-insensitive Strings that lead to a dataset.
+        Typically in form ``(genre, name)``
         Type of dataset. e.x. "classification".
-        Case insensitive
-    name : str
-        Name of dataset. e.x. "imagenet".
-        Case insensitive
     """
 
-    genre = genre.lower()
-    name = name.lower()
+    d = DATASETS
+    for arg in args:
+        d = d[arg.lower()]
 
-    return DATASETS[genre][name]
+    assert issubclass(
+        d, Dataset
+    ), f"arguments {args} did not lead to a dataset constructor; lead to {d}"
+
+    return d
 
 
 # Alias for ``get`` function
