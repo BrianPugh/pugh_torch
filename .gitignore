@@ -113,3 +113,4 @@ experiments/**/outputs/
 docker_run.sh
 *DS_Store*
 **/._*
+nohup.out

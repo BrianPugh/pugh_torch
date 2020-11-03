@@ -170,3 +170,20 @@ def test_add_depth(mock_add_image):
 
     assert actual_montage.shape == (480, 3 * 640, 3)
     # TODO: more strict tests on the produced montage
+
+
+def test_add_depth_visual(mock_add_image, chelsea, assert_img_equal):
+    writer = NoInitSummaryWriter()
+
+    rgbs = torch.Tensor(chelsea.transpose(2, 0, 1)[None]) / 255
+    targets = torch.arange(9).reshape(1, 3, 3)
+    preds = targets / 1.2
+
+    writer.add_depth("foo", rgbs, preds, targets)
+
+    mock_add_image.assert_called_once()
+    args, kwargs = mock_add_image.call_args_list[0]
+    actual_tag, actual_montage = args
+
+    assert actual_tag == "foo/0"
+    assert_img_equal(actual_montage)

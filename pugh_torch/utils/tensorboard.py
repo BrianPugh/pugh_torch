@@ -35,7 +35,10 @@ class SummaryWriter(tb.SummaryWriter):
         rgb_transform : str, torchvision.transforms.*
             Used when rgb images need to be logged. Transform applied to
             rgb images when logged.
+            Should convert whatever rgb data your batch is in to a float image in
+            range [0, 1]. Values outside this range will be clipped.
         """
+
         super().__init__(*args, **kwargs)
 
         self.rgb_transform = self._parse_rgb_transform(rgb_transform)
@@ -96,7 +99,7 @@ class SummaryWriter(tb.SummaryWriter):
             (B, 3, H, W) Image data.  See ``rgb_transform`` argument.
         rgb_transform : str or callable
             Transform to apply to the rgb data. If not provided, defaults to
-            the transform provided in __init__
+            the transform provided in __init__.
         n_images : int
             Maximum number of images to add.
         labels : list or str
@@ -179,13 +182,21 @@ class SummaryWriter(tb.SummaryWriter):
             pseudo_target = turbo(target)
 
             # Resize pred and target
-            pseudo_pred = cv2.resize(pseudo_pred, (w, h))
-            pseudo_target = cv2.resize(pseudo_target, (w, h))
+            pseudo_pred = cv2.resize(
+                pseudo_pred, (w, h), interpolation=cv2.INTER_NEAREST
+            )
+            pseudo_target = cv2.resize(
+                pseudo_target, (w, h), interpolation=cv2.INTER_NEAREST
+            )
+
+            # convert to uint8's
+            to_uint8 = lambda x: (np.clip(255 * x, 0, 255).astype(np.uint8))
+            pseudo_pred = to_uint8(pseudo_pred)
+            pseudo_target = to_uint8(pseudo_target)
 
             # Horizontally combine all three into a single image
-            montage = np.concatenate((pseudo_target, rgb, pseudo_pred), axis=1).astype(
-                np.uint8
-            )
+            montage = np.concatenate((pseudo_target, rgb, pseudo_pred), axis=1)
+
             # Log the montage to tensorboard
             self.add_image(
                 f"{tag}/{i}",
