@@ -44,3 +44,10 @@ def test_turbo_auto_range():
     )
 
     assert np.allclose(actual, expected)
+
+
+def test_turbo_many_dim():
+    shape = (5, 5, 5, 5, 5)
+    x = np.random.rand(*shape)
+    actual = pt.mappings.turbo(x)
+    assert actual.shape == (*shape, 3)
