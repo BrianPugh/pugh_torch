@@ -20,6 +20,14 @@ pugh\_torch.datasets.base module
    :undoc-members:
    :show-inheritance:
 
+pugh\_torch.datasets.nyuv2 module
+---------------------------------
+
+.. automodule:: pugh_torch.datasets.nyuv2
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pugh\_torch.datasets.torchvision module
 ---------------------------------------
 

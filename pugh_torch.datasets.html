@@ -359,6 +359,89 @@ file in the root of the data directory.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-pugh_torch.datasets.nyuv2">
+<span id="pugh-torch-datasets-nyuv2-module"></span><h2>pugh_torch.datasets.nyuv2 module<a class="headerlink" href="#module-pugh_torch.datasets.nyuv2" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pugh_torch.datasets.nyuv2.NYUv2">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.datasets.nyuv2.</code><code class="sig-name descname">NYUv2</code><span class="sig-paren">(</span><em class="sig-param">*args, raw_depth=False, types=['rgb', 'depth'], transform=None, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/datasets/nyuv2.html#NYUv2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.datasets.nyuv2.NYUv2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pugh_torch.datasets.base.Dataset" title="pugh_torch.datasets.base.Dataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.datasets.base.Dataset</span></code></a></p>
+<dl class="simple">
+<dt>rgb<span class="classifier">np.array uint8</span></dt><dd><p>Images in RGB order</p>
+</dd>
+<dt>depth<span class="classifier">np.array float32</span></dt><dd><p>Depth in meters</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>raw_depth</strong> (<em>bool</em>) – Return the depth data before invalid areas were infilled.
+Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>types</strong> (<em>list of str</em>) – Data types to return.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="pugh_torch.datasets.nyuv2.NYUv2.DOWNLOAD_URL">
+<code class="sig-name descname">DOWNLOAD_URL</code><em class="property"> = 'http://horatio.cs.nyu.edu/mit/silberman/nyu_depth_v2/nyu_depth_v2_labeled.mat'</em><a class="headerlink" href="#pugh_torch.datasets.nyuv2.NYUv2.DOWNLOAD_URL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.datasets.nyuv2.NYUv2.K">
+<code class="sig-name descname">K</code><em class="property"> = array([[518.85790117,   0.        , 325.58244941],        [  0.        , 519.46961112, 253.73616633],        [  0.        ,   0.        ,   1.        ]])</em><a class="headerlink" href="#pugh_torch.datasets.nyuv2.NYUv2.K" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.datasets.nyuv2.NYUv2.K4">
+<code class="sig-name descname">K4</code><em class="property"> = array([518.85790117, 519.46961112, 325.58244941, 253.73616633])</em><a class="headerlink" href="#pugh_torch.datasets.nyuv2.NYUv2.K4" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.datasets.nyuv2.NYUv2.PAYLOAD_NAME">
+<code class="sig-name descname">PAYLOAD_NAME</code><em class="property"> = 'nyu_depth_v2_labeled.mat'</em><a class="headerlink" href="#pugh_torch.datasets.nyuv2.NYUv2.PAYLOAD_NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.datasets.nyuv2.NYUv2.available_types">
+<code class="sig-name descname">available_types</code><em class="property"> = {'depth', 'instances', 'labels', 'rgb'}</em><a class="headerlink" href="#pugh_torch.datasets.nyuv2.NYUv2.available_types" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.datasets.nyuv2.NYUv2.cx">
+<code class="sig-name descname">cx</code><em class="property"> = 325.58244941119034</em><a class="headerlink" href="#pugh_torch.datasets.nyuv2.NYUv2.cx" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.datasets.nyuv2.NYUv2.cy">
+<code class="sig-name descname">cy</code><em class="property"> = 253.73616633400465</em><a class="headerlink" href="#pugh_torch.datasets.nyuv2.NYUv2.cy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pugh_torch.datasets.nyuv2.NYUv2.download">
+<code class="sig-name descname">download</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/datasets/nyuv2.html#NYUv2.download"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.datasets.nyuv2.NYUv2.download" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to download data to <code class="docutils literal notranslate"><span class="pre">self.path</span></code>.</p>
+<p>The directories up to <code class="docutils literal notranslate"><span class="pre">self.path</span></code> have already been created.</p>
+<p>Will only be called if data has not been downloaded.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.datasets.nyuv2.NYUv2.fx">
+<code class="sig-name descname">fx</code><em class="property"> = 518.8579011745019</em><a class="headerlink" href="#pugh_torch.datasets.nyuv2.NYUv2.fx" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pugh_torch.datasets.nyuv2.NYUv2.fy">
+<code class="sig-name descname">fy</code><em class="property"> = 519.4696111212749</em><a class="headerlink" href="#pugh_torch.datasets.nyuv2.NYUv2.fy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pugh_torch.datasets.nyuv2.NYUv2.unpack">
+<code class="sig-name descname">unpack</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/datasets/nyuv2.html#NYUv2.unpack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.datasets.nyuv2.NYUv2.unpack" title="Permalink to this definition">¶</a></dt>
+<dd><p>No unpacking necessary</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-pugh_torch.datasets.torchvision">
 <span id="pugh-torch-datasets-torchvision-module"></span><h2>pugh_torch.datasets.torchvision module<a class="headerlink" href="#module-pugh_torch.datasets.torchvision" title="Permalink to this headline">¶</a></h2>
 <p>Lightly wraps torchvision datasets.</p>
