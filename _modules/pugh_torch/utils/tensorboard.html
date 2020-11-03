@@ -233,7 +233,10 @@
 <span class="sd">        rgb_transform : str, torchvision.transforms.*</span>
 <span class="sd">            Used when rgb images need to be logged. Transform applied to</span>
 <span class="sd">            rgb images when logged.</span>
+<span class="sd">            Should convert whatever rgb data your batch is in to a float image in</span>
+<span class="sd">            range [0, 1]. Values outside this range will be clipped.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">rgb_transform</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_rgb_transform</span><span class="p">(</span><span class="n">rgb_transform</span><span class="p">)</span>
@@ -294,7 +297,7 @@
 <span class="sd">            (B, 3, H, W) Image data.  See ``rgb_transform`` argument.</span>
 <span class="sd">        rgb_transform : str or callable</span>
 <span class="sd">            Transform to apply to the rgb data. If not provided, defaults to</span>
-<span class="sd">            the transform provided in __init__</span>
+<span class="sd">            the transform provided in __init__.</span>
 <span class="sd">        n_images : int</span>
 <span class="sd">            Maximum number of images to add.</span>
 <span class="sd">        labels : list or str</span>
@@ -377,13 +380,21 @@
             <span class="n">pseudo_target</span> <span class="o">=</span> <span class="n">turbo</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
 
             <span class="c1"># Resize pred and target</span>
-            <span class="n">pseudo_pred</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">pseudo_pred</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">))</span>
-            <span class="n">pseudo_target</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">pseudo_target</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">))</span>
+            <span class="n">pseudo_pred</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span>
+                <span class="n">pseudo_pred</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span> <span class="n">interpolation</span><span class="o">=</span><span class="n">cv2</span><span class="o">.</span><span class="n">INTER_NEAREST</span>
+            <span class="p">)</span>
+            <span class="n">pseudo_target</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span>
+                <span class="n">pseudo_target</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span> <span class="n">interpolation</span><span class="o">=</span><span class="n">cv2</span><span class="o">.</span><span class="n">INTER_NEAREST</span>
+            <span class="p">)</span>
+
+            <span class="c1"># convert to uint8&#39;s</span>
+            <span class="n">to_uint8</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="mi">255</span> <span class="o">*</span> <span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">))</span>
+            <span class="n">pseudo_pred</span> <span class="o">=</span> <span class="n">to_uint8</span><span class="p">(</span><span class="n">pseudo_pred</span><span class="p">)</span>
+            <span class="n">pseudo_target</span> <span class="o">=</span> <span class="n">to_uint8</span><span class="p">(</span><span class="n">pseudo_target</span><span class="p">)</span>
 
             <span class="c1"># Horizontally combine all three into a single image</span>
-            <span class="n">montage</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">pseudo_target</span><span class="p">,</span> <span class="n">rgb</span><span class="p">,</span> <span class="n">pseudo_pred</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span>
-                <span class="n">np</span><span class="o">.</span><span class="n">uint8</span>
-            <span class="p">)</span>
+            <span class="n">montage</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">pseudo_target</span><span class="p">,</span> <span class="n">rgb</span><span class="p">,</span> <span class="n">pseudo_pred</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
             <span class="c1"># Log the montage to tensorboard</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_image</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tag</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>

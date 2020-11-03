@@ -317,7 +317,9 @@ necessary and use the name from google drive.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>rgb_transform</strong> (<em>str, torchvision.transforms.*</em>) – Used when rgb images need to be logged. Transform applied to
-rgb images when logged.</p>
+rgb images when logged.
+Should convert whatever rgb data your batch is in to a float image in
+range [0, 1]. Values outside this range will be clipped.</p>
 </dd>
 </dl>
 <dl class="method">
@@ -351,7 +353,7 @@ ImageNet’s mean and stddev) and you want to log it to tensorboard.</p>
 <dt>rgbs<span class="classifier">torch.Tensor</span></dt><dd><p>(B, 3, H, W) Image data.  See <code class="docutils literal notranslate"><span class="pre">rgb_transform</span></code> argument.</p>
 </dd>
 <dt>rgb_transform<span class="classifier">str or callable</span></dt><dd><p>Transform to apply to the rgb data. If not provided, defaults to
-the transform provided in __init__</p>
+the transform provided in __init__.</p>
 </dd>
 <dt>n_images<span class="classifier">int</span></dt><dd><p>Maximum number of images to add.</p>
 </dd>
