@@ -222,6 +222,33 @@
 <code class="sig-prename descclassname">pugh_torch.mappings.color.</code><code class="sig-name descname">get_palette</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/mappings/color.html#get_palette"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.mappings.color.get_palette" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="function">
+<dt id="pugh_torch.mappings.color.turbo">
+<code class="sig-prename descclassname">pugh_torch.mappings.color.</code><code class="sig-name descname">turbo</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">min=None</em>, <em class="sig-param">max=None</em>, <em class="sig-param">alpha=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/mappings/color.html#turbo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.mappings.color.turbo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply the colormap “turbo” to input data x
+:Parameters: * <strong>x</strong> (<em>numpy.ndarray</em>) – Array of any shape</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>min</strong> (<em>float</em>) – Lowest point in the colormap range.
+Values below this will be clipped.
+Defaults to <code class="docutils literal notranslate"><span class="pre">x.min()</span></code></p></li>
+<li><p><strong>max</strong> (<em>float</em>) – Highest point in the colormap range.
+Values above this will be clipped.
+Defaults to <code class="docutils literal notranslate"><span class="pre">x.max()</span></code></p></li>
+<li><p><strong>alpha</strong> (<em>bool</em>) – Return <code class="docutils literal notranslate"><span class="pre">RGBA</span></code> instead of <code class="docutils literal notranslate"><span class="pre">RGB</span></code>. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Float output in range [0,1] with same shape as input, with an additional
+RGB dimension.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 <div class="section" id="module-pugh_torch.mappings">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pugh_torch.mappings" title="Permalink to this headline">¶</a></h2>
