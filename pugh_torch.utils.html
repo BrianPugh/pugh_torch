@@ -321,6 +321,22 @@ rgb images when logged.</p>
 </dd>
 </dl>
 <dl class="method">
+<dt id="pugh_torch.utils.tensorboard.SummaryWriter.add_depth">
+<code class="sig-name descname">add_depth</code><span class="sig-paren">(</span><em class="sig-param">tag</em>, <em class="sig-param">rgbs</em>, <em class="sig-param">preds</em>, <em class="sig-param">targets</em>, <em class="sig-param">global_step=None</em>, <em class="sig-param">walltime=None</em>, <em class="sig-param">dataformats='CHW'</em>, <em class="sig-param">*</em>, <em class="sig-param">rgb_transform=None</em>, <em class="sig-param">n_images=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/utils/tensorboard.html#SummaryWriter.add_depth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.utils.tensorboard.SummaryWriter.add_depth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a depth image and its pairing input montage.</p>
+<p><code class="docutils literal notranslate"><span class="pre">self.add_rgb</span></code>’s documentation applies to the <code class="docutils literal notranslate"><span class="pre">rgbs</span></code> input here.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>preds</strong></p></li>
+<li><p><strong>preds</strong> (<em>torch.Tensor</em>) – (B, H, W) Predicted depth in meters.</p></li>
+<li><p><strong>targets</strong> (<em>torch.Tensor</em>) – (B, H, W) Ground truth depth in meters.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="pugh_torch.utils.tensorboard.SummaryWriter.add_rgb">
 <code class="sig-name descname">add_rgb</code><span class="sig-paren">(</span><em class="sig-param">tag</em>, <em class="sig-param">rgbs</em>, <em class="sig-param">global_step=None</em>, <em class="sig-param">walltime=None</em>, <em class="sig-param">dataformats='CHW'</em>, <em class="sig-param">*</em>, <em class="sig-param">rgb_transform=None</em>, <em class="sig-param">n_images=1</em>, <em class="sig-param">labels=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/utils/tensorboard.html#SummaryWriter.add_rgb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.utils.tensorboard.SummaryWriter.add_rgb" title="Permalink to this definition">¶</a></dt>
 <dd><p>Applies a transform and adds image to log</p>

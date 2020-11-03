@@ -28,6 +28,14 @@ pugh\_torch.callbacks.tensorboard\_add\_classification module
    :undoc-members:
    :show-inheritance:
 
+pugh\_torch.callbacks.tensorboard\_add\_depth module
+----------------------------------------------------
+
+.. automodule:: pugh_torch.callbacks.tensorboard_add_depth
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pugh\_torch.callbacks.tensorboard\_add\_ss module
 -------------------------------------------------
 

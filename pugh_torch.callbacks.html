@@ -258,6 +258,7 @@ they appear under sublabels in TensorBoard.</p></li>
 <dd><p>Bases: <a class="reference internal" href="#pugh_torch.callbacks.tensorboard_base.TensorBoardCallback" title="pugh_torch.callbacks.tensorboard_base.TensorBoardCallback"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.callbacks.tensorboard_base.TensorBoardCallback</span></code></a></p>
 <p>Adds the rgb, ground truth label, and the network prediction
 to tensorboard.</p>
+<p>Relies on the attribute <code class="docutils literal notranslate"><span class="pre">last_logits</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>classes</strong> (<em>list</em>) – If provided, the predictions will contain the appropriate annotation.
@@ -275,6 +276,32 @@ If this is available under <code class="docutils literal notranslate"><span clas
 <dt id="pugh_torch.callbacks.tensorboard_add_classification.TensorBoardAddClassification.on_train_start">
 <code class="sig-name descname">on_train_start</code><span class="sig-paren">(</span><em class="sig-param">trainer</em>, <em class="sig-param">pl_module</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/callbacks/tensorboard_add_classification.html#TensorBoardAddClassification.on_train_start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.callbacks.tensorboard_add_classification.TensorBoardAddClassification.on_train_start" title="Permalink to this definition">¶</a></dt>
 <dd><p>Called when the train begins.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pugh_torch.callbacks.tensorboard_add_depth">
+<span id="pugh-torch-callbacks-tensorboard-add-depth-module"></span><h2>pugh_torch.callbacks.tensorboard_add_depth module<a class="headerlink" href="#module-pugh_torch.callbacks.tensorboard_add_depth" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pugh_torch.callbacks.tensorboard_add_depth.TensorBoardAddDepth">
+<em class="property">class </em><code class="sig-prename descclassname">pugh_torch.callbacks.tensorboard_add_depth.</code><code class="sig-name descname">TensorBoardAddDepth</code><span class="sig-paren">(</span><em class="sig-param">*</em>, <em class="sig-param">logging_batch_interval=20</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/callbacks/tensorboard_add_depth.html#TensorBoardAddDepth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.callbacks.tensorboard_add_depth.TensorBoardAddDepth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pugh_torch.callbacks.tensorboard_base.TensorBoardCallback" title="pugh_torch.callbacks.tensorboard_base.TensorBoardCallback"><code class="xref py py-class docutils literal notranslate"><span class="pre">pugh_torch.callbacks.tensorboard_base.TensorBoardCallback</span></code></a></p>
+<p>Adds the rgb, ground truth depth, and the network prediction to tensorboard.</p>
+<p>Assumes the network’s prediction is in attribute <code class="docutils literal notranslate"><span class="pre">last_logits</span></code> with shape
+(b, h, w).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>logging_batch_interval</strong> (<em>int</em>) – Log image(s) every this many batches.</p></li>
+<li><p><strong>kwargs</strong> (<em>dict</em>) – Passed along to <code class="docutils literal notranslate"><span class="pre">SummaryWriter</span></code> method on hook</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="pugh_torch.callbacks.tensorboard_add_depth.TensorBoardAddDepth.on_train_batch_end">
+<code class="sig-name descname">on_train_batch_end</code><span class="sig-paren">(</span><em class="sig-param">trainer</em>, <em class="sig-param">pl_module</em>, <em class="sig-param">outputs</em>, <em class="sig-param">batch</em>, <em class="sig-param">batch_idx</em>, <em class="sig-param">dataloader_idx</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/callbacks/tensorboard_add_depth.html#TensorBoardAddDepth.on_train_batch_end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.callbacks.tensorboard_add_depth.TensorBoardAddDepth.on_train_batch_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Just some validation checks.</p>
 </dd></dl>
 
 </dd></dl>
