@@ -5,7 +5,7 @@ import numpy as np
 from pathlib import Path
 
 from ..transforms import imagenet
-from ..mappings.color import get_palette
+from ..mappings.color import get_palette, turbo
 from ..helpers import add_text_under_img
 
 __all__ = [
@@ -123,6 +123,73 @@ class SummaryWriter(tb.SummaryWriter):
             self.add_image(
                 f"{tag}/{i}",
                 rgb,
+                global_step=global_step,
+                walltime=walltime,
+                dataformats="HWC",
+            )
+
+    def add_depth(
+        self,
+        tag,
+        rgbs,
+        preds,
+        targets,
+        global_step=None,
+        walltime=None,
+        dataformats="CHW",
+        *,
+        rgb_transform=None,
+        n_images=1,
+    ):
+        """Add a depth image and its pairing input montage.
+
+        ``self.add_rgb``'s documentation applies to the ``rgbs`` input here.
+
+        Parameters
+        ----------
+        preds
+        preds : torch.Tensor
+            (B, H, W) Predicted depth in meters.
+        targets : torch.Tensor
+            (B, H, W) Ground truth depth in meters.
+        """
+
+        # Input validation
+        if dataformats != "CHW":
+            raise NotImplementedError("TODO: allow other dataformats")
+
+        rgb_transform = self._parse_rgb_transform(rgb_transform)
+        for i, rgb in enumerate(rgbs):
+            rgbs[i] = rgb_transform(rgb)
+
+        # Move all the data to cpu
+        rgbs = rgbs.detach().cpu().numpy()
+        preds = preds.detach().cpu().numpy()
+        targets = targets.detach().cpu().numpy()
+
+        # General cleanup operations
+        rgbs = np.clip(rgbs, 0, 1)
+        rgbs = np.transpose(rgbs, (0, 2, 3, 1))  # (B, H, W, 3)
+        rgbs = (rgbs * 255).astype(np.uint8)
+        _, h, w, _ = rgbs.shape
+
+        for i, rgb, pred, target in zip(range(n_images), rgbs, preds, targets):
+            # determine clipping values based on the ground truth
+            pseudo_pred = turbo(pred, min=target.min(), max=target.max())
+            pseudo_target = turbo(target)
+
+            # Resize pred and target
+            pseudo_pred = cv2.resize(pseudo_pred, (w, h))
+            pseudo_target = cv2.resize(pseudo_target, (w, h))
+
+            # Horizontally combine all three into a single image
+            montage = np.concatenate((pseudo_target, rgb, pseudo_pred), axis=1).astype(
+                np.uint8
+            )
+            # Log the montage to tensorboard
+            self.add_image(
+                f"{tag}/{i}",
+                montage,
                 global_step=global_step,
                 walltime=walltime,
                 dataformats="HWC",

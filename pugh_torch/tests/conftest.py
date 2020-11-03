@@ -103,7 +103,8 @@ def assert_img_equal(img1, img2, thresh=0.001, resize=True):
             img = np.array(img)
         else:
             # Assume its something path/str-like
-            img = cv2.imread(str(img))[..., ::-1]
+            img = cv2.imread(str(img))
+            img[..., :3] = img[..., :3][..., ::-1]
         img = img.astype(np.float32)
         if img.ndim == 2:
             img = img[..., None]
@@ -149,9 +150,9 @@ def assert_img_equal(request):
         if img.ndim == 2:
             cv2.imwrite(str(actual_file), img)
         else:
-            cv2.imwrite(
-                str(actual_file), img[..., ::-1]
-            )  # img is RGB, imwrite expects BGR
+            img_bgr = img.copy()
+            img_bgr[..., :3] = img_bgr[..., :3][..., ::-1]
+            cv2.imwrite(str(actual_file), img_bgr)  # img is RGB, imwrite expects BGR
 
         if not expected_file.exists():
             raise AssertionError(

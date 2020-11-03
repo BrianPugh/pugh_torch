@@ -7,4 +7,5 @@ else:
     from .histogram import Histogram
     from .tensorboard_add_classification import TensorBoardAddClassification
     from .tensorboard_add_ss import TensorBoardAddSS
+    from .tensorboard_add_depth import TensorBoardAddDepth
     from .model_checkpoint import ModelCheckpoint
