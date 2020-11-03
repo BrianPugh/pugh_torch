@@ -2,6 +2,50 @@
 """
 
 import numpy as np
+import matplotlib.cm as cm
+
+
+def turbo(x, min=None, max=None, alpha=False):
+    """Apply the colormap "turbo" to input data x
+    Parameters
+    ----------
+    x : numpy.ndarray
+        Array of any shape
+    min : float
+        Lowest point in the colormap range.
+        Values below this will be clipped.
+        Defaults to ``x.min()``
+    max : float
+        Highest point in the colormap range.
+        Values above this will be clipped.
+        Defaults to ``x.max()``
+    alpha : bool
+        Return ``RGBA`` instead of ``RGB``. Defaults to ``False``.
+
+    Returns
+    -------
+    numpy.ndarray
+        Float output in range [0,1] with same shape as input, with an additional
+        RGB dimension.
+    """
+
+    colormap = cm.get_cmap("turbo")
+
+    if min is None:
+        min = x.min()
+
+    if max is None:
+        max = x.max()
+
+    x = np.clip(x, min, max)
+    x = (x - min) / max
+
+    pseudo = colormap(x)
+
+    if not alpha:
+        pseudo = pseudo[..., :3]
+
+    return pseudo
 
 
 def get_palette(name):
