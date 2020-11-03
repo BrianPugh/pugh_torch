@@ -222,23 +222,29 @@
 <span class="kn">import</span> <span class="nn">pugh_torch.datasets.segmentation</span>
 
 
-<div class="viewcode-block" id="get"><a class="viewcode-back" href="../../pugh_torch.datasets.html#pugh_torch.datasets.get">[docs]</a><span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">genre</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<div class="viewcode-block" id="get"><a class="viewcode-back" href="../../pugh_torch.datasets.html#pugh_torch.datasets.get">[docs]</a><span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Gets dataset constructor from string identifiers</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        constructor = get(&quot;classification&quot;, &quot;imagenet&quot;)</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    genre : str</span>
+<span class="sd">    *args : str</span>
+<span class="sd">        Case-insensitive Strings that lead to a dataset.</span>
+<span class="sd">        Typically in form ``(genre, name)``</span>
 <span class="sd">        Type of dataset. e.x. &quot;classification&quot;.</span>
-<span class="sd">        Case insensitive</span>
-<span class="sd">    name : str</span>
-<span class="sd">        Name of dataset. e.x. &quot;imagenet&quot;.</span>
-<span class="sd">        Case insensitive</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">genre</span> <span class="o">=</span> <span class="n">genre</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">DATASETS</span>
+    <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">arg</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
 
-    <span class="k">return</span> <span class="n">DATASETS</span><span class="p">[</span><span class="n">genre</span><span class="p">][</span><span class="n">name</span><span class="p">]</span></div>
+    <span class="k">assert</span> <span class="nb">issubclass</span><span class="p">(</span>
+        <span class="n">d</span><span class="p">,</span> <span class="n">Dataset</span>
+    <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;arguments </span><span class="si">{</span><span class="n">args</span><span class="si">}</span><span class="s2"> did not lead to a dataset constructor; lead to </span><span class="si">{</span><span class="n">d</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">return</span> <span class="n">d</span></div>
 
 
 <span class="c1"># Alias for ``get`` function</span>

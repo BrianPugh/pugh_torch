@@ -509,32 +509,34 @@ __get__ implementation, or other parent classes of the dataset..</p></li>
 <p>I don’t expose this in code because I think it just clutters the code.</p>
 <dl class="function">
 <dt id="pugh_torch.datasets.get">
-<code class="sig-prename descclassname">pugh_torch.datasets.</code><code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param">genre</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/datasets.html#get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.datasets.get" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pugh_torch.datasets.</code><code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pugh_torch/datasets.html#get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pugh_torch.datasets.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets dataset constructor from string identifiers</p>
+<dl class="simple">
+<dt>Example:</dt><dd><p>constructor = get(“classification”, “imagenet”)</p>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>genre</strong> (<em>str</em>) – Type of dataset. e.x. “classification”.
-Case insensitive</p></li>
-<li><p><strong>name</strong> (<em>str</em>) – Name of dataset. e.x. “imagenet”.
-Case insensitive</p></li>
-</ul>
+<dd class="field-odd"><p><strong>*args</strong> (<em>str</em>) – Case-insensitive Strings that lead to a dataset.
+Typically in form <code class="docutils literal notranslate"><span class="pre">(genre,</span> <span class="pre">name)</span></code>
+Type of dataset. e.x. “classification”.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="pugh_torch.datasets.get_dataset">
-<code class="sig-prename descclassname">pugh_torch.datasets.</code><code class="sig-name descname">get_dataset</code><span class="sig-paren">(</span><em class="sig-param">genre</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#pugh_torch.datasets.get_dataset" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pugh_torch.datasets.</code><code class="sig-name descname">get_dataset</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#pugh_torch.datasets.get_dataset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets dataset constructor from string identifiers</p>
+<dl class="simple">
+<dt>Example:</dt><dd><p>constructor = get(“classification”, “imagenet”)</p>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>genre</strong> (<em>str</em>) – Type of dataset. e.x. “classification”.
-Case insensitive</p></li>
-<li><p><strong>name</strong> (<em>str</em>) – Name of dataset. e.x. “imagenet”.
-Case insensitive</p></li>
-</ul>
+<dd class="field-odd"><p><strong>*args</strong> (<em>str</em>) – Case-insensitive Strings that lead to a dataset.
+Typically in form <code class="docutils literal notranslate"><span class="pre">(genre,</span> <span class="pre">name)</span></code>
+Type of dataset. e.x. “classification”.</p>
 </dd>
 </dl>
 </dd></dl>
