@@ -24,6 +24,12 @@ def pytest_addoption(parser):
         default=False,
         help="run dataset downloading tests. WARNING may use considerable bandwith and take a long time. DOES NOT SAVE DATA.",
     )
+    parser.addoption(
+        "--network",
+        action="store_true",
+        default=False,
+        help="Trains a toy network to real-life integration-test some code.",
+    )
 
 
 def pytest_collection_modifyitems(config, items):
@@ -42,6 +48,14 @@ def pytest_collection_modifyitems(config, items):
     for item in items:
         if "dataset" in item.keywords:
             item.add_marker(skip_dataset)
+
+    if config.getoption("--network"):
+        # --network given in cli: do not skip network tests
+        return
+    skip_network = pytest.mark.skip(reason="need --network option to run")
+    for item in items:
+        if "network" in item.keywords:
+            item.add_marker(skip_network)
 
 
 @pytest.fixture

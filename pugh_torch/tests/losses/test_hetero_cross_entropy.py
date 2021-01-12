@@ -1,4 +1,5 @@
 import torch
+from torch import nn
 import torch.nn.functional as F
 from pugh_torch.losses import hetero_cross_entropy
 from pugh_torch.losses.hetero_cross_entropy import _format_weight
@@ -346,3 +347,121 @@ def test_hetero_cross_entropy_weight_tensor_no_class(pred):
 
     actual_loss = actual_loss.detach().numpy()
     assert np.isclose(actual_loss, 14.342173)
+
+class DigitRecognizerCNN(nn.Module):
+    """Simple convolutional network consisting of 2 convolution layers with
+    max-pooling followed by two fully-connected layers and a softmax output
+    layer
+
+    https://www.kaggle.com/mcwitt/mnist-cnn-with-pytorch
+    """
+
+    def __init__(self, num_classes):
+
+        super().__init__()
+
+        self.features = nn.Sequential(
+            nn.Conv2d(1, 16, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=3, stride=2, padding=1),
+            nn.Conv2d(16, 32, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=3, stride=2, padding=1))
+
+        self.classifier = nn.Sequential(
+            nn.Dropout(p=0.2),
+            nn.Linear(32 * 7 * 7, 784),
+            nn.ReLU(),
+            nn.Dropout(p=0.2),
+            nn.Linear(784, 784),
+            nn.ReLU(),
+            nn.Linear(784, num_classes))
+
+    def forward(self, X):
+        x = self.features(X)
+        x = x.view(x.size(0), 32 * 7 * 7)
+        x = self.classifier(x)
+        return x
+
+@pytest.mark.network
+def test_hetero_cross_entropy_mnist():
+    """ Runs a small network on mnist to observe this loss on a toy problem/network.
+
+    Treat this as an integration test.
+    """
+
+    from pugh_torch.datasets.classification import MNIST
+    from torchvision import transforms
+    import matplotlib.pyplot as plt
+
+    # Seed RNG for determinism
+    def make_deterministic():
+        torch.backends.cudnn.benchmark = False
+        torch.backends.cudnn.deterministic = True
+
+        torch.manual_seed(0)
+        torch.cuda.manual_seed(0)
+        np.random.seed(0)
+
+    transform = transforms.Compose(
+                [
+                    transforms.ToTensor(),
+                ]
+    )
+
+    batch_size = 32
+
+    trainset = MNIST(split="train", transform=transform)
+    trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=2)
+
+    valset = MNIST(split="val", transform=transform)
+    valloader = torch.utils.data.DataLoader(valset, batch_size=batch_size, num_workers=2)
+
+    print_interval = 2000 // batch_size 
+    def run_train(model):
+        for epoch in range(1):
+            running_loss = 0.0  # Accumulates loss over print_interval
+            for i, (inputs, labels) in enumerate(trainloader):
+                inputs, labels = inputs.to('cuda'), labels.to('cuda')
+                optimizer.zero_grad()
+
+                outputs = net(inputs)
+
+                loss = criterion(outputs, labels)
+                loss.backward()
+                optimizer.step()
+
+                # print statistics
+                running_loss += loss.item()
+                if i % print_interval == (print_interval-1):
+                    print('[%d, %5d] loss: %.3f' %
+                          (epoch + 1, i + 1, running_loss / print_interval))
+                    running_loss = 0.0
+
+
+    def run_val(model):
+        correct = 0
+        total = 0
+        with torch.no_grad():
+            for inputs, labels in valloader:
+                inputs, labels = inputs.to('cuda'), labels.to('cuda')
+                outputs = model(inputs)
+                _, predicted = torch.max(outputs, -1)
+                total += labels.size(0)
+                correct += (predicted == labels).sum().item()
+
+        accuracy = correct / total
+        print('Accuracy of the network on the 10000 test images: %.2f %%' % (
+            100 * accuracy))
+        return accuracy
+
+
+    make_deterministic()
+    net = DigitRecognizerCNN(10).to('cuda')
+    criterion = nn.CrossEntropyLoss()
+    optimizer = torch.optim.AdamW(net.parameters(), lr=0.001)
+    print("Training classic cross-entropy network")
+    run_train(net)
+    print('Finished Training. Running validation split...')
+    acc = run_val(net)
+    assert np.isclose(acc, 0.9734, atol=0.0001)
