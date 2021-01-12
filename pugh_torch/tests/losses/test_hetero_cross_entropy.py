@@ -418,50 +418,106 @@ def test_hetero_cross_entropy_mnist():
     valloader = torch.utils.data.DataLoader(valset, batch_size=batch_size, num_workers=2)
 
     print_interval = 2000 // batch_size 
-    def run_train(model):
+    split_thresh = 3
+    def run_train(model, naive=False, hetero=False):
         for epoch in range(1):
             running_loss = 0.0  # Accumulates loss over print_interval
             for i, (inputs, labels) in enumerate(trainloader):
                 inputs, labels = inputs.to('cuda'), labels.to('cuda')
                 optimizer.zero_grad()
 
+                availables = torch.ones(batch_size, 10).to('cuda')
+
+                if i % 2 == 0:
+                    mask = labels < split_thresh  # 0, 1, and 2
+                    if naive:
+                        # Equivalent to only apply loss for labeled data
+                        labels = labels[mask]
+                        inputs = inputs[mask]
+                    elif hetero:
+                        labels[~mask] = -1
+                        availables[~mask, split_thresh:] = False
+
                 outputs = net(inputs)
 
-                loss = criterion(outputs, labels)
+                if hetero:
+                    loss = hetero_cross_entropy(outputs, labels, availables, super_index=-1)
+                else:
+                    loss = F.cross_entropy(outputs, labels)
+
                 loss.backward()
                 optimizer.step()
 
                 # print statistics
                 running_loss += loss.item()
-                if i % print_interval == (print_interval-1):
+                if True and i % print_interval == (print_interval-1):
                     print('[%d, %5d] loss: %.3f' %
                           (epoch + 1, i + 1, running_loss / print_interval))
                     running_loss = 0.0
 
 
     def run_val(model):
-        correct = 0
-        total = 0
+        correct = np.zeros(10)
+        total = np.zeros(10)
         with torch.no_grad():
             for inputs, labels in valloader:
                 inputs, labels = inputs.to('cuda'), labels.to('cuda')
                 outputs = model(inputs)
                 _, predicted = torch.max(outputs, -1)
-                total += labels.size(0)
-                correct += (predicted == labels).sum().item()
 
-        accuracy = correct / total
+                predicted = predicted.cpu().numpy()
+                labels = labels.cpu().numpy()
+                for predict, label in zip(predicted, labels):
+                    correct[label] += (predict==label)
+                    total[label] += 1
+
+        accuracy = correct.sum() / total.sum()
         print('Accuracy of the network on the 10000 test images: %.2f %%' % (
             100 * accuracy))
-        return accuracy
+        for i, (c, t) in enumerate(zip(correct, total)):
+            print(f'    label {i}: {100*c/t:.2f}')
+        return correct / total
 
 
-    make_deterministic()
-    net = DigitRecognizerCNN(10).to('cuda')
-    criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.AdamW(net.parameters(), lr=0.001)
-    print("Training classic cross-entropy network")
-    run_train(net)
-    print('Finished Training. Running validation split...')
-    acc = run_val(net)
-    assert np.isclose(acc, 0.9734, atol=0.0001)
+    expected = np.array([0.99285714, 0.99207048, 0.98643411, 0.98019802, 0.97046843,
+               0.98318386, 0.95302714, 0.98735409, 0.97741273, 0.90882061])
+    if False:
+        make_deterministic()
+        net = DigitRecognizerCNN(10).to('cuda')
+        optimizer = torch.optim.AdamW(net.parameters(), lr=0.001)
+        print("Training classic cross-entropy network")
+        run_train(net)
+        print('Finished Training. Running validation split...')
+        acc = run_val(net)
+
+        assert np.allclose(acc, expected, atol=0.0001)
+
+    # Naive Cross-Entropy with non-heterogeneous datasets
+    # Essentially, only apply cross-entropy loss for labeled datapoints.
+    expected_naive =  np.array([0.99795918, 0.99471366, 0.98837209, 0.96831683, 0.9592668 ,
+               0.94170404, 0.95093946, 0.96595331, 0.94661191, 0.95936571])
+    if False:
+        make_deterministic()
+        net = DigitRecognizerCNN(10).to('cuda')
+        criterion = nn.CrossEntropyLoss()
+        optimizer = torch.optim.AdamW(net.parameters(), lr=0.001)
+        print("Training naive cross-entropy network")
+        run_train(net, naive=True)
+        print('Finished Training. Running validation split...')
+        acc_naive = run_val(net)
+        assert np.allclose(acc_naive, expected_naive, atol=0.0001)
+
+    # Hetero-Cross-Entropy
+    expected_hetero = np.array([0.99081633, 0.99559471, 0.98546512, 0.98415842, 0.97861507,
+               0.97197309, 0.97807933, 0.97568093, 0.9825462 , 0.9444995 ])
+    if True:
+        make_deterministic()
+        net = DigitRecognizerCNN(10).to('cuda')
+        criterion = nn.CrossEntropyLoss()
+        optimizer = torch.optim.AdamW(net.parameters(), lr=0.001)
+        print("Training hetero-cross-entropy network")
+        run_train(net, hetero=True)
+        print('Finished Training. Running validation split...')
+        acc_hetero = run_val(net)
+        assert np.allclose(acc_hetero, expected_hetero, atol=0.0001)
+
