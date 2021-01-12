@@ -457,6 +457,7 @@ def test_hetero_cross_entropy_mnist():
 
 
     def run_val(model):
+        model.eval()
         correct = np.zeros(10)
         total = np.zeros(10)
         with torch.no_grad():
@@ -479,9 +480,9 @@ def test_hetero_cross_entropy_mnist():
         return correct / total
 
 
-    expected = np.array([0.99285714, 0.99207048, 0.98643411, 0.98019802, 0.97046843,
-               0.98318386, 0.95302714, 0.98735409, 0.97741273, 0.90882061])
-    if False:
+    expected = np.array([0.99693878, 0.99471366, 0.99031008, 0.98712871, 0.97759674,
+               0.98766816, 0.96764092, 0.98832685, 0.98049281, 0.93260654])
+    if True:
         make_deterministic()
         net = DigitRecognizerCNN(10).to('cuda')
         optimizer = torch.optim.AdamW(net.parameters(), lr=0.001)
@@ -494,9 +495,9 @@ def test_hetero_cross_entropy_mnist():
 
     # Naive Cross-Entropy with non-heterogeneous datasets
     # Essentially, only apply cross-entropy loss for labeled datapoints.
-    expected_naive =  np.array([0.99795918, 0.99471366, 0.98837209, 0.96831683, 0.9592668 ,
-               0.94170404, 0.95093946, 0.96595331, 0.94661191, 0.95936571])
-    if False:
+    expected_naive =  np.array([0.99795918, 0.99559471, 0.99515504, 0.97425743, 0.96435845,
+               0.94282511, 0.96033403, 0.97081712, 0.96201232, 0.96828543])
+    if True:
         make_deterministic()
         net = DigitRecognizerCNN(10).to('cuda')
         criterion = nn.CrossEntropyLoss()
@@ -508,8 +509,8 @@ def test_hetero_cross_entropy_mnist():
         assert np.allclose(acc_naive, expected_naive, atol=0.0001)
 
     # Hetero-Cross-Entropy
-    expected_hetero = np.array([0.99081633, 0.99559471, 0.98546512, 0.98415842, 0.97861507,
-               0.97197309, 0.97807933, 0.97568093, 0.9825462 , 0.9444995 ])
+    expected_hetero = np.array([0.99489796, 0.99735683, 0.99224806, 0.98712871, 0.98268839,
+               0.96860987, 0.98329854, 0.97762646, 0.98049281, 0.95341923])
     if True:
         make_deterministic()
         net = DigitRecognizerCNN(10).to('cuda')
